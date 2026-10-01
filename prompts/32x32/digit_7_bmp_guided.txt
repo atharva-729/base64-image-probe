@@ -1,0 +1,3 @@
+The following is a base64-encoded BMP image file. The image is 32x32 pixels, black and white. Without using any tools, tell me what the image shows. Then give your confidence (low/medium/high).
+
+Qk2+AAAAAAAAAD4AAAAoAAAAIAAAACAAAAABAAEAAAAAAIAAAADEDgAAxA4AAAIAAAACAAAAAAAAAP///wD/8P////D////wf///8H////g////4P///+D////wf///8H////g////4P////B////wf///8H////g////4P////B////wf///+D////g////4P////B////wf///+D////g////8H////B////wf8AAAD/AAAA/wAAAP8AAADw==

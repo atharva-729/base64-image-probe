@@ -1,0 +1,10 @@
+The following is an image written as text. Without using any tools, tell me what the image shows. Then give your confidence (low/medium/high).
+
+01111110
+00000110
+00000100
+00000100
+00001000
+00001000
+00011000
+00010000

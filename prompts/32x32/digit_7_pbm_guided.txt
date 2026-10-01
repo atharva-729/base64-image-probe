@@ -1,0 +1,3 @@
+The following is a base64-encoded PBM (binary, P4) image file. The image is 32x32 pixels, black and white. Without using any tools, tell me what the image shows. Then give your confidence (low/medium/high).
+
+UDQKMzIgMzIKD///8A////AP///wD///8AAAA+AAAAPgAAAD4AAAB8AAAAfAAAAPgAAAD4AAAB8AAAAfAAAAHwAAAD4AAAA+AAAAfAAAAHwAAAD4AAAA+AAAAPgAAAHwAAAB8AAAA+AAAAPgAAAHwAAAB8AAAAfAAAAPgAAAD4AAAA8AAAAPAAA=

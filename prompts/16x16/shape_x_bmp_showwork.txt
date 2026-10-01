@@ -1,0 +1,3 @@
+The following is a base64-encoded BMP image file. The image is 16x16 pixels, black and white. Do not use any tools or run any code. First reconstruct the pixel grid, writing one row per line using 1 for a black pixel and 0 for a white pixel. Then tell me what the image shows. Then give your confidence (low/medium/high).
+
+Qk1+AAAAAAAAAD4AAAAoAAAAEAAAABAAAAABAAEAAAAAAEAAAADEDgAAxA4AAAIAAAACAAAAAAAAAP///wA//AAAH/gAAI/xAADH4wAA48cAAPGPAAD4HwAA/D8AAPw/AAD4HwAA8Y8AAOPHAADH4wAAj/EAAB/4AAA//AAA

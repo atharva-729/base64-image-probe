@@ -1,0 +1,10 @@
+The following is a 8x8 black-and-white image written as a text grid, one row per line (1 = black, 0 = white). Without using any tools, tell me what the image shows. Then give your confidence (low/medium/high).
+
+00011000
+00100100
+00100100
+00100100
+00100100
+00100100
+00100100
+00011000
