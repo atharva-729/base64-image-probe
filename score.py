@@ -47,11 +47,15 @@ def accuracy(got, want):
     return sum(g == w for gr, wr in zip(got, want) for g, w in zip(gr, wr)) / len(want) ** 2
 
 
-out_rows = []
+# a call resent at a larger token cap replaces its cut-off first attempt
+latest = {}
 for line in (ROOT / "responses.jsonl").read_text(encoding="utf-8").splitlines():
     r = json.loads(line)
-    if "error" in r:
-        continue
+    if "error" not in r:
+        latest[r["model"], r["prompt_sha256"], r["effort"], r["run"]] = r
+
+out_rows = []
+for r in latest.values():
     want = truth[r["image"], r["size"]]
     grid, tail = find_grid(r["response"], r["size"])
     acc = inv = exact = ""
@@ -76,6 +80,7 @@ for line in (ROOT / "responses.jsonl").read_text(encoding="utf-8").splitlines():
             "pixel_acc_inverted": inv,
             "named": named,
             "confidence": "".join(conf[-1]).lower() if conf else "",
+            "max_tokens": r["request"]["max_tokens"],
             "finish_reason": r["finish_reason"],
             "reasoning_tokens": r["reasoning_tokens"],
             "completion_tokens": r["usage"].get("completion_tokens"),
@@ -102,4 +107,4 @@ for (model, effort, size, fmt), rows in sorted(groups.items()):
         f"{mean('pixel_acc'):>5} {mean('pixel_acc_inverted'):>5} {len(rows) - len(scored):>7} "
         f"{sum(tok) // len(tok):>10} {sum(x['cost'] for x in rows):>7.4f}"
     )
-print(f"{len(out_rows)} replies scored, total ${sum(x['cost'] for x in out_rows):.4f} -> results.csv")
+print(f"{len(out_rows)} replies scored -> results.csv")

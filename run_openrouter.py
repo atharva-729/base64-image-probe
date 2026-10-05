@@ -7,7 +7,8 @@ script containing a line  OPENROUTER_API_KEY=sk-or-...
 
 Every request and its full reply are appended to responses.jsonl. A call is
 identified by (model, prompt text, reasoning effort, run number); one already
-in that file is never sent again. Spend is added up from the cost OpenRouter
+in that file is never sent again, unless it was cut off with no answer at a
+smaller token cap than the current one. Spend is added up from the cost OpenRouter
 reports, and the script stops before any call that could cross a budget.
 
 Examples:
@@ -45,14 +46,14 @@ OPUS = "anthropic/claude-opus-5.5"
 # `floor` is the lowest reasoning effort the model accepts: Gemini and Claude
 # cannot switch reasoning off.
 MODELS = {
-    LUNA: dict(price_in=0.10, price_out=0.50, cap=12000, floor="none"),
+    LUNA: dict(price_in=0.10, price_out=0.50, cap=24000, floor="none"),  # 12000 cut off every PNG
     GEMINI: dict(price_in=0.75, price_out=3.75, cap=12000, floor="low"),
     SONNET: dict(price_in=2.00, price_out=10.00, cap=8000, floor="low"),
     SOL: dict(price_in=2.00, price_out=10.00, cap=8000, floor="none"),
     OPUS: dict(price_in=4.00, price_out=20.00, cap=8000, floor="low"),
 }
 TOTAL_BUDGET = 1.25
-PHASE_BUDGET = {"1": 0.30, "2": 0.25, "3": 0.70}
+PHASE_BUDGET = {"1": 0.30, "2": 0.40, "3": 0.70}
 
 Call = namedtuple("Call", "phase model image size fmt effort run")
 
@@ -175,13 +176,17 @@ else:
         for run in range(1, args.runs + 1)
     ]
 
-done, spent, phase_spent = set(), 0.0, 0.0
+done, cut_off, spent, phase_spent = set(), {}, 0.0, 0.0
 if LOG.exists():
     for line in LOG.read_text(encoding="utf-8").splitlines():
         r = json.loads(line)
         if "error" in r:
             continue
-        done.add((r["model"], r["prompt_sha256"], r["effort"], r["run"]))
+        k = (r["model"], r["prompt_sha256"], r["effort"], r["run"])
+        if r["finish_reason"] == "length" and not r["response"].strip():
+            cut_off[k] = max(cut_off.get(k, 0), r["request"]["max_tokens"])
+        else:
+            done.add(k)
         spent += r["cost"]
         if r["phase"] == args.phase:
             phase_spent += r["cost"]
@@ -189,8 +194,10 @@ if LOG.exists():
 todo = []
 for c in calls:
     text = prompt_path(c).read_text(encoding="utf-8")
-    if cache_key(c, text) not in done:
-        done.add(cache_key(c, text))
+    k = cache_key(c, text)
+    # a reply cut off with no answer is worth resending only at a larger cap
+    if k not in done and cut_off.get(k, 0) < max_tokens(c):
+        done.add(k)
         todo.append((c, text))
 todo = todo[: args.max]
 phase_budget = PHASE_BUDGET.get(args.phase, args.budget)
