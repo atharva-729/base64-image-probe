@@ -76,3 +76,12 @@ openai/gpt-6-luna,high,1,noise_b,16,pbm,0,0.949,0.051,,low,12000,stop,3456,3607,
 openai/gpt-6-luna,high,1,digit_7,16,png,,,,0,,12000,length,12000,12000,104.5,0.00602
 openai/gpt-6-luna,high,1,shape_x,16,png,,,,0,,12000,length,12000,12000,96.8,0.00602
 openai/gpt-6-luna,high,1,noise_a,16,png,1,1.0,0.0,,low,12000,stop,9094,9245,81.8,0.00464
+openai/gpt-6-luna,high,1,noise_b,16,png,,,,,,12000,length,12000,12000,111.8,0.00602
+openai/gpt-6-luna,high,2,digit_7,8,png,,,,0,,12000,length,12000,12000,108.6,0.00601
+openai/gpt-6-luna,high,2,shape_x,8,png,,,,0,,12000,length,12000,12000,112.0,0.00601
+openai/gpt-6-luna,high,2,noise_a,8,png,,,,,,12000,length,12000,12000,87.4,0.00601
+openai/gpt-6-luna,high,2,noise_b,8,png,,,,,,12000,length,12000,12000,105.5,0.00601
+openai/gpt-6-luna,high,3,digit_7,8,png,,,,0,,12000,length,12000,12000,117.7,0.00601
+openai/gpt-6-luna,high,3,shape_x,8,png,,,,0,,12000,length,12000,12000,122.8,0.00601
+openai/gpt-6-luna,high,3,noise_a,8,png,,,,,,12000,length,12000,12000,106.1,0.00601
+openai/gpt-6-luna,high,3,noise_b,8,png,,,,,,12000,length,12000,12000,106.5,0.00601

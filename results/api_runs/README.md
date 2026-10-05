@@ -1,6 +1,20 @@
 # API runs: interim results
 
-**Status: interim.** 74 replies scored as of 5 October 2026, 10:52 IST. The GPT-6 Luna sweep is 63 of 75 calls done and still running; the Sonnet / Sol / Gemini comparison on more images has not started. Spend so far: **$0.26** of a $1.25 cap (the key holds $5).
+**Status: interim.** 86 replies as of 5 October 2026, 11:15 IST. The GPT-6 Luna sweep is complete (75 calls). A retry of its cut-off PNG calls with a doubled token cap is running, and the Sonnet / Sol / Gemini comparison on more images has not started. Spend so far: **$0.33** of a $1.25 cap (the key holds $5).
+
+## The question, and the short answer
+
+**Question:** if a model is given only the base64 text of an image file, with no tools and no image input, can it work out what the picture is?
+
+**Short answer so far:** yes for tiny images, but only when the model reasons, and how the file is stored decides how hard it is.
+
+1. Claude Sonnet 5.5 and GPT-6 Sol each reconstructed every pixel of an 8×8 PNG through the API, where no code can run. One image and one run each so far.
+2. With reasoning off, nothing decodes: GPT-6 Luna got 0 of 16 base64 images right, at coin-flip accuracy.
+3. It is decoding, not guessing: Luna reproduced random-noise images exactly in the uncompressed formats.
+4. Uncompressed formats are within reach of a small model; compressed PNG mostly is not.
+5. Models that do not reason often state wrong answers with high confidence. Sonnet did not.
+
+**What this is not.** It is not advice on how to send images to a model. Attaching an image normally uses the model's vision input, which is far cheaper and more reliable than any of this. It also does not show that BMP saves tokens: BMP's base64 is longer than PNG's (128 characters against 100–108 for these 8×8 images). The experiment measures how far text-only reasoning goes on raw file bytes.
 
 ## Setup
 
@@ -32,11 +46,11 @@ Gemini 3.8 Flash at its lowest setting did no reasoning and described a "smiley 
 
 Two models decompressed a PNG in their reasoning with no tools. This is one image and one run each, so it needs the repeats and the noise images before it is a firm claim.
 
-Luna, the cheapest model, cannot do it at any effort (see the PNG row below), so PNG decoding depends on the model, not just on turning reasoning on.
+Luna, the cheapest model, could not do the 8×8 PNGs at any effort within a 12,000-token cap (see the PNG row below), so PNG decoding depends on the model, not just on turning reasoning on.
 
 Gemini used almost all of its 12,000-token cap, so the cap may have cut it short. In the earlier chat-UI run it thought for nearly six minutes and got it right.
 
-### 3. Difficulty follows the file format (GPT-6 Luna, 8×8, four images per cell)
+### 3. Difficulty follows the file format (GPT-6 Luna, four images per cell, 8×8 unless stated)
 
 Exact decodes out of 4:
 
@@ -48,11 +62,13 @@ Exact decodes out of 4:
 | BMP | 0 / 4 | 4 / 4 | 2 / 4 | 8,519 |
 | PNG | 0 / 4 | 0 / 4 | 0 / 4 | 12,000 (the cap) |
 | PBM at 16×16 | not run | not run | 2 / 4 | 5,917 |
+| PNG at 16×16 | not run | not run | 1 / 4 | 11,273 |
 
 - The noise images decode as well as the shapes at high effort (PBM and PGM: 4 of 4 each), so this is decoding and not guessing.
 - PGM costs about four times the reasoning of PBM for the same picture, because the file is five times longer. Length of the base64, not just the format's complexity, drives the effort.
 - At low effort on PGM the model declined three times out of four, saying it could not decode reliably.
-- PNG is out of Luna's reach. At low effort it declined all four. At high effort all four used the whole 12,000-token cap on reasoning and returned no answer, so this is "did not finish", not a wrong answer.
+- 8×8 PNG was out of Luna's reach at a 12,000-token cap. At low effort it declined all four. At high effort it used the whole cap on reasoning and returned no answer, on all four images in each of three runs (12 of 12). This is "did not finish", not a wrong answer; the retry at 24,000 tokens tests whether more room helps.
+- One PNG did decode: the 16×16 `noise_a`, all 256 pixels, in 9,094 reasoning tokens. The other three 16×16 PNGs were cut off. The likely reason is in the file: noise does not compress, so that PNG stores its pixel data uncompressed, while the others use Huffman coding (checked by reading the files). Not all PNGs are equally hard; the compression inside is what costs the reasoning.
 - At 16×16 the PBM decodes held up: two exact, and the other two had 244 and 243 of 256 pixels right, one of them a noise image.
 - BMP did better at low effort than at high (4 of 4 against 2 of 4). The two high-effort misses were small: 56 and 62 of 64 pixels. With four images per cell this may be noise.
 
@@ -71,14 +87,15 @@ At low and medium effort Sonnet did no reasoning at all (zero reasoning tokens i
 
 | Model | Calls | Spend |
 |---|---|---|
-| GPT-6 Luna | 65 | $0.092 |
+| GPT-6 Luna | 77 | $0.163 |
 | Claude Sonnet 5.5 | 5 | $0.084 |
 | Gemini 3.8 Flash | 2 | $0.047 |
 | GPT-6 Sol | 2 | $0.037 |
-| **Total** | **74** | **$0.260** |
+| **Total** | **86** | **$0.331** |
 
 - Cost is almost entirely reasoning tokens. A no-reasoning call costs a fraction of a cent on any model.
 - Replies took 1–3 s without reasoning and 15–113 s with it. No call timed out or failed.
+- 15 Luna calls ($0.09) were cut off at the token cap with no answer. They are billed all the same.
 
 ## Caveats
 
@@ -89,5 +106,5 @@ At low and medium effort Sonnet did no reasoning at all (zero reasoning tokens i
 
 ## Still to come
 
-- Rest of the Luna sweep: 16×16 PNG and two more runs of the 8×8 PNG cells, all at high effort. Given the result above, these 12 calls will probably hit the cap too.
+- Retry of the 15 cut-off Luna PNG calls with the token cap doubled to 24,000 (running; at most $0.18).
 - Sonnet (low / high), Sol (none / medium) and Gemini (low only) on `digit_7` and `noise_a`, as PBM and PNG, plus one 16×16 noise image. Expected cost about $0.55.
