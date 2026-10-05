@@ -73,3 +73,6 @@ openai/gpt-6-luna,high,1,digit_7,16,pbm,0,0.953,0.047,0,medium,stop,11356,11529,
 openai/gpt-6-luna,high,1,shape_x,16,pbm,1,1.0,0.0,1,high,stop,3683,3825,30.5,0.00193
 openai/gpt-6-luna,high,1,noise_a,16,pbm,1,1.0,0.0,,medium,stop,5174,5323,44.9,0.00267
 openai/gpt-6-luna,high,1,noise_b,16,pbm,0,0.949,0.051,,low,stop,3456,3607,28.9,0.00182
+openai/gpt-6-luna,high,1,digit_7,16,png,,,,0,,length,12000,12000,104.5,0.00602
+openai/gpt-6-luna,high,1,shape_x,16,png,,,,0,,length,12000,12000,96.8,0.00602
+openai/gpt-6-luna,high,1,noise_a,16,png,1,1.0,0.0,,low,stop,9094,9245,81.8,0.00464
