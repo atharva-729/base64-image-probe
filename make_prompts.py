@@ -4,7 +4,6 @@ Reads images/images.json (from make_images.py) and writes:
   encodings.json                              every encoded string, per image
   prompts/<size>/<name>_<format>_<variant>.txt  ready-to-paste prompts
   token_counts.csv                            payload size and token estimates
-  results.csv                                 empty results table (not overwritten)
 
 Formats:
   grid  rows of 0/1 characters (control, not base64)
@@ -100,10 +99,5 @@ with open(ROOT / "token_counts.csv", "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["image", "size", "format", "payload_chars", "payload_tokens_o200k", "native_image_tokens_claude_formula"])
     w.writerows(token_rows)
-
-results = ROOT / "results.csv"
-if not results.exists():
-    with open(results, "w", newline="") as f:
-        csv.writer(f).writerow(["model", "image", "size", "format", "variant", "correct", "pixel_acc", "confidence", "notes"])
 
 print(f"wrote {len(images) * len(FORMATS) * 3} prompts for {len(images)} images")

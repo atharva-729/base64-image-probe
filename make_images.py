@@ -1,12 +1,13 @@
 """Stage 1: build the fixed test set from the README.
 
 Seven pure black-and-white images (digits 1, 7, 0; shapes X, square, diagonal,
-circle), each rasterised natively at 8x8, 16x16 and 32x32.
+circle), each rasterised natively at 8x8, 16x16 and 32x32, plus two random-noise
+images per size. Noise has no shape to guess, so only real decoding scores on it.
 
 Outputs, under images/:
   raw/<name>_<size>.png      true-size 1-bit image (black ink on white)
   preview/<name>_<size>.png  same image upscaled to 256x256 for viewing
-  contact_sheet.png          all 21 in one grid, labelled
+  contact_sheet.png          all of them in one grid, labelled
   images.json                0/1 pixel grid for every image (1 = ink)
 """
 import json
@@ -32,6 +33,7 @@ POLYLINES = {
     "shape_diagonal": [[(0, 0), (7, 7)]],
 }
 CIRCLE_RADIUS = 3.5 / 8  # ring centred on the image
+NOISE_SEEDS = {"noise_a": 1, "noise_b": 2}  # each pixel black with probability 1/2
 
 
 def pixel_centres(n):
@@ -48,6 +50,8 @@ def segment_distance(x, y, a, b):
 
 
 def render(name, n):
+    if name in NOISE_SEEDS:
+        return np.random.default_rng([NOISE_SEEDS[name], n]).integers(0, 2, (n, n), dtype=np.uint8)
     x, y = pixel_centres(n)
     if name == "shape_circle":
         dist = np.abs(np.hypot(x - 0.5, y - 0.5) - CIRCLE_RADIUS)
@@ -60,7 +64,7 @@ def render(name, n):
     return (dist <= HALF_STROKE + 1e-9).astype(np.uint8)  # 1 = ink
 
 
-names = list(POLYLINES) + ["shape_circle"]
+names = list(POLYLINES) + ["shape_circle"] + list(NOISE_SEEDS)
 (OUT / "raw").mkdir(parents=True, exist_ok=True)
 (OUT / "preview").mkdir(exist_ok=True)
 

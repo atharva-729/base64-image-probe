@@ -105,6 +105,31 @@ Expectation: base64 costs far more tokens than the native image for anything bey
 - **Succeeds on raw-pixel formats at small sizes:** real in-context decoding ability. Find the size where it breaks.
 - **Succeeds on PNG:** very surprising. Double-check for tool use and memorization before believing it.
 
+## Running it through the API
+
+Chat UIs are agents: they can save the string, decode it with code and look at the result. The API runs send text and get text back, with no tools, so that route is closed.
+
+```
+python make_images.py                       # test images, including two random-noise ones per size
+python make_prompts.py                      # encodings and prompts
+python run_openrouter.py --check-key        # key limit and usage (free)
+python run_openrouter.py --phase 1 --dry-run   # list the calls and their worst-case cost (free)
+python run_openrouter.py --phase 1          # pilot: 8 calls
+python run_openrouter.py --phase 2          # cheap model, full sweep
+python run_openrouter.py --phase 3          # pricier models, key cells only
+python score.py                             # responses.jsonl -> results.csv (free)
+```
+
+Put the key in `.env` (copy `.env.example`); git ignores it. Every request and full reply goes to `responses.jsonl`, and a call already in that file is never sent again. The runner stops before any call that could cross the phase budget or the $1.25 total.
+
+| Phase | Models | What it covers |
+|---|---|---|
+| 1 | GPT-6 Luna, Gemini 3.8 Flash, Claude Sonnet 5.5, GPT-6 Sol | `digit_7` 8×8 PNG at lowest reasoning effort and at medium |
+| 2 | GPT-6 Luna | 8×8, four images × five formats × effort none / low / high; 16×16 PBM and PNG; repeats of the 8×8 PNG cells |
+| 3 | Gemini 3.8 Flash, Claude Sonnet 5.5, GPT-6 Sol | 8×8 `digit_7` and `noise_a` as PBM and PNG; 16×16 `noise_a`. Efforts: Sol none / medium, Sonnet low / high, Gemini low only |
+
+Gemini 3.8 Flash and Claude Sonnet 5.5 cannot switch reasoning off through the API, so their lowest setting is `low`; the GPT-6 models go down to `none`. In the pilot Sonnet did no reasoning below `high`, and Gemini at `medium` used its whole 12,000-token cap, so phase 3 uses the efforts above.
+
 ## Related experiments from the same discussion
 
 - **Multi-image order:** when given several images, do models and harnesses keep track of which is "image 1", "image 2", and so on, especially when filenames conflict with position?

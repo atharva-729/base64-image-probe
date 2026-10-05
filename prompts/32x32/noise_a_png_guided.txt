@@ -1,0 +1,3 @@
+The following is a base64-encoded PNG image file. The image is 32x32 pixels, black and white. Without using any tools, tell me what the image shows. Then give your confidence (low/medium/high).
+
+iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQAAAABbAUdZAAAAq0lEQVR4nAGgAF//AUkPxSkBDJ//OgIp8PlIAOMh/kQC/BdRLQFeDb8eADT1pyYBDjRB5wCS5SqdAtL8+pMA9BUEdQD64W3cAdjSlioB/ySA0wCRG/c9As2ivuEA/t4bQgKDFzIlAUryHTkE+SMuSQD0iySBBIeP9vwE+huQNwQt02MRBPuZjvQCuiL34QLbyOYGAai5K9UAdRcZ0AAX/oIRAv6/00ICS5+kCpecQ0vZ5BnHAAAAAElFTkSuQmCC
