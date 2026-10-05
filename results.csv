@@ -82,6 +82,6 @@ openai/gpt-6-luna,high,2,shape_x,8,png,,,,0,,24000,length,24000,24000,265.5,0.01
 openai/gpt-6-luna,high,2,noise_a,8,png,,,,,,24000,length,24000,24000,212.2,0.01201
 openai/gpt-6-luna,high,2,noise_b,8,png,,,,,,24000,length,24000,24000,216.9,0.01201
 openai/gpt-6-luna,high,3,digit_7,8,png,1,1.0,0.0,0,medium,24000,stop,12638,12702,145.1,0.00637
-openai/gpt-6-luna,high,3,shape_x,8,png,,,,0,,12000,length,12000,12000,122.8,0.00601
-openai/gpt-6-luna,high,3,noise_a,8,png,,,,,,12000,length,12000,12000,106.1,0.00601
-openai/gpt-6-luna,high,3,noise_b,8,png,,,,,,12000,length,12000,12000,106.5,0.00601
+openai/gpt-6-luna,high,3,shape_x,8,png,1,1.0,0.0,1,high,24000,stop,14955,15008,140.7,0.00752
+openai/gpt-6-luna,high,3,noise_a,8,png,1,1.0,0.0,,high,24000,stop,17173,17250,135.5,0.00864
+openai/gpt-6-luna,high,3,noise_b,8,png,,,,,,24000,length,24000,24000,231.7,0.01201

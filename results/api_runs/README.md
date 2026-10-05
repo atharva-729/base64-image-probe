@@ -1,6 +1,6 @@
 # API runs: interim results
 
-**Status: interim.** 98 replies as of 5 October 2026, 12:10 IST. The GPT-6 Luna sweep is complete, and 12 of its 15 cut-off PNG calls have been retried with a doubled token cap; the last 3 are running. The Sonnet / Sol / Gemini comparison on more images has not started. Spend so far: **$0.46** of a $1.25 cap (the key holds $5).
+**Status: interim.** 101 replies as of 5 October 2026, 12:25 IST. The GPT-6 Luna sweep is complete, including a retry of its 15 cut-off PNG calls with a doubled token cap. The Sonnet / Sol / Gemini comparison on more images has not started. Spend so far: **$0.48** of a $1.25 cap (the key holds $5).
 
 ## The question, and the short answer
 
@@ -11,7 +11,7 @@
 1. Claude Sonnet 5.5 and GPT-6 Sol each reconstructed every pixel of an 8×8 PNG through the API, where no code can run. One image and one run each so far.
 2. With reasoning off, nothing decodes: GPT-6 Luna got 0 of 16 base64 images right, at coin-flip accuracy.
 3. It is decoding, not guessing: Luna reproduced random-noise images exactly in the uncompressed formats.
-4. Uncompressed formats are within reach of a small model. Compressed PNG is at the edge of it: Luna got some, only with a very large reasoning allowance, and none of the noise ones that use real compression.
+4. Uncompressed formats are within reach of a small model. Compressed PNG is at the edge of it: Luna got some, including one compressed noise image, but only with a very large reasoning allowance and not reliably.
 5. Models that do not reason often state wrong answers with high confidence. Sonnet did not.
 
 **What this is not.** It is not advice on how to send images to a model. Attaching an image normally uses the model's vision input, which is far cheaper and more reliable than any of this. It also does not show that BMP saves tokens: BMP's base64 is longer than PNG's (128 characters against 100–108 for these 8×8 images). The experiment measures how far text-only reasoning goes on raw file bytes.
@@ -76,19 +76,19 @@ With a 12,000-token cap, 15 of 16 PNG calls spent the whole cap on reasoning and
 | Image | Size | Compression inside the PNG | Result |
 |---|---|---|---|
 | `digit_7` | 8×8 | Fixed Huffman | Run 1 cut off at 24,000; runs 2 and 3 exact (21,188 and 12,638 reasoning tokens) |
-| `shape_x` | 8×8 | Fixed Huffman | Run 1 exact (13,984); run 2 cut off at 24,000; run 3 retry pending |
-| `noise_a` | 8×8 | Fixed Huffman | Runs 1 and 2 cut off at 24,000; run 3 retry pending |
-| `noise_b` | 8×8 | Fixed Huffman | Runs 1 and 2 cut off at 24,000; run 3 retry pending |
+| `shape_x` | 8×8 | Fixed Huffman | Runs 1 and 3 exact (13,984 and 14,955); run 2 cut off at 24,000 |
+| `noise_a` | 8×8 | Fixed Huffman | Runs 1 and 2 cut off at 24,000; run 3 exact (17,173) |
+| `noise_b` | 8×8 | Fixed Huffman | All three runs cut off at 24,000 |
 | `shape_x` | 16×16 | None (stored) | Exact, all 256 pixels (11,683) |
 | `noise_a` | 16×16 | None (stored) | Exact, all 256 pixels (9,094, at the 12,000 cap) |
 | `noise_b` | 16×16 | Fixed Huffman | Cut off at 24,000 |
 | `digit_7` | 16×16 | Dynamic Huffman | Answered after 22,790 tokens: said it could not decode and would not invent a grid |
 
-- **Doubling the cap helped only partly.** Of the 12 retried calls, 4 came back exact, 1 declined, and 7 were cut off again at 24,000 tokens.
-- **Every grid Luna did give was exactly right.** At high effort on PNG it produced five grids, all perfect, and never a wrong one. It either finishes correctly, declines, or runs out.
+- **Doubling the cap helped only partly.** Of the 15 retried calls, 6 came back exact, 1 declined, and 8 were cut off again at 24,000 tokens. At 8×8 that is 5 exact out of 12.
+- **Every grid Luna did give was exactly right.** At high effort on PNG it produced seven grids, all perfect, and never a wrong one. It either finishes correctly, declines, or runs out.
 - **The compression inside the PNG matters more than the image size.** Both PNGs whose pixel data is stored uncompressed were decoded, though they are 16×16. The compression type was read from the files; that it explains the pattern is an inference from eight images.
 - **The same call can succeed or fail between runs.** `digit_7` 8×8 was cut off once and exact twice; `shape_x` 8×8 was exact once and cut off once.
-- **No noise PNG with real compression has decoded** in five attempts so far. The only noise PNG that worked is the uncompressed one. So for Luna the evidence that it decompresses, and does not guess, rests on the shapes being pixel-exact.
+- **One compressed noise PNG decoded exactly:** `noise_a` 8×8 on its third run, all 64 pixels. Random pixels cannot be guessed, so this is real decompression by the cheapest model. It is one success in six attempts on compressed noise PNGs.
 - One retried `digit_7` was pixel-exact but described as "a short horizontal bar with a zigzagging stem", not as a 7.
 
 ### 5. Decoding the pixels is not the same as recognising the picture
@@ -106,16 +106,16 @@ At low and medium effort Sonnet did no reasoning at all (zero reasoning tokens i
 
 | Model | Calls | Spend |
 |---|---|---|
-| GPT-6 Luna | 89 | $0.288 |
+| GPT-6 Luna | 92 | $0.316 |
 | Claude Sonnet 5.5 | 5 | $0.084 |
 | Gemini 3.8 Flash | 2 | $0.047 |
 | GPT-6 Sol | 2 | $0.037 |
-| **Total** | **98** | **$0.456** |
+| **Total** | **101** | **$0.484** |
 
 - Cost is almost entirely reasoning tokens. A no-reasoning call costs a fraction of a cent on any model.
 - Replies took 1–3 s without reasoning and 15–113 s with it at a 12,000-token cap. At 24,000 tokens Luna's PNG calls took 2–4.5 minutes each.
-- 22 Luna calls were cut off at a token cap with no answer. They are billed all the same and cost $0.17, more than a third of the spend so far.
-- One call timed out: Luna on `shape_x` 8×8 PNG, third run, at the 24,000 cap. The runner stopped there and logged it. OpenRouter's usage figure is $0.003 above the logged total, so that call was probably billed in part.
+- 23 Luna calls were cut off at a token cap with no answer. They are billed all the same and cost $0.19, more than a third of the spend so far.
+- One call timed out: Luna on `shape_x` 8×8 PNG, third run, at the 24,000 cap. The runner stopped there and logged it, and the call was resent successfully. Whether the timed-out attempt was billed is unknown: OpenRouter's usage figure lags the log, so the two cannot be compared yet.
 
 ## Caveats
 
@@ -126,5 +126,4 @@ At low and medium effort Sonnet did no reasoning at all (zero reasoning tokens i
 
 ## Still to come
 
-- The last 3 retries of cut-off Luna PNG calls at the 24,000 cap (running; at most $0.04).
 - Sonnet (low / high), Sol (none / medium) and Gemini (low only) on `digit_7` and `noise_a`, as PBM and PNG, plus one 16×16 noise image. Expected cost about $0.55.
