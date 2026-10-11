@@ -1,0 +1,3 @@
+The following is a base64-encoded image file. Without using any tools, tell me what the image shows. Then give your confidence (low/medium/high).
+
+iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQAAAABbAUdZAAAAb0lEQVR4nE2OwQ2DMBRDH04F3MoGdBLoKAyC1IzCKBGTpBvkGFWIX5Fc8MHyu9jGYmdi+8EJH50QdLgQSWN+Ki1tJpg5NeC1wyQudWaxpGo9DDcsliHdcIVvTRPstfTl7VGGyC6MHDBL8MZ8Y1zX/poUKaHQPKI6AAAAAElFTkSuQmCC

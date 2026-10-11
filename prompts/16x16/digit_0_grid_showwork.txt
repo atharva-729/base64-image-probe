@@ -1,0 +1,18 @@
+The following is a 16x16 black-and-white image written as a text grid, one row per line (1 = black, 0 = white). Do not use any tools or run any code. First reconstruct the pixel grid, writing one row per line using 1 for a black pixel and 0 for a white pixel. Then tell me what the image shows. Then give your confidence (low/medium/high).
+
+0000001111000000
+0000011111100000
+0000111001110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000110000110000
+0000111001110000
+0000011111100000
+0000001111000000

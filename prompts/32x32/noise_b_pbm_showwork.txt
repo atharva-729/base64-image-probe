@@ -1,0 +1,3 @@
+The following is a base64-encoded PBM (binary, P4) image file. The image is 32x32 pixels, black and white. Do not use any tools or run any code. First reconstruct the pixel grid, writing one row per line using 1 for a black pixel and 0 for a white pixel. Then tell me what the image shows. Then give your confidence (low/medium/high).
+
+UDQKMzIgMzIK3KMlQSSBAnytnSbU2Qh48FrkVnBsmutqVeMkK9EuH2tmiwDvaC6VE22lYaSWPd3yZWY6NgzfNYVJh++ZBYWHbx9lfvxNR1DvcvKlNTS3SLjSq/jh4eqh7T/kwFRE5nwvHbzpr5fgs/uoBNzGvgeOXis6NMBPKWJS+rSIIbX8MXI=
