@@ -48,8 +48,8 @@ OPUS = "anthropic/claude-opus-5.5"
 MODELS = {
     LUNA: dict(price_in=0.10, price_out=0.50, cap=24000, floor="none"),  # 12000 cut off every PNG
     GEMINI: dict(price_in=0.75, price_out=3.75, cap=12000, floor="low"),
-    SONNET: dict(price_in=2.00, price_out=10.00, cap=8000, floor="low"),
-    SOL: dict(price_in=2.00, price_out=10.00, cap=8000, floor="none"),
+    SONNET: dict(price_in=2.00, price_out=10.00, cap=12000, floor="low"),
+    SOL: dict(price_in=2.00, price_out=10.00, cap=12000, floor="none"),
     OPUS: dict(price_in=4.00, price_out=20.00, cap=8000, floor="low"),
 }
 TOTAL_BUDGET = 1.25
@@ -80,21 +80,14 @@ def plan(phase):
             for image in images:
                 add(LUNA, image, 8, "png", "high", run)
     elif phase == "3":
-        # pricier models on the key cells only; cell-major order, so a budget
-        # stop costs every model the same tail. Arms come from the pilot: Sonnet
-        # does not reason below high, and Gemini at medium spends its whole cap.
-        arms = {GEMINI: ("low",), SONNET: ("low", "high"), SOL: ("none", "medium")}
-        for size, image, fmt, models in (
-            (8, "noise_a", "png", (GEMINI, SONNET, SOL)),
-            (8, "noise_a", "pbm", (GEMINI, SONNET, SOL)),
-            (8, "digit_7", "png", (GEMINI, SONNET, SOL)),
-            (8, "digit_7", "pbm", (GEMINI, SONNET, SOL)),
-            (16, "noise_a", "png", (GEMINI, SONNET, SOL)),
-            (16, "noise_a", "pbm", (GEMINI,)),
-        ):
-            for m in models:
-                for effort in arms[m][-1:] if size == 16 else arms[m]:
-                    add(m, image, size, fmt, effort, 1)
+        # the other three models across every format, for the model x format
+        # table. One effort each, from the pilot: Sonnet does not reason below
+        # high, and Gemini at medium spends its whole cap, so it runs at low.
+        # Format-major order, so a budget stop drops the costliest cells.
+        for fmt in FORMATS:
+            for image in ("digit_7", "noise_a"):
+                for m, effort in ((GEMINI, "low"), (SOL, "medium"), (SONNET, "high")):
+                    add(m, image, 8, fmt, effort, 1)
     return calls
 
 

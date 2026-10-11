@@ -1,5 +1,7 @@
 # Can LLMs See Images Through Base64?
 
+**Results page:** https://atharva-729.github.io/base64-image-probe/ · **Written report:** [results/api_runs/README.md](results/api_runs/README.md)
+
 ## The question
 
 If you give a frontier LLM the **base64 text of an image file**, with no tools and no image input, can it work out what the image shows?
@@ -118,6 +120,8 @@ python run_openrouter.py --phase 1          # pilot: 8 calls
 python run_openrouter.py --phase 2          # cheap model, full sweep
 python run_openrouter.py --phase 3          # pricier models, key cells only
 python score.py                             # responses.jsonl -> results.csv (free)
+python make_table.py                        # model x format charts and table (free)
+python make_site.py                         # the results page, docs/index.html (free)
 ```
 
 Put the key in `.env` (copy `.env.example`); git ignores it. Every request and full reply goes to `responses.jsonl`, and a call already in that file is never sent again. The runner stops before any call that could cross the phase budget or the $1.25 total.
@@ -126,7 +130,7 @@ Put the key in `.env` (copy `.env.example`); git ignores it. Every request and f
 |---|---|---|
 | 1 | GPT-6 Luna, Gemini 3.8 Flash, Claude Sonnet 5.5, GPT-6 Sol | `digit_7` 8×8 PNG at lowest reasoning effort and at medium |
 | 2 | GPT-6 Luna | 8×8, four images × five formats × effort none / low / high; 16×16 PBM and PNG; repeats of the 8×8 PNG cells |
-| 3 | Gemini 3.8 Flash, Claude Sonnet 5.5, GPT-6 Sol | 8×8 `digit_7` and `noise_a` as PBM and PNG; 16×16 `noise_a`. Efforts: Sol none / medium, Sonnet low / high, Gemini low only |
+| 3 | Gemini 3.8 Flash, Claude Sonnet 5.5, GPT-6 Sol | 8×8 `digit_7` and `noise_a` in all five formats, one effort each: Sol medium, Sonnet high, Gemini low |
 
 Gemini 3.8 Flash and Claude Sonnet 5.5 cannot switch reasoning off through the API, so their lowest setting is `low`; the GPT-6 models go down to `none`. In the pilot Sonnet did no reasoning below `high`, and Gemini at `medium` used its whole 12,000-token cap, so phase 3 uses the efforts above.
 

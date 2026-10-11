@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can a model read a picture it can't see?</title>
+<meta name="description" content="Four language models were given tiny images as raw text, with no tools and no vision. Two of them decoded every one.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f1e8; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #3b3a36; --hair: #c9c6ba; --cell: #ffffff;
+  --accent: #1c5cab; --bad: #c22f2f;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
+  --q0:#cde2fb; --q1:#b7d3f6; --q2:#9ec5f4; --q3:#86b6ef; --q4:#6da7ec; --q5:#5598e7; --q6:#3987e5; --q7:#2a78d6; --q8:#256abf; --q9:#1c5cab; --q10:#184f95;
+  --f0:#0b0b0b; --f1:#0b0b0b; --f2:#0b0b0b; --f3:#0b0b0b; --f4:#0b0b0b; --f5:#0b0b0b; --f6:#0b0b0b; --f7:#ffffff; --f8:#ffffff; --f9:#ffffff; --f10:#ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #111110; --surface: #1a1a19; --ink: #f4f3ee; --ink2: #c9c8be; --hair: #45443f; --cell: #1a1a19;
+    --accent: #86b6ef; --bad: #ff8f8f;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
+    --q0:#0d366b; --q1:#104281; --q2:#184f95; --q3:#1c5cab; --q4:#256abf; --q5:#2a78d6; --q6:#3987e5; --q7:#5598e7; --q8:#6da7ec; --q9:#86b6ef; --q10:#b7d3f6;
+    --f0:#f4f3ee; --f1:#f4f3ee; --f2:#f4f3ee; --f3:#f4f3ee; --f4:#f4f3ee; --f5:#ffffff; --f6:#0b0b0b; --f7:#0b0b0b; --f8:#0b0b0b; --f9:#0b0b0b; --f10:#0b0b0b;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.wrap { width: min(1000px, calc(100% - 48px)); margin-inline: auto; }
+.prose { max-width: 680px; }
+h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(40px, 6.4vw, 76px); line-height: 1.02; }
+h2 { font-size: clamp(28px, 3.6vw, 40px); line-height: 1.12; margin-bottom: 14px; }
+h3 { font-size: 23px; line-height: 1.25; margin: 34px 0 8px; }
+p { margin: 0 0 16px; }
+a { color: var(--ink); text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+.mono, code { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+code { font-size: 0.88em; background: var(--surface); border: 1px solid var(--hair); padding: 1px 5px; border-radius: 3px; }
+.kicker { font: 600 12.5px/1 "IBM Plex Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink2); display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
+.kicker b { color: var(--bg); background: var(--ink); padding: 5px 7px; font-weight: 600; }
+section { padding: 72px 0; border-top: 2px solid var(--ink); }
+.lede { font-size: 21px; line-height: 1.5; }
+.note { font-size: 14.5px; color: var(--ink2); line-height: 1.5; }
+
+header.hero { padding: 56px 0 64px; }
+.topline { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 500 13px/1.4 "IBM Plex Mono", monospace; color: var(--ink2); padding-bottom: 40px; }
+.hero .lede { max-width: 640px; margin-top: 24px; }
+.figures { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid var(--ink); margin-top: 44px; background: var(--surface); }
+.figures div { padding: 18px 20px; border-right: 1px solid var(--ink); }
+.figures div:last-child { border-right: 0; }
+.figures strong { display: block; font: 500 38px/1 "Newsreader", serif; }
+.figures span { font-size: 14px; color: var(--ink2); }
+
+.panel { background: var(--surface); border: 2px solid var(--ink); }
+.tabs { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--ink); }
+.tabs button, .chips button { font: 500 14px/1 "IBM Plex Mono", monospace; color: var(--ink); background: transparent; border: 0; cursor: pointer; padding: 13px 16px; }
+.tabs button { border-right: 1px solid var(--ink); }
+.tabs button[aria-pressed="true"], .chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.tabs button:focus-visible, .chips button:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.chips { display: inline-flex; flex-wrap: wrap; border: 2px solid var(--ink); background: var(--surface); }
+.chips button { border-right: 1px solid var(--ink); padding: 10px 13px; }
+.chips button:last-child { border-right: 0; }
+.decoder { display: grid; grid-template-columns: minmax(0, 1fr) auto 220px; gap: 28px; align-items: center; padding: 28px; }
+.decoder .string { font: 500 15px/1.55 "IBM Plex Mono", monospace; word-break: break-all; white-space: pre-wrap; max-height: 220px; overflow: auto; }
+.decoder .arrow { font: 500 13px/1.3 "IBM Plex Mono", monospace; text-align: center; color: var(--ink2); }
+.decoder .arrow span { display: block; font-size: 30px; color: var(--ink); line-height: 1; }
+.about { border-top: 1px solid var(--ink); padding: 16px 28px; display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; }
+.about b { font: 600 13px/1 "IBM Plex Mono", monospace; white-space: nowrap; }
+
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--ink); background: var(--surface); margin: 28px 0; }
+.steps > div { padding: 22px; border-right: 1px solid var(--ink); }
+.steps > div:last-child { border-right: 0; }
+.steps i { font: 600 13px/1 "IBM Plex Mono", monospace; font-style: normal; color: var(--ink2); }
+.steps h4 { font: 600 17px/1.3 "IBM Plex Sans", sans-serif; margin: 10px 0 6px; }
+.steps p { font-size: 15px; margin: 0; }
+.imgs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 24px; max-width: 760px; }
+.imgs figure, .gallery figure { margin: 0; }
+.imgs figcaption { font: 500 13px/1.4 "IBM Plex Mono", monospace; margin-top: 8px; }
+svg.px { display: block; width: 100%; height: auto; border: 2px solid var(--ink); background: #ffffff; }
+
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin: 26px 0 14px; }
+.heat { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; }
+.heat th { font: 600 13.5px/1.3 "IBM Plex Mono", monospace; padding: 8px 6px; text-align: center; }
+.heat th[scope="row"] { text-align: left; width: 190px; font: 600 15.5px/1.25 "IBM Plex Sans", sans-serif; padding: 6px 12px 6px 0; }
+.heat th small { display: block; font: 400 13px/1.3 "IBM Plex Sans", sans-serif; color: var(--ink2); }
+.heat td { text-align: center; padding: 13px 4px; border-radius: 3px; height: 68px; cursor: default; }
+.heat td b { display: block; font: 600 19px/1.1 "IBM Plex Sans", sans-serif; }
+.heat td span { font-size: 12.5px; line-height: 1.25; display: block; margin-top: 3px; }
+.heat td:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.scale { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink2); margin-top: 12px; }
+.scale i { display: inline-block; width: 22px; height: 12px; }
+.scroll { overflow-x: auto; }
+.scroll > * { min-width: 720px; }
+
+#scatter { width: 100%; height: auto; display: block; }
+#scatter text { font-family: "IBM Plex Sans", sans-serif; fill: var(--ink); }
+#scatter .tick { font: 500 12.5px "IBM Plex Mono", monospace; fill: var(--ink2); }
+#scatter .axis { font-size: 13.5px; font-weight: 600; }
+#scatter .lab, #scatter .lab2 { paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+#scatter .lab { font-size: 13.5px; font-weight: 600; }
+#scatter .lab2 { font-size: 12px; fill: var(--ink2); }
+#scatter .pt { cursor: default; }
+#scatter .pt:focus-visible { outline: 3px solid var(--ink); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14.5px; margin-top: 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+#tip { position: fixed; z-index: 10; pointer-events: none; background: var(--ink); color: var(--bg); padding: 10px 12px; font-size: 13.5px; line-height: 1.45; max-width: 280px; border-radius: 3px; opacity: 0; transition: opacity .1s; }
+#tip b { display: block; font-size: 14.5px; }
+
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 30px 18px; margin-top: 28px; }
+.gallery figcaption { margin-top: 10px; font-size: 14px; line-height: 1.4; }
+.gallery figcaption b { display: block; font-size: 15px; }
+.gallery figcaption small { color: var(--ink2); font-size: 13px; display: block; }
+.gallery q, .gallery .said { display: block; margin: 6px 0; quotes: none; }
+.tag { display: inline-block; font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: 0.04em; padding: 5px 7px; border: 1.5px solid var(--ink); margin-top: 2px; }
+.tag.solid { background: var(--ink); color: var(--bg); }
+.empty { aspect-ratio: 1; border: 2px dashed var(--ink); display: grid; place-items: center; text-align: center; font: 500 13px/1.4 "IBM Plex Mono", monospace; padding: 14px; color: var(--ink2); }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+table.plain { width: 100%; border-collapse: collapse; font-size: 15px; margin: 14px 0 8px; }
+table.plain th, table.plain td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
+table.plain thead th { border-bottom: 2px solid var(--ink); font: 600 12.5px/1.3 "IBM Plex Mono", monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+table.plain td.num, table.plain th.num { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
+blockquote { margin: 16px 0; padding: 14px 18px; border-left: 4px solid var(--ink); background: var(--surface); font-size: 16px; }
+blockquote cite { display: block; font: 500 13px/1.4 "IBM Plex Mono", monospace; font-style: normal; color: var(--ink2); margin-top: 8px; }
+ul.tight { padding-left: 20px; margin: 0 0 16px; }
+ul.tight li { margin-bottom: 8px; }
+.callout { border: 2px solid var(--ink); background: var(--surface); padding: 22px 24px; margin-top: 28px; }
+.callout h3 { margin-top: 0; }
+footer { border-top: 2px solid var(--ink); padding: 32px 0 64px; font-size: 14.5px; color: var(--ink2); }
+pre { background: var(--surface); border: 2px solid var(--ink); padding: 16px 18px; overflow-x: auto; font: 500 14px/1.6 "IBM Plex Mono", monospace; margin: 14px 0; }
+
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .wrap { width: calc(100% - 32px); }
+  section { padding: 52px 0; }
+  .figures { grid-template-columns: 1fr 1fr; }
+  .figures div:nth-child(2) { border-right: 0; }
+  .figures div:nth-child(-n+2) { border-bottom: 1px solid var(--ink); }
+  .decoder { grid-template-columns: 1fr; padding: 20px; }
+  .decoder .arrow span { transform: rotate(90deg); display: inline-block; }
+  .decoder .grid { max-width: 200px; }
+  .steps { grid-template-columns: 1fr; }
+  .steps > div { border-right: 0; border-bottom: 1px solid var(--ink); }
+  .steps > div:last-child { border-bottom: 0; }
+  .imgs { grid-template-columns: 1fr 1fr; }
+  .two { grid-template-columns: 1fr; gap: 12px; }
+  .about { padding: 14px 20px; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } #tip { transition: none; } }
+</style>
+</head>
+<body>
+<div id="tip" role="status"></div>
+
+<header class="hero wrap">
+  <div class="topline"><span>base64-image-probe</span><span>An experiment, October 2026</span></div>
+  <h1>Can a model read a picture it can&rsquo;t see?</h1>
+  <p class="lede">We turned tiny images into strings of letters and digits, pasted them into four language models as plain text, and asked what the picture was. The models had no tools, no code and no vision. Two of them got every single pixel right.</p>
+  <div class="figures" id="figures"></div>
+</header>
+
+<main>
+<section class="wrap" id="idea">
+  <div class="kicker"><b>01</b> The idea</div>
+  <div class="prose">
+    <h2>A picture is just a file, and a file can be written as text</h2>
+    <p>When you attach an image to a chat, the model looks at it with a separate vision system. We took that away. An image file is a sequence of bytes, and any bytes can be spelled out with ordinary characters using an encoding called base64. The result looks like gibberish.</p>
+    <p>The question is whether a model can work backwards from that gibberish to the picture, purely by reasoning. It is like being handed a page of Morse code and asked what the drawing is.</p>
+  </div>
+  <div class="panel" style="margin-top:28px">
+    <div class="tabs" id="fmtTabs" role="group" aria-label="File format"></div>
+    <div class="decoder">
+      <div><div class="note" id="fmtCount" style="margin-bottom:8px"></div><div class="string" id="fmtString"></div></div>
+      <div class="arrow"><span aria-hidden="true">&rarr;</span>model,<br>no tools</div>
+      <div class="grid" id="fmtGrid"></div>
+    </div>
+    <div class="about"><b id="fmtName"></b><span id="fmtAbout"></span></div>
+  </div>
+  <p class="note" style="margin-top:12px">The same 8&times;8 picture of a 7, written five ways. Switch tabs to see what the model was actually given.</p>
+</section>
+
+<section class="wrap" id="setup">
+  <div class="kicker"><b>02</b> The setup</div>
+  <div class="prose">
+    <h2>Text in, text out, nothing else</h2>
+    <p>An earlier round used chat apps, and one objection sank it: a chatbot can quietly write code to decode the image and then look at the result. So every run here goes through the API with no tools attached. Whatever a model gets right, it worked out in its own reasoning.</p>
+  </div>
+  <div class="steps">
+    <div><i>STEP 1</i><h4>Draw a tiny image</h4><p>Black and white, 8 pixels by 8. Small enough that decoding it by hand is tedious and not hopeless.</p></div>
+    <div><i>STEP 2</i><h4>Save it five ways</h4><p>From a plain grid of 0s and 1s up to a compressed PNG. Same picture, very different amounts of work.</p></div>
+    <div><i>STEP 3</i><h4>Ask for every pixel</h4><p>The model must write out the full grid before naming the picture, so a lucky guess doesn&rsquo;t count.</p></div>
+  </div>
+  <div class="prose">
+    <h3>The test images</h3>
+    <p>Two shapes and two blocks of random noise. The noise matters most: nobody can guess random pixels, so a model that reproduces them exactly has really decoded the file.</p>
+  </div>
+  <div class="imgs" id="imgs"></div>
+</section>
+
+<section class="wrap" id="results">
+  <div class="kicker"><b>03</b> The result</div>
+  <div class="prose">
+    <h2>The stronger models decoded everything</h2>
+    <p>Each cell is two images: the 7 and one block of noise. A cell counts only when all 64 pixels are right.</p>
+  </div>
+  <div class="bar">
+    <div class="chips" id="heatView" role="group" aria-label="What the cells show">
+      <button data-v="acc" aria-pressed="true">Images decoded</button><button data-v="cost" aria-pressed="false">Cost per call</button>
+    </div>
+    <span class="note">Formats run easiest to hardest, left to right.</span>
+  </div>
+  <div class="scroll"><table class="heat" id="heat"></table></div>
+  <div class="scale" id="heatScale"></div>
+  <div class="two" style="margin-top:36px">
+    <ul class="tight">
+      <li><b>Claude Sonnet 5.5 and GPT-6 Sol went 10 for 10</b>, including a compressed PNG of random noise.</li>
+      <li><b>With reasoning switched off, nothing decodes.</b> GPT-6 Luna got the plain grid and nothing else.</li>
+    </ul>
+    <ul class="tight">
+      <li><b>PNG is where the cheap model runs out of room.</b> GPT-6 Luna got 3 of 6 and hit its token limit on the rest.</li>
+      <li><b>Gemini 3.8 Flash at low effort</b> managed the simplest format and little beyond it.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="wrap" id="tradeoff">
+  <div class="kicker"><b>04</b> Accuracy against cost</div>
+  <div class="prose">
+    <h2>What a correct answer costs</h2>
+    <p>Each point is one model at one reasoning setting. Up is better, left is cheaper. The cost axis is logarithmic: each gridline is ten times the one before.</p>
+  </div>
+  <div class="bar">
+    <div class="chips" id="scatterFmt" role="group" aria-label="Format shown"></div>
+    <span class="note">Choose a format to see how the picture changes.</span>
+  </div>
+  <div class="panel" style="padding:18px 18px 10px"><div class="scroll"><svg id="scatter" viewBox="0 0 960 470" role="img" aria-label="Scatter plot of share of images decoded against average cost per call"></svg></div></div>
+  <div class="legend" id="legend"></div>
+  <p class="note" style="margin-top:12px">Two images per format per point; GPT-6 Luna at high effort has six PNG attempts. With all formats selected, each point averages its five formats equally. The dashed line joins GPT-6 Luna&rsquo;s three settings, from reasoning off to high effort.</p>
+</section>
+
+<section class="wrap" id="gallery">
+  <div class="kicker"><b>05</b> What they answered</div>
+  <div class="prose">
+    <h2>One image, ten answers</h2>
+    <p>Every model was given the PNG of the 7. These are the grids they wrote back. A red dot marks a pixel that is wrong.</p>
+  </div>
+  <div class="gallery" id="galleryGrid"></div>
+</section>
+
+<section class="wrap" id="findings">
+  <div class="kicker"><b>06</b> What we learned</div>
+  <div class="two">
+    <div>
+      <h2>Reasoning is the switch</h2>
+      <p>The same model on the same files goes from coin-flip accuracy to exact decodes when it is allowed to think. GPT-6 Luna, four images per cell, exact decodes out of 4:</p>
+      <table class="plain">
+        <thead><tr><th>Format</th><th class="num">Off</th><th class="num">Low</th><th class="num">High</th></tr></thead>
+        <tbody>
+          <tr><td>Text grid</td><td class="num">4</td><td class="num">4</td><td class="num">4</td></tr>
+          <tr><td>PBM</td><td class="num">0</td><td class="num">2</td><td class="num">4</td></tr>
+          <tr><td>PGM</td><td class="num">0</td><td class="num">0</td><td class="num">4</td></tr>
+          <tr><td>BMP</td><td class="num">0</td><td class="num">4</td><td class="num">2</td></tr>
+          <tr><td>PNG</td><td class="num">0</td><td class="num">0</td><td class="num">5 of 12</td></tr>
+        </tbody>
+      </table>
+      <p class="note">With reasoning off, pixel accuracy was 38&ndash;67%, which is what guessing gives. The two BMP misses at high effort were close: 56 and 62 of 64 pixels.</p>
+    </div>
+    <div>
+      <h2>Confidence without reasoning</h2>
+      <p>Models that did not reason still answered, and some answered boldly. Asked about the 7:</p>
+      <blockquote>A classic pixel-art smiley face. Confidence: high.<cite>Gemini 3.8 Flash, low effort, no reasoning tokens</cite></blockquote>
+      <p>Claude Sonnet 5.5 behaved differently. When it did not reason, it either refused or marked its answer as a guess:</p>
+      <blockquote>A made-up grid would be fabricated, so I&rsquo;m not giving one.<cite>Claude Sonnet 5.5, low effort</cite></blockquote>
+    </div>
+  </div>
+
+  <div class="two" style="margin-top:28px">
+    <div>
+      <h3>Not all PNGs are equally hard</h3>
+      <p>A PNG can compress its pixels in different ways. GPT-6 Luna decoded both PNGs that store their pixels uncompressed, even at 16&times;16, and struggled with the ones that use real compression.</p>
+      <table class="plain">
+        <thead><tr><th>PNG</th><th>Compression inside</th><th>GPT-6 Luna, high effort</th></tr></thead>
+        <tbody>
+          <tr><td>X, 16&times;16</td><td>None</td><td>Exact, 256 of 256</td></tr>
+          <tr><td>Noise A, 16&times;16</td><td>None</td><td>Exact, 256 of 256</td></tr>
+          <tr><td>7, 8&times;8</td><td>Fixed Huffman</td><td>2 of 3 runs exact</td></tr>
+          <tr><td>X, 8&times;8</td><td>Fixed Huffman</td><td>2 of 3 runs exact</td></tr>
+          <tr><td>Noise A, 8&times;8</td><td>Fixed Huffman</td><td>1 of 3 runs exact</td></tr>
+          <tr><td>Noise B, 8&times;8</td><td>Fixed Huffman</td><td>0 of 3, out of tokens</td></tr>
+          <tr><td>Noise B, 16&times;16</td><td>Fixed Huffman</td><td>Out of tokens</td></tr>
+          <tr><td>7, 16&times;16</td><td>Dynamic Huffman</td><td>Declined after 22,790 tokens</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Every grid Luna did produce on PNG was pixel-perfect. It finishes correctly, declines, or runs out of tokens; it never returned a wrong grid. That compression explains the pattern is an inference from these eight files.</p>
+    </div>
+    <div>
+      <h3>Decoding is not recognising</h3>
+      <p>Getting the pixels right and knowing what they show turned out to be separate skills.</p>
+      <ul class="tight">
+        <li>GPT-6 Luna decoded the X exactly from a BMP, then called it &ldquo;a white diamond on a black background&rdquo;.</li>
+        <li>It decoded the 7 exactly from a PNG and described &ldquo;a short horizontal bar with a zigzagging stem&rdquo;.</li>
+        <li>GPT-6 Sol decoded the 7 with black and white swapped. PNG stores black as 0 and the prompt asked for black as 1, so the trap is partly ours.</li>
+      </ul>
+      <h3>The cost is the thinking</h3>
+      <p>The input is a hundred characters. Nearly all the cost is reasoning: a PNG took Sonnet and Sol about a minute and 6&ndash;7 cents, against a few seconds and under a cent for the same picture as PBM.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h3>What this is not</h3>
+    <p style="margin:0">This is not a better way to send images to a model. Attaching an image normally is far cheaper and more reliable than any of this. The experiment measures how far a model&rsquo;s reasoning can go on raw file bytes, and nothing more.</p>
+  </div>
+</section>
+
+<section class="wrap" id="cost">
+  <div class="kicker"><b>07</b> The bill and the fine print</div>
+  <div class="two">
+    <div>
+      <h2>What it cost</h2>
+      <table class="plain" id="spend"></table>
+      <p class="note">23 of GPT-6 Luna&rsquo;s calls hit a token limit and returned nothing. They are billed all the same, and came to $0.19.</p>
+    </div>
+    <div>
+      <h2>Read with care</h2>
+      <ul class="tight">
+        <li><b>Small counts.</b> Sonnet, Sol and Gemini have one run per cell on two images.</li>
+        <li><b>Tiny images.</b> These are 20&ndash;130 characters of base64. A real photo is hundreds of thousands. Nothing here says the result carries over.</li>
+        <li><b>Token limits cut both ways.</b> A model that hit its limit did not finish; that is different from being unable.</li>
+        <li><b>Unequal settings.</b> Each model has a different range of reasoning effort, so each is shown at a setting where it reasons.</li>
+      </ul>
+    </div>
+  </div>
+  <h3>Run it yourself</h3>
+  <div class="prose"><p>Everything is in the repository: the images, every prompt, every raw reply and the scoring. Replies are cached, so re-running costs nothing unless you add something new.</p></div>
+  <pre>python make_images.py      # test images
+python make_prompts.py     # encodings and prompts
+python run_openrouter.py --phase 1 --dry-run   # list calls and worst-case cost
+python score.py            # replies -> results.csv
+python make_site.py        # this page</pre>
+  <p><a href="https://github.com/atharva-729/base64-image-probe">Repository</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/results/api_runs/README.md">Full written report</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/responses.jsonl">Every raw reply</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/results.csv">Scores</a></p>
+</section>
+</main>
+
+<footer class="wrap">Atharva Sharma &middot; Models were called through OpenRouter between 5 and 11 October 2026.</footer>
+
+<script>
+const D = {"configs": [{"name": "Claude Sonnet 5.5", "effort": "high effort", "vendor": "anthropic", "formats": {"grid": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.002775, "tokens": 0.0, "seconds": 4.050000000000001}, "pbm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00796, "tokens": 598.0, "seconds": 6.8}, "pgm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.034735, "tokens": 3200.5, "seconds": 22.549999999999997}, "bmp": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.020130000000000002, "tokens": 1704.0, "seconds": 14.700000000000001}, "png": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0688, "tokens": 6560.5, "seconds": 49.5}}}, {"name": "GPT-6 Sol", "effort": "medium effort", "vendor": "openai", "formats": {"grid": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00228, "tokens": 143.0, "seconds": 3.65}, "pbm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0054800000000000005, "tokens": 465.0, "seconds": 6.1}, "pgm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.01713, "tokens": 1627.5, "seconds": 15.45}, "bmp": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.013155, "tokens": 1228.5, "seconds": 12.600000000000001}, "png": {"n": 2, "decoded": 2, "flipped": 1, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.062665, "tokens": 6170.5, "seconds": 58.25}}}, {"name": "GPT-6 Luna", "effort": "high effort", "vendor": "openai", "formats": {"grid": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0005600000000000001, "tokens": 1035.5, "seconds": 12.799999999999999}, "pbm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00083, "tokens": 1567.5, "seconds": 16.5}, "pgm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.004265, "tokens": 8434.5, "seconds": 68.3}, "bmp": {"n": 2, "decoded": 1, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 1, "cost": 0.005025, "tokens": 9939.5, "seconds": 99.25}, "png": {"n": 6, "decoded": 3, "flipped": 0, "cutOff": 3, "declined": 0, "wrong": 0, "cost": 0.01028, "tokens": 20499.833333333332, "seconds": 196.08333333333334}}}, {"name": "GPT-6 Luna", "effort": "low effort", "vendor": "openai", "formats": {"grid": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00019, "tokens": 285.0, "seconds": 5.9}, "pbm": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.00048499999999999997, "tokens": 883.5, "seconds": 11.9}, "pgm": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 2, "wrong": 0, "cost": 0.001105, "tokens": 2136.5, "seconds": 21.75}, "bmp": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00073, "tokens": 1376.5, "seconds": 16.2}, "png": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 2, "wrong": 0, "cost": 0.0008849999999999999, "tokens": 1702.5, "seconds": 22.15}}}, {"name": "Gemini 3.8 Flash", "effort": "low effort", "vendor": "google", "formats": {"grid": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.001365, "tokens": 142.5, "seconds": 3.3499999999999996}, "pbm": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00923, "tokens": 2127.5, "seconds": 14.3}, "pgm": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 1, "declined": 0, "wrong": 1, "cost": 0.015189999999999999, "tokens": 3805.0, "seconds": 20.35}, "bmp": {"n": 2, "decoded": 1, "flipped": 0, "cutOff": 1, "declined": 0, "wrong": 0, "cost": 0.019225, "tokens": 4935.5, "seconds": 27.55}, "png": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.012445, "tokens": 2880.5, "seconds": 20.15}}}, {"name": "GPT-6 Luna", "effort": "reasoning off", "vendor": "openai", "formats": {"grid": {"n": 2, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 4e-05, "tokens": 0.0, "seconds": 2.3}, "pbm": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 4.5e-05, "tokens": 0.0, "seconds": 1.85}, "pgm": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 4.5e-05, "tokens": 0.0, "seconds": 1.35}, "bmp": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 1, "wrong": 1, "cost": 4.5e-05, "tokens": 0.0, "seconds": 2.25}, "png": {"n": 2, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 1, "wrong": 1, "cost": 4e-05, "tokens": 0.0, "seconds": 2.25}}}], "formats": ["grid", "pbm", "pgm", "bmp", "png"], "gallery": [{"name": "Claude Sonnet 5.5", "setting": "high effort", "said": "“The digit 7.” Confidence: medium–high.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 6327, "seconds": 49.4, "cost": 0.065772}, {"name": "GPT-6 Sol", "setting": "medium effort", "said": "“A white 7 on a black background.” Confidence: high.", "verdict": "flipped", "grid": ["10000001", "11111001", "11111011", "11111011", "11110111", "11110111", "11100111", "11101111"], "tokens": 3537, "seconds": 34.6, "cost": 0.036218}, {"name": "GPT-6 Luna", "setting": "high effort, 2nd run", "said": "“The digit 7.” Confidence: high.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 21188, "seconds": 238.5, "cost": 0.0106374}, {"name": "GPT-6 Luna", "setting": "high effort, 3rd run", "said": "“A short horizontal bar with a narrow, slightly zigzagging stem.” Confidence: medium.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 12638, "seconds": 145.1, "cost": 0.0063659}, {"name": "Gemini 3.8 Flash", "setting": "medium effort", "said": "“An X, formed by two intersecting diagonal lines.” Confidence: high.", "verdict": "wrong", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "tokens": 11520, "seconds": 69.3, "cost": 0.04494225}, {"name": "Gemini 3.8 Flash", "setting": "low effort", "said": "“A classic pixel-art smiley face.” Confidence: high.", "verdict": "wrong", "grid": ["00111100", "01000010", "10011001", "10000001", "10100101", "10011001", "01000010", "00111100"], "tokens": 0, "seconds": 5.3, "cost": 0.00238725}, {"name": "GPT-6 Luna", "setting": "reasoning off", "said": "“A small pixel-art key.” Confidence: medium.", "verdict": "wrong", "grid": ["01011100", "01011000", "01110000", "11101100", "01111100", "01111000", "01010000", "00000000"], "tokens": 0, "seconds": 2.5, "cost": 4.19e-05}, {"name": "GPT-6 Luna", "setting": "medium effort", "said": "“An abstract pixel pattern; I can’t confidently identify it.” Confidence: low.", "verdict": "wrong", "grid": ["01111111", "00000110", "00000110", "11111111", "00000011", "00000000", "00000000", "00000000"], "tokens": 8054, "seconds": 73.5, "cost": 0.0040839}, {"name": "Claude Sonnet 5.5", "setting": "medium effort, did not reason", "said": "“This guess looks like the letter A … not a verified decode.” Confidence: low.", "verdict": "guess", "grid": ["00011000", "00111100", "01100110", "11000011", "11111111", "11000011", "11000011", "11000011"], "tokens": 0, "seconds": 6.1, "cost": 0.004682}, {"name": "Claude Sonnet 5.5", "setting": "low effort, did not reason", "said": "“A made-up grid would be fabricated, so I’m not giving one.”", "verdict": "declined", "grid": null, "tokens": 0, "seconds": 5.0, "cost": 0.004312}], "truth": {"digit_7": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "shape_x": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "noise_a": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "noise_b": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"]}, "encodings": {"grid": "01111110\n00000110\n00000100\n00000100\n00001000\n00001000\n00011000\n00010000", "pbm": "UDQKOCA4Cn4GBAQICBgQ", "pgm": "UDUKOCA4CjI1NQr/AAAAAAAA////////AAD///////8A/////////wD///////8A/////////wD///////8AAP///////wD/////", "bmp": "Qk1eAAAAAAAAAD4AAAAoAAAACAAAAAgAAAABAAEAAAAAACAAAADEDgAAxA4AAAIAAAACAAAAAAAAAP///wDvAAAA5wAAAPcAAAD3AAAA+wAAAPsAAAD5AAAAgQAAAA==", "png": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQAAAADsdIMmAAAAGElEQVR4nGNoZPjJxMTEwPSHiYHpAxMHAB5qA32rRw2yAAAAAElFTkSuQmCC"}, "spend": [{"model": "openai/gpt-6-luna", "calls": 92, "cost": 0.3163720999999998}, {"model": "anthropic/claude-sonnet-5.5", "calls": 14, "cost": 0.28662}, {"model": "openai/gpt-6-sol", "calls": 11, "cost": 0.20222600000000002}, {"model": "google/gemini-3.8-flash", "calls": 11, "cost": 0.159852}], "totalCalls": 128, "totalCost": 0.9650701};
+const $ = (id) => document.getElementById(id);
+const FMT = {
+  grid: ["Text grid", "The picture typed out directly, one character per pixel. Nothing to decode. This is the sanity check."],
+  pbm: ["PBM", "A short label, then one bit per pixel. The shortest file of the five."],
+  pgm: ["PGM", "A short label, then one whole byte per pixel. Simple, but five times longer than PBM."],
+  bmp: ["BMP", "A long header, then the pixels stored bottom row first, with padding."],
+  png: ["PNG", "The pixels are compressed, like a zip file. To read it the model has to decompress it step by step in its reasoning."],
+};
+const money = (x) => (x >= 0.0005 ? "$" + x.toFixed(3) : "under $0.001");
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+// ---------- pixel grids
+function px(rows, truth) {
+  const n = rows.length, c = 10;
+  let s = `<svg class="px" viewBox="0 0 ${n * c} ${n * c}" role="img" aria-label="${n} by ${n} pixel grid">`;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const on = rows[y][x] === "1";
+    // the test images are black on white whatever the page theme
+    s += `<rect x="${x * c}" y="${y * c}" width="${c}" height="${c}" fill="${on ? "#0b0b0b" : "#ffffff"}" stroke="#b9b6aa" stroke-width="0.4"/>`;
+    if (truth && truth[y][x] !== rows[y][x]) s += `<circle cx="${x * c + 5}" cy="${y * c + 5}" r="2.4" fill="${on ? "#ff6b6b" : "#c22f2f"}"/>`;
+  }
+  return s + "</svg>";
+}
+const SEVEN = D.truth.digit_7;
+
+// ---------- headline figures
+$("figures").innerHTML = [
+  [D.totalCalls, "model calls, all logged"], [4, "models"], [5, "ways to store one picture"], ["$" + D.totalCost.toFixed(2), "total spend"],
+].map(([a, b]) => `<div><strong>${a}</strong><span>${b}</span></div>`).join("");
+
+// ---------- format switcher
+function showFormat(f) {
+  const s = D.encodings[f];
+  $("fmtString").textContent = s;
+  $("fmtCount").textContent = `${s.length} characters, exactly as given to the model`;
+  $("fmtName").textContent = FMT[f][0];
+  $("fmtAbout").textContent = FMT[f][1];
+  document.querySelectorAll("#fmtTabs button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.f === f));
+}
+$("fmtTabs").innerHTML = D.formats.map((f) => `<button data-f="${f}">${FMT[f][0]}</button>`).join("");
+$("fmtTabs").addEventListener("click", (e) => e.target.dataset.f && showFormat(e.target.dataset.f));
+$("fmtGrid").innerHTML = px(SEVEN);
+showFormat("png");
+
+// ---------- test images
+$("imgs").innerHTML = [["digit_7", "A digit 7"], ["shape_x", "An X"], ["noise_a", "Random noise A"], ["noise_b", "Random noise B"]]
+  .map(([k, label]) => `<figure>${px(D.truth[k])}<figcaption>${label}</figcaption></figure>`).join("");
+
+// ---------- tooltip
+const tip = $("tip");
+function bindTips(root) {
+  root.querySelectorAll("[data-tip]").forEach((el) => {
+    const show = (e) => {
+      tip.innerHTML = el.dataset.tip; tip.style.opacity = 1;
+      const r = el.getBoundingClientRect();
+      const x = e.clientX ?? r.left + r.width / 2, y = e.clientY ?? r.top;
+      tip.style.left = Math.max(8, Math.min(x + 14, innerWidth - tip.offsetWidth - 8)) + "px";
+      tip.style.top = Math.max(8, y - tip.offsetHeight - 12) + "px";
+    };
+    el.addEventListener("mousemove", show); el.addEventListener("focus", show);
+    el.addEventListener("mouseleave", () => (tip.style.opacity = 0)); el.addEventListener("blur", () => (tip.style.opacity = 0));
+  });
+}
+const cellTip = (c, f, s) => `<b>${c.name}, ${c.effort}</b>${FMT[f][0]}: ${s.decoded} of ${s.n} decoded<br>${money(s.cost)} per call<br>${Math.round(s.tokens).toLocaleString()} reasoning tokens, ${Math.round(s.seconds)} s`;
+
+// ---------- heatmap
+const HEAT_ROWS = D.configs.filter((c) => c.effort !== "low effort" || c.name !== "GPT-6 Luna");
+const maxCost = Math.max(...HEAT_ROWS.flatMap((c) => D.formats.map((f) => c.formats[f].cost)));
+function notes(s) {
+  const out = [];
+  if (s.wrong) out.push(`${s.wrong} wrong`);
+  if (s.declined) out.push(`${s.declined} gave no grid`);
+  if (s.cutOff) out.push(`${s.cutOff} out of tokens`);
+  if (s.flipped) out.push(`${s.flipped} colours swapped`);
+  return out.join(", ") || "all exact";
+}
+function drawHeat(view) {
+  let h = `<thead><tr><th></th>${D.formats.map((f) => `<th scope="col">${FMT[f][0]}</th>`).join("")}</tr></thead><tbody>`;
+  for (const c of HEAT_ROWS) {
+    h += `<tr><th scope="row">${c.name}<small>${c.effort}</small></th>`;
+    for (const f of D.formats) {
+      const s = c.formats[f];
+      const v = view === "acc" ? s.decoded / s.n : s.cost / maxCost;
+      const k = Math.round(Math.max(0, Math.min(1, v)) * 10);
+      const main = view === "acc" ? `${s.decoded} of ${s.n}` : money(s.cost);
+      const sub = view === "acc" ? notes(s) : (s.tokens ? (s.tokens / 1000).toFixed(1) + "k tokens" : "no reasoning") + `, ${Math.round(s.seconds)} s`;
+      h += `<td tabindex="0" style="background:var(--q${k});color:var(--f${k})" data-tip="${esc(cellTip(c, f, s))}"><b>${main}</b><span>${sub}</span></td>`;
+    }
+    h += "</tr>";
+  }
+  $("heat").innerHTML = h + "</tbody>";
+  const ends = view === "acc" ? ["none decoded", "all decoded"] : ["$0", money(maxCost) + " per call"];
+  $("heatScale").innerHTML = `<span>${ends[0]}</span><span>${Array.from({ length: 11 }, (_, k) => `<i style="background:var(--q${k})"></i>`).join("")}</span><span>${ends[1]}</span>`;
+  document.querySelectorAll("#heatView button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.v === view));
+  bindTips($("heat"));
+}
+$("heatView").addEventListener("click", (e) => e.target.dataset.v && drawHeat(e.target.dataset.v));
+drawHeat("acc");
+
+// ---------- scatter
+const COLOR = { anthropic: "var(--s1)", openai: "var(--s2)", google: "var(--s3)" };
+const SHAPE = { "Claude Sonnet 5.5": "circle", "GPT-6 Sol": "square", "GPT-6 Luna": "diamond", "Gemini 3.8 Flash": "triangle" };
+function mark(shape, x, y, color, hollow, r = 9) {
+  const a = `fill="${hollow ? "var(--surface)" : color}" stroke="${hollow ? color : "var(--surface)"}" stroke-width="${hollow ? 3 : 2}"`;
+  if (shape === "circle") return `<circle cx="${x}" cy="${y}" r="${r}" ${a}/>`;
+  if (shape === "square") return `<rect x="${x - r + 1}" y="${y - r + 1}" width="${2 * r - 2}" height="${2 * r - 2}" ${a}/>`;
+  if (shape === "diamond") return `<path d="M${x} ${y - r - 1}L${x + r + 1} ${y}L${x} ${y + r + 1}L${x - r - 1} ${y}Z" ${a}/>`;
+  return `<path d="M${x} ${y - r - 1}L${x + r + 1} ${y + r - 1}L${x - r - 1} ${y + r - 1}Z" ${a}/>`;
+}
+function drawScatter(fmt) {
+  const W = 960, H = 470, L = 70, R = 30, T = 62, B = 62;
+  const x0 = Math.log10(0.00001), x1 = Math.log10(1);
+  const X = (c) => L + ((Math.log10(Math.max(c, 0.00001)) - x0) / (x1 - x0)) * (W - L - R);
+  const Y = (p) => T + (1 - p) * (H - T - B);
+  const pts = D.configs.map((c) => {
+    const fs = fmt === "all" ? D.formats : [fmt];
+    const rate = fs.reduce((a, f) => a + c.formats[f].decoded / c.formats[f].n, 0) / fs.length;
+    const cost = fs.reduce((a, f) => a + c.formats[f].cost, 0) / fs.length;
+    const dec = fs.reduce((a, f) => a + c.formats[f].decoded, 0), n = fs.reduce((a, f) => a + c.formats[f].n, 0);
+    return { c, rate, cost, dec, n, x: X(cost), y: Y(rate) };
+  });
+  let s = "";
+  for (const p of [0, 0.25, 0.5, 0.75, 1]) s += `<line x1="${L}" x2="${W - R}" y1="${Y(p)}" y2="${Y(p)}" stroke="var(--hair)" stroke-width="1"/><text class="tick" x="${L - 10}" y="${Y(p) + 4}" text-anchor="end">${p * 100}%</text>`;
+  for (const [v, label] of [[0.0001, "$0.0001"], [0.001, "$0.001"], [0.01, "$0.01"], [0.1, "$0.10"]]) s += `<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H - B}" stroke="var(--hair)" stroke-width="1"/><text class="tick" x="${X(v)}" y="${H - B + 20}" text-anchor="middle">${label}</text>`;
+  s += `<line x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}" stroke="var(--ink)" stroke-width="2"/>`;
+  s += `<text class="axis" x="${(L + W - R) / 2}" y="${H - 12}" text-anchor="middle">Average cost of one call (log scale)</text>`;
+  s += `<text class="axis" x="${L - 52}" y="20">Images decoded exactly</text>`;
+  const luna = ["reasoning off", "low effort", "high effort"].map((e) => pts.find((p) => p.c.name === "GPT-6 Luna" && p.c.effort === e));
+  s += `<polyline points="${luna.map((p) => p.x + "," + p.y).join(" ")}" fill="none" stroke="var(--ink2)" stroke-width="1.5" stroke-dasharray="5 5"/>`;
+  // labels: try beside the point, then above, then stacked further below with a
+  // leader line; take the first spot clear of every point and earlier label
+  const boxes = pts.map((p) => [p.x - 14, p.y - 14, p.x + 14, p.y + 14]);
+  const overlap = (b) => boxes.reduce((a, o) => a + Math.max(0, Math.min(b[2], o[2]) - Math.max(b[0], o[0])) * Math.max(0, Math.min(b[3], o[3]) - Math.max(b[1], o[1])), 0);
+  let labels = "";
+  for (const p of [...pts].sort((a, b) => b.x - a.x)) {
+    const w = Math.max(p.c.name.length * 7.6, p.c.effort.length * 6.4) + 8;
+    const spots = [[p.x + 16, p.y - 14, "start", 0], [p.x - 16 - w, p.y - 14, "end", 0], [p.x - w / 2, p.y - 48, "middle", 0]];
+    if (p.c.name === "GPT-6 Luna") spots.unshift([p.x + 16, p.y + 2, "start", 0]); // below the dashed line
+    for (let k = 0; k < 6; k++) for (const dx of [0, -0.5, 0.5]) spots.push([p.x - w / 2 + dx * w, p.y + 18 + 38 * k, "middle", k]);
+    const ok = spots.filter(([bx, by]) => bx > L + 2 && bx + w < W - 4 && by > 24 && by + 32 < H - B - 2);
+    const pool = ok.length ? ok : spots;
+    const [bx, by, anchor, far] = pool.find(([bx, by]) => !overlap([bx, by, bx + w, by + 32])) || pool.reduce((m, c) => (overlap([c[0], c[1], c[0] + w, c[1] + 32]) < overlap([m[0], m[1], m[0] + w, m[1] + 32]) ? c : m));
+    boxes.push([bx, by, bx + w, by + 32]);
+    const tx = anchor === "start" ? bx : anchor === "end" ? bx + w : bx + w / 2;
+    if (far) labels += `<line x1="${p.x}" y1="${p.y + 12}" x2="${tx}" y2="${by}" stroke="var(--ink2)" stroke-width="1"/>`;
+    labels += `<text class="lab" x="${tx}" y="${by + 13}" text-anchor="${anchor}">${p.c.name}</text><text class="lab2" x="${tx}" y="${by + 28}" text-anchor="${anchor}">${p.c.effort}</text>`;
+  }
+  for (const p of [...pts].sort((a, b) => b.x - a.x)) {
+    const t = `<b>${p.c.name}, ${p.c.effort}</b>${p.dec} of ${p.n} decoded (${Math.round(p.rate * 100)}%)<br>${money(p.cost)} per call on average`;
+    s += `<g class="pt" tabindex="0" data-tip="${esc(t)}">${mark(SHAPE[p.c.name], p.x, p.y, COLOR[p.c.vendor], p.c.effort === "reasoning off")}</g>`;
+  }
+  $("scatter").innerHTML = s + labels;
+  document.querySelectorAll("#scatterFmt button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.f === fmt));
+  bindTips($("scatter"));
+}
+$("scatterFmt").innerHTML = `<button data-f="all">All formats</button>` + D.formats.map((f) => `<button data-f="${f}">${FMT[f][0]}</button>`).join("");
+$("scatterFmt").addEventListener("click", (e) => e.target.dataset.f && drawScatter(e.target.dataset.f));
+drawScatter(D.formats.includes(location.hash.slice(1)) ? location.hash.slice(1) : "all");
+const lg = (shape, vendor, hollow, label) => `<span><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">${mark(shape, 12, 12, COLOR[vendor], hollow, 8)}</svg>${label}</span>`;
+$("legend").innerHTML = lg("circle", "anthropic", false, "Claude Sonnet 5.5") + lg("square", "openai", false, "GPT-6 Sol") + lg("diamond", "openai", false, "GPT-6 Luna") + lg("triangle", "google", false, "Gemini 3.8 Flash") + lg("diamond", "openai", true, "Hollow: reasoning off");
+
+// ---------- gallery
+const TAG = { decoded: ["DECODED", 1], flipped: ["DECODED, FLIPPED", 1], wrong: ["WRONG", 0], guess: ["LABELLED A GUESS", 0], declined: ["DECLINED TO GUESS", 0] };
+const right = (g) => g.reduce((a, row, y) => a + [...row].filter((ch, x) => ch === SEVEN[y][x]).length, 0);
+$("galleryGrid").innerHTML =
+  `<figure>${px(SEVEN)}<figcaption><b>The real image</b><small>what was encoded</small><span class="tag solid">TRUTH</span></figcaption></figure>` +
+  D.gallery.map((g) => {
+    const flip = g.verdict === "flipped";
+    const pic = g.grid ? px(g.grid, flip ? null : SEVEN) : `<div class="empty">no grid given</div>`;
+    const score = g.grid ? (flip ? "every pixel right, black and white swapped" : `${right(g.grid)} of 64 pixels right`) : "";
+    const [label, solid] = TAG[g.verdict];
+    const work = g.tokens ? `${g.tokens.toLocaleString()} reasoning tokens, ${Math.round(g.seconds)}&nbsp;s` : `no reasoning, ${Math.round(g.seconds)}&nbsp;s`;
+    return `<figure>${pic}<figcaption><b>${g.name}</b><small>${g.setting}</small><span class="said">${g.said}</span><small>${score}${score ? "<br>" : ""}${work}</small><span class="tag${solid ? " solid" : ""}">${label}</span></figcaption></figure>`;
+  }).join("");
+
+// ---------- spend
+const NAMES = { "openai/gpt-6-luna": "GPT-6 Luna", "anthropic/claude-sonnet-5.5": "Claude Sonnet 5.5", "openai/gpt-6-sol": "GPT-6 Sol", "google/gemini-3.8-flash": "Gemini 3.8 Flash" };
+$("spend").innerHTML = `<thead><tr><th>Model</th><th class="num">Calls</th><th class="num">Spend</th></tr></thead><tbody>` +
+  D.spend.map((r) => `<tr><td>${NAMES[r.model]}</td><td class="num">${r.calls}</td><td class="num">$${r.cost.toFixed(2)}</td></tr>`).join("") +
+  `<tr><td><b>Total</b></td><td class="num"><b>${D.totalCalls}</b></td><td class="num"><b>$${D.totalCost.toFixed(2)}</b></td></tr></tbody>`;
+</script>
+</body>
+</html>
