@@ -1,0 +1,3 @@
+The following is a base64-encoded PGM (binary, P5) image file. The image is 16x16 pixels, black and white. Do not use any tools or run any code. First reconstruct the pixel grid, writing one row per line using 1 for a black pixel and 0 for a white pixel. Then tell me what the image shows. Then give your confidence (low/medium/high).
+
+UDUKMTYgMTYKMjU1Cv//AAD///8A//8AAAAA/wAAAAAA//8A/wD/AP////8AAAAAAAAAAAD/////AAD/AAD//wD/AP8AAP8AAP//AAD/AP8A/wD//wD/////AAD//wAA////AP8A/wAAAP///wD/AAAA//8AAP8AAAAAAP8A/wAAAAAA/wD/AP////8A//8A/wD/AAD/AAAAAP8A//8AAAD//wAA/wD//////wAAAAAAAP8A////AAD//////////////wD/AP//AP//AP///////wD/AAD//wAA/wD/////AAAAAAAA/wAAAP8AAAD//wD/AAD/AAAA//////8A/wAA//////8A/wD///8=

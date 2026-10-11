@@ -2,7 +2,7 @@
 
 **Results page:** https://atharva-729.github.io/base64-image-probe/ · **Results report:** [results/api_runs/README.md](results/api_runs/README.md)
 
-We gave language models the base64 text of tiny image files, with no tools and no image input, and asked them to reconstruct every pixel. Two of four models (Claude Sonnet 5.5 and GPT-6 Sol) decoded every image in every format, including a compressed PNG of random noise. It only works when the model reasons, and it costs 6–7 cents and about a minute per PNG. Total spend was $0.97 over 128 API calls.
+We gave language models the base64 text of tiny image files, with no tools and no image input, and asked them to reconstruct every pixel. On seven 8×8 images in five formats, GPT-6 Sol decoded all 35 and Claude Sonnet 5.5 decoded 33, both including compressed PNGs of random noise. It only works when the model reasons, and a PNG costs 4–7 cents and most of a minute. Total spend was $2.41 over 218 API calls.
 
 This README covers what we were trying to find out, the technical background, and what actually happened, including the wrong turns.
 
@@ -51,7 +51,7 @@ The encoder picks the block type, and this turned out to matter. Random noise do
 
 ### Images
 
-Seven hand-defined shapes (digits 1, 7, 0; an X, a square, a diagonal, a circle) and two random-noise images, each at 8×8, 16×16 and 32×32. The runs used four of them: `digit_7`, `shape_x`, `noise_a`, `noise_b`.
+Seven hand-defined shapes (digits 1, 7, 0; an X, a square, a diagonal, a circle) and three random-noise images, each at 8×8, 16×16 and 32×32. The final comparison uses seven of them at 8×8: `digit_1`, `digit_7`, `shape_x`, `shape_circle`, `noise_a`, `noise_b`, `noise_c`.
 
 The noise images are the control against guessing. A 7 can be guessed from a vague impression. Random pixels cannot, and chance is 50% per pixel, so an exact noise reconstruction can only come from decoding.
 
@@ -84,7 +84,7 @@ Requests go to the OpenRouter chat completions API as a single user message. No 
 
 ### Guardrails on spending
 
-The whole project had a $5 key and a self-imposed limit of $1.25. [run_openrouter.py](run_openrouter.py) enforces it:
+The project ran on $5 keys with a self-imposed limit: $1.25 at first, then a further $1.75 for the validation round. [run_openrouter.py](run_openrouter.py) enforces it:
 
 - Every request and full reply is appended to [responses.jsonl](responses.jsonl).
 - A call is identified by model, prompt, effort and run number, and is never sent twice.
@@ -139,10 +139,10 @@ The cap was doubled to 24,000 and the cut-off calls were resent. To make that po
 
 Two things came out of this:
 
-- **Every grid Luna did produce on PNG was pixel-perfect**, including one compressed noise image. It finishes correctly, declines, or runs out of tokens. It never returned a wrong grid.
+- **Every grid Luna produced on PNG in this round was pixel-perfect**, including one compressed noise image. It looked as if it either finishes correctly, declines, or runs out of tokens. The validation round (step 9) later found two wrong grids.
 - **The compression inside the PNG predicts the outcome.** Both 16×16 PNGs that use stored (uncompressed) blocks were decoded exactly. The fixed-Huffman 8×8 ones succeeded on some runs. The one dynamic-Huffman file was not decoded. This was checked by reading the block type from the files; that it explains the pattern is an inference from eight files.
 
-In total 23 calls were cut off with no answer, costing $0.19, about a fifth of everything spent.
+In total 23 calls were cut off with no answer, costing $0.19, about a fifth of what had been spent by then.
 
 ### 6. A wrong turn: "so is BMP better than PNG?"
 
@@ -156,21 +156,32 @@ Partway through, the Luna results looked like advice: convert PNGs to BMP to sav
 
 The original last phase covered two formats for the three pricier models. What was actually wanted was a model × format comparison of accuracy and cost, and only Luna had all five formats. The phase was redesigned: Sonnet (high), Sol (medium) and Gemini (low) on all five formats, on the 7 and one noise image, with the 16×16 cells dropped to pay for it. The caps for Sonnet and Sol were raised to 12,000, which mattered: Sol needed 8,881 tokens for the noise PNG.
 
-### 8. Final results
+### 8. First comparison, on two images
 
-| Model | Effort | Text grid | PBM | PGM | BMP | PNG | Avg. cost per PNG call |
-|---|---|---|---|---|---|---|---|
-| Claude Sonnet 5.5 | high | 2 of 2 | 2 of 2 | 2 of 2 | 2 of 2 | 2 of 2 | $0.069 |
-| GPT-6 Sol | medium | 2 of 2 | 2 of 2 | 2 of 2 | 2 of 2 | 2 of 2 | $0.063 |
-| GPT-6 Luna | high | 2 of 2 | 2 of 2 | 2 of 2 | 1 of 2 | 3 of 6 | $0.010 |
-| Gemini 3.8 Flash | low | 2 of 2 | 2 of 2 | 0 of 2 | 1 of 2 | 0 of 2 | $0.012 |
-| GPT-6 Luna | off | 2 of 2 | 0 of 2 | 0 of 2 | 0 of 2 | 0 of 2 | under $0.001 |
+Sonnet and Sol each decoded 10 of 10 (the 7 and one noise image in five formats), noise PNG included. Luna got 8 of 10 with half its PNG attempts cut off, and Gemini at low effort got 5 of 10.
 
-Two images per cell (the 7 and `noise_a`, 8×8); Luna's PNG cell has three runs of each.
+That looked like a clean result, and two images per cell is not enough to call it one. Two claims written at this point did not survive the next round: that Sonnet and Sol "decoded everything", and that Luna "never returned a wrong grid" on PNG.
 
-- Sonnet and Sol decoded everything, including the PNG of random noise. Sol was cheaper on every format.
-- PNG cost Sonnet and Sol 6–7 cents and about a minute. The same picture as PBM cost under a cent and a few seconds.
-- Gemini at low effort got PBM right and failed PGM and PNG, twice with a confident wrong answer.
+### 9. Validation on seven images
+
+The comparison was rerun on seven 8×8 images: the 1, the 7, the cross, the circle, and three noise images (a third was generated for this). Token caps were set by price: 32,000 for Luna, 10,000 for Gemini, 12,000 for Sol and Sonnet. Gemini ran last so that a budget stop would drop its calls first. All 90 new calls completed for $1.45, with none cut off.
+
+Images decoded pixel-for-pixel, out of 7:
+
+| Model | Effort | Text grid | PBM | PGM | BMP | PNG | Total | Avg. cost per call |
+|---|---|---|---|---|---|---|---|---|
+| GPT-6 Sol | medium | 7 | 7 | 7 | 7 | 7 | 35 of 35 | $0.015 |
+| Claude Sonnet 5.5 | high | 7 | 7 | 7 | 7 | 5 | 33 of 35 | $0.026 |
+| GPT-6 Luna | high | 7 | 7 | 5 | 3 | 2 | 24 of 35 | $0.004 |
+| Gemini 3.8 Flash | low | 7 | 6 | 2 | 4 | 0 | 19 of 35 | $0.015 |
+
+One run per cell. For Luna, three of the PNG cells are earlier calls that ran out of tokens at a 24,000 cap.
+
+- **Sol is the only model that decoded everything**, including all three noise PNGs. On four of its seven PNGs the grid was exact with black and white swapped.
+- **Sonnet missed two PNGs**, the 1 (61 of 64 pixels) and the cross (62 of 64). It decoded all three noise PNGs.
+- **Luna does return wrong grids.** On PNG it gave wrong grids for the 1 and the circle. Its BMP misses were mostly a few pixels off.
+- **Gemini at low effort got no PNGs**, and 10 of its 16 misses came with high confidence.
+- **PNG is the expensive format:** about 45 seconds and 4–7 cents for Sol and Sonnet, against seconds and under a cent for PBM.
 
 ![Average cost of one call, by model and format](results/api_runs/cost.svg)
 
@@ -178,7 +189,7 @@ Full numbers, per-model detail and caveats are in the [results report](results/a
 
 ## What we learned
 
-1. **Models can decode a small image from its bytes by reasoning alone.** With tools unavailable, two models reconstructed compressed PNGs of random noise exactly.
+1. **Models can decode a small image from its bytes by reasoning alone.** With tools unavailable, two models reconstructed three compressed PNGs of random noise exactly.
 2. **Reasoning is the switch.** Without it, accuracy is at chance. The same model on the same files produces exact decodes once it reasons.
 3. **Format and length set the cost.** Compression is the expensive part, and within PNG the block type matters more than the image size.
 4. **Decoding is not recognising.** Luna decoded the X exactly and called it "a white diamond on a black background", and decoded the 7 exactly and described "a short horizontal bar with a zigzagging stem".
@@ -187,6 +198,7 @@ Full numbers, per-model detail and caveats are in the [results report](results/a
 ## What we got wrong or would change
 
 - **"PNG is near impossible"** was the starting hypothesis. For tiny images it is merely expensive.
+- **Two images per cell overstated the result.** "Decoded everything" became 33 of 35 for Sonnet, and "never returns a wrong grid" turned out false for Luna, once seven images were run.
 - **The colour convention in the prompt is a trap.** Asking for 1 = black when PNG stores 0 = black caused inverted-but-exact grids. Decoding and interpretation should be scored separately, which the scorer now does.
 - **Token caps were set too low at first** for the cheap model, and the cut-off calls were pure waste. A cap bounds cost, but it also bounds how long a model can think, so a failure at the cap means "did not finish", not "cannot".
 - **Gemini is under-tested.** Its medium setting was dropped after one expensive failure, and its chat-app success with extended thinking was never reproduced through the API.
@@ -194,10 +206,10 @@ Full numbers, per-model detail and caveats are in the [results report](results/a
 
 ## Limits
 
-- Sonnet, Sol and Gemini have one run per cell on two images. The counts are small.
+- The final comparison is seven images with one run per cell. Luna's repeat runs showed the same call can succeed or fail between runs, so single runs are noisy.
 - All images are 8×8 or 16×16, black and white, 20–130 characters of base64. A real photo is hundreds of thousands of characters. Nothing here says the result carries over.
 - Models were not run at the same effort level, because each has a different range. Each is reported at a setting where it reasons.
-- The 32×32 images, the blind and guided prompt variants, and five of the nine images were generated but never run.
+- The 32×32 images, the blind and guided prompt variants, and three of the ten images were generated but never run.
 
 ## Repository
 
@@ -222,7 +234,8 @@ python run_openrouter.py --check-key           # key limit and usage, free
 python run_openrouter.py --phase 1 --dry-run   # list calls and worst-case cost, free
 python run_openrouter.py --phase 1             # pilot
 python run_openrouter.py --phase 2             # GPT-6 Luna sweep
-python run_openrouter.py --phase 3             # other models, all formats
+python run_openrouter.py --phase 3             # other models, all formats, two images
+python run_openrouter.py --phase 4             # all models, seven images
 python score.py
 python make_table.py
 python make_site.py

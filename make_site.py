@@ -10,7 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-IMAGES = ("digit_7", "noise_a")  # the two 8x8 images every model was given
+IMAGES = ("digit_1", "digit_7", "shape_x", "shape_circle", "noise_a", "noise_b", "noise_c")  # the 8x8 validation set
 FORMATS = ("grid", "pbm", "pgm", "bmp", "png")
 # (model id, effort, name, effort label, vendor); only settings run on all five formats
 CONFIGS = (
@@ -51,7 +51,7 @@ encodings = {(e["name"], e["size"]): e for e in json.loads((ROOT / "encodings.js
 
 cells = defaultdict(list)
 for r in csv.DictReader(open(ROOT / "results.csv")):
-    if r["size"] == "8" and r["image"] in IMAGES:
+    if r["size"] == "8" and r["image"] in IMAGES and r["run"] == "1":
         cells[r["model"], r["effort"], r["format"]].append(r)
 
 configs = []
@@ -111,7 +111,7 @@ data = {
     "configs": configs,
     "formats": list(FORMATS),
     "gallery": gallery,
-    "truth": {name: truth[name, 8] for name in ("digit_7", "shape_x", "noise_a", "noise_b")},
+    "truth": {name: truth[name, 8] for name in IMAGES},
     "encodings": {fmt: seven[fmt] for fmt in FORMATS},
     "spend": [{"model": m, "calls": c, "cost": v} for m, (c, v) in sorted(spend.items(), key=lambda kv: -kv[1][1])],
     "totalCalls": len(ok),

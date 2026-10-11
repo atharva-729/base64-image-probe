@@ -6,8 +6,8 @@ results/api_runs/:
   cost.svg      average cost of one call
   table.md      the same numbers as a Markdown table
 
-Only 8x8 images that every model was given are counted, so the rows compare
-like with like. A decode counts if every pixel is right, including when the
+Only the seven 8x8 validation images are counted, first run of each, so the
+rows compare like with like. A decode counts if every pixel is right, including when the
 model has black and white swapped: that is a misreading of the colour
 convention, not a failure to decode.
 """
@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "results" / "api_runs"
-IMAGES = ("digit_7", "noise_a")
+IMAGES = ("digit_1", "digit_7", "shape_x", "shape_circle", "noise_a", "noise_b", "noise_c")
 FORMATS = (("grid", "Text grid"), ("pbm", "PBM"), ("pgm", "PGM"), ("bmp", "BMP"), ("png", "PNG"))
 # one row per model at the effort where it reasons, plus a no-reasoning baseline
 ROWS = (
@@ -32,7 +32,7 @@ SURFACE, INK, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#d9d8d2"
 
 cells = defaultdict(list)
 for r in csv.DictReader(open(ROOT / "results.csv")):
-    if r["size"] == "8" and r["image"] in IMAGES:
+    if r["size"] == "8" and r["image"] in IMAGES and r["run"] == "1":
         cells[r["model"], r["effort"], r["format"]].append(r)
 
 
@@ -114,7 +114,7 @@ def accuracy_lines(s):
 heatmap(
     OUT / "accuracy.svg",
     "Images decoded pixel-for-pixel from text alone",
-    "8×8 black-and-white images (a digit 7 and random noise), given as text with no tools. Formats run easiest to hardest.",
+    "Seven 8×8 black-and-white images (four shapes, three of random noise), given as text with no tools. Easiest format on the left.",
     ("none decoded", "all decoded"),
     lambda s: s["decoded"] / s["n"],
     accuracy_lines,

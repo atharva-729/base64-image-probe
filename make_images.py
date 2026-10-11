@@ -1,7 +1,7 @@
 """Stage 1: build the fixed test set from the README.
 
 Seven pure black-and-white images (digits 1, 7, 0; shapes X, square, diagonal,
-circle), each rasterised natively at 8x8, 16x16 and 32x32, plus two random-noise
+circle), each rasterised natively at 8x8, 16x16 and 32x32, plus three random-noise
 images per size. Noise has no shape to guess, so only real decoding scores on it.
 
 Outputs, under images/:
@@ -33,7 +33,7 @@ POLYLINES = {
     "shape_diagonal": [[(0, 0), (7, 7)]],
 }
 CIRCLE_RADIUS = 3.5 / 8  # ring centred on the image
-NOISE_SEEDS = {"noise_a": 1, "noise_b": 2}  # each pixel black with probability 1/2
+NOISE_SEEDS = {"noise_a": 1, "noise_b": 2, "noise_c": 3}  # each pixel black with probability 1/2
 
 
 def pixel_centres(n):

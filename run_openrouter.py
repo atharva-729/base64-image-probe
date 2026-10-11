@@ -46,14 +46,14 @@ OPUS = "anthropic/claude-opus-5.5"
 # `floor` is the lowest reasoning effort the model accepts: Gemini and Claude
 # cannot switch reasoning off.
 MODELS = {
-    LUNA: dict(price_in=0.10, price_out=0.50, cap=24000, floor="none"),  # 12000 cut off every PNG
-    GEMINI: dict(price_in=0.75, price_out=3.75, cap=12000, floor="low"),
+    LUNA: dict(price_in=0.10, price_out=0.50, cap=32000, floor="none"),  # 12000 cut off every PNG
+    GEMINI: dict(price_in=0.75, price_out=3.75, cap=20000, floor="low"),  # low effort gets half: 10000
     SONNET: dict(price_in=2.00, price_out=10.00, cap=12000, floor="low"),
     SOL: dict(price_in=2.00, price_out=10.00, cap=12000, floor="none"),
     OPUS: dict(price_in=4.00, price_out=20.00, cap=8000, floor="low"),
 }
-TOTAL_BUDGET = 1.25
-PHASE_BUDGET = {"1": 0.30, "2": 0.40, "3": 0.70}
+TOTAL_BUDGET = 2.75
+PHASE_BUDGET = {"1": 0.30, "2": 0.40, "3": 0.70, "4": 1.75}
 
 Call = namedtuple("Call", "phase model image size fmt effort run")
 
@@ -87,6 +87,15 @@ def plan(phase):
         for fmt in FORMATS:
             for image in ("digit_7", "noise_a"):
                 for m, effort in ((GEMINI, "low"), (SOL, "medium"), (SONNET, "high")):
+                    add(m, image, 8, fmt, effort, 1)
+    elif phase == "4":
+        # validation: seven 8x8 images in every format on every model, at the
+        # effort where each reasons. Gemini goes last, so a budget stop drops
+        # its calls and not the ones the main claim rests on.
+        images = ("digit_1", "digit_7", "shape_x", "shape_circle", "noise_a", "noise_b", "noise_c")
+        for m, effort in ((LUNA, "high"), (SOL, "medium"), (SONNET, "high"), (GEMINI, "low")):
+            for fmt in FORMATS:
+                for image in images:
                     add(m, image, 8, fmt, effort, 1)
     return calls
 
@@ -189,7 +198,8 @@ for c in calls:
     text = prompt_path(c).read_text(encoding="utf-8")
     k = cache_key(c, text)
     # a reply cut off with no answer is worth resending only at a larger cap
-    if k not in done and cut_off.get(k, 0) < max_tokens(c):
+    # (phase 4 only adds calls never sent before, so it leaves cut-off ones alone)
+    if k not in done and cut_off.get(k, 0) < max_tokens(c) and not (c.phase == "4" and k in cut_off):
         done.add(k)
         todo.append((c, text))
 todo = todo[: args.max]

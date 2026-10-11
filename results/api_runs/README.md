@@ -1,12 +1,12 @@
 # API runs: results
 
-**Status:** all planned runs are done. 128 replies from four models, 5–11 October 2026. Total spend: **$0.97** of a $1.25 cap.
+**Status:** complete. 218 replies from four models, 5–12 October 2026. Total spend: **$2.41**.
 
 ## The question, and the answer
 
 **Question:** if a model is given only the text of an image file (base64), with no tools and no image input, can it work out what the picture is?
 
-**Answer:** yes, for tiny images, when the model reasons. Claude Sonnet 5.5 and GPT-6 Sol decoded every image in every format, including a compressed PNG of random noise, which cannot be guessed.
+**Answer:** yes, for tiny images, when the model reasons. On seven 8×8 images in five formats, GPT-6 Sol decoded all 35 and Claude Sonnet 5.5 decoded 33. Both decoded all three compressed PNGs of random noise, which cannot be guessed.
 
 ![Share of images decoded exactly, by model and format](accuracy.svg)
 
@@ -16,16 +16,17 @@ How to read the charts:
 
 - **Rows** are models, each at the reasoning effort where it works, plus GPT-6 Luna with reasoning off as a baseline.
 - **Columns** are ways of storing the same picture, easiest to hardest. The text grid is the picture typed out as 0s and 1s (a sanity check). PBM, PGM and BMP list the pixels uncompressed. PNG compresses them, so the model has to decompress in its reasoning.
-- **Two images** per cell: a digit 7 and an 8×8 block of random noise. GPT-6 Luna's PNG cell has three runs of each.
-- **"Decoded"** means every one of the 64 pixels is right.
+- **Seven images** per cell: a 1, a 7, a cross, a circle and three blocks of random noise, one run each. The reasoning-off baseline was run on four of them.
+- **"Decoded"** means every one of the 64 pixels is right. A grid that is exact with black and white swapped counts, and is labelled.
 
 ## Main findings
 
-1. **The two stronger models decoded everything.** Sonnet 5.5 (high effort) and GPT-6 Sol (medium) each got 10 of 10, noise images included. No tools were available, so this is reasoning alone.
-2. **Without reasoning, nothing decodes.** GPT-6 Luna with reasoning off got the text grid and nothing else, and often stated high confidence anyway.
-3. **PNG is the expensive format.** For Sonnet and Sol a PNG costs 6–7 cents and about a minute, against under a cent and a few seconds for PBM. The picture is the same; decompressing is what costs.
-4. **The cheap model reaches PNG only sometimes.** GPT-6 Luna decoded 3 of 6 PNG attempts and ran out of its 24,000-token allowance on the rest, taking over three minutes a call.
-5. **Gemini 3.8 Flash at low effort is unreliable past the simplest format.** It got PBM right and failed PGM and PNG, twice giving a wrong picture with high confidence.
+1. **GPT-6 Sol decoded everything: 35 of 35.** That includes all three noise PNGs. No tools were available, so this is reasoning alone.
+2. **Claude Sonnet 5.5 decoded 33 of 35.** It got every noise PNG and missed two shape PNGs by two and three pixels.
+3. **Without reasoning, nothing decodes.** GPT-6 Luna with reasoning off got the text grid and nothing else.
+4. **PNG is the expensive format.** For Sol and Sonnet a PNG takes about 45 seconds and 4–7 cents, against seconds and under a cent for PBM.
+5. **GPT-6 Luna is solid on simple formats and fades after.** 7 of 7 on PBM, 5 on PGM, 3 on BMP, 2 on PNG, at about a quarter of Sol's cost.
+6. **Gemini 3.8 Flash at low effort is unreliable past PBM.** It got 0 of 7 PNGs, and 10 of its 16 misses came with high confidence.
 
 **What this is not.** It is not advice on how to send images to a model. Attaching an image normally uses the model's vision input, which is far cheaper and more reliable. The experiment measures how far text-only reasoning goes on raw file bytes.
 
@@ -33,130 +34,114 @@ How to read the charts:
 
 | Model | Effort | Format | Decoded | Avg. cost per call | Avg. reasoning tokens | Avg. time |
 |---|---|---|---|---|---|---|
-| Claude Sonnet 5.5 | high effort | Text grid | 2 of 2 | $0.003 | 0 | 4 s |
-| Claude Sonnet 5.5 | high effort | PBM | 2 of 2 | $0.008 | 598 | 7 s |
-| Claude Sonnet 5.5 | high effort | PGM | 2 of 2 | $0.035 | 3,200 | 23 s |
-| Claude Sonnet 5.5 | high effort | BMP | 2 of 2 | $0.020 | 1,704 | 15 s |
-| Claude Sonnet 5.5 | high effort | PNG | 2 of 2 | $0.069 | 6,560 | 50 s |
-| GPT-6 Sol | medium effort | Text grid | 2 of 2 | $0.002 | 143 | 4 s |
-| GPT-6 Sol | medium effort | PBM | 2 of 2 | $0.005 | 465 | 6 s |
-| GPT-6 Sol | medium effort | PGM | 2 of 2 | $0.017 | 1,628 | 15 s |
-| GPT-6 Sol | medium effort | BMP | 2 of 2 | $0.013 | 1,228 | 13 s |
-| GPT-6 Sol | medium effort | PNG | 2 of 2 | $0.063 | 6,170 | 58 s |
-| GPT-6 Luna | high effort | Text grid | 2 of 2 | $0.001 | 1,036 | 13 s |
-| GPT-6 Luna | high effort | PBM | 2 of 2 | $0.001 | 1,568 | 16 s |
-| GPT-6 Luna | high effort | PGM | 2 of 2 | $0.004 | 8,434 | 68 s |
-| GPT-6 Luna | high effort | BMP | 1 of 2 | $0.005 | 9,940 | 99 s |
-| GPT-6 Luna | high effort | PNG | 3 of 6 | $0.010 | 20,500 | 196 s |
-| Gemini 3.8 Flash | low effort | Text grid | 2 of 2 | $0.001 | 142 | 3 s |
-| Gemini 3.8 Flash | low effort | PBM | 2 of 2 | $0.009 | 2,128 | 14 s |
-| Gemini 3.8 Flash | low effort | PGM | 0 of 2 | $0.015 | 3,805 | 20 s |
-| Gemini 3.8 Flash | low effort | BMP | 1 of 2 | $0.019 | 4,936 | 28 s |
-| Gemini 3.8 Flash | low effort | PNG | 0 of 2 | $0.012 | 2,880 | 20 s |
-| GPT-6 Luna | reasoning off | Text grid | 2 of 2 | under $0.001 | 0 | 2 s |
-| GPT-6 Luna | reasoning off | PBM | 0 of 2 | under $0.001 | 0 | 2 s |
-| GPT-6 Luna | reasoning off | PGM | 0 of 2 | under $0.001 | 0 | 1 s |
-| GPT-6 Luna | reasoning off | BMP | 0 of 2 | under $0.001 | 0 | 2 s |
-| GPT-6 Luna | reasoning off | PNG | 0 of 2 | under $0.001 | 0 | 2 s |
+| Claude Sonnet 5.5 | high effort | Text grid | 7 of 7 | $0.002 | 0 | 3 s |
+| Claude Sonnet 5.5 | high effort | PBM | 7 of 7 | $0.008 | 577 | 7 s |
+| Claude Sonnet 5.5 | high effort | PGM | 7 of 7 | $0.032 | 2,984 | 21 s |
+| Claude Sonnet 5.5 | high effort | BMP | 7 of 7 | $0.018 | 1,460 | 13 s |
+| Claude Sonnet 5.5 | high effort | PNG | 5 of 7 | $0.069 | 6,640 | 50 s |
+| GPT-6 Sol | medium effort | Text grid | 7 of 7 | $0.002 | 110 | 3 s |
+| GPT-6 Sol | medium effort | PBM | 7 of 7 | $0.005 | 392 | 7 s |
+| GPT-6 Sol | medium effort | PGM | 7 of 7 | $0.017 | 1,613 | 16 s |
+| GPT-6 Sol | medium effort | BMP | 7 of 7 | $0.010 | 886 | 10 s |
+| GPT-6 Sol | medium effort | PNG | 7 of 7 | $0.044 | 4,287 | 45 s |
+| GPT-6 Luna | high effort | Text grid | 7 of 7 | under $0.001 | 749 | 10 s |
+| GPT-6 Luna | high effort | PBM | 7 of 7 | $0.001 | 1,663 | 18 s |
+| GPT-6 Luna | high effort | PGM | 5 of 7 | $0.004 | 7,934 | 67 s |
+| GPT-6 Luna | high effort | BMP | 3 of 7 | $0.005 | 10,767 | 94 s |
+| GPT-6 Luna | high effort | PNG | 2 of 7 | $0.010 | 19,792 | 165 s |
+| Gemini 3.8 Flash | low effort | Text grid | 7 of 7 | $0.001 | 217 | 3 s |
+| Gemini 3.8 Flash | low effort | PBM | 6 of 7 | $0.009 | 2,077 | 13 s |
+| Gemini 3.8 Flash | low effort | PGM | 2 of 7 | $0.026 | 6,807 | 42 s |
+| Gemini 3.8 Flash | low effort | BMP | 4 of 7 | $0.024 | 6,094 | 38 s |
+| Gemini 3.8 Flash | low effort | PNG | 0 of 7 | $0.014 | 3,486 | 23 s |
+| GPT-6 Luna | reasoning off | Text grid | 4 of 4 | under $0.001 | 0 | 2 s |
+| GPT-6 Luna | reasoning off | PBM | 0 of 4 | under $0.001 | 0 | 2 s |
+| GPT-6 Luna | reasoning off | PGM | 0 of 4 | under $0.001 | 0 | 2 s |
+| GPT-6 Luna | reasoning off | BMP | 0 of 4 | under $0.001 | 0 | 2 s |
+| GPT-6 Luna | reasoning off | PNG | 0 of 4 | under $0.001 | 0 | 2 s |
 
-Costs are per call, averaged over the calls in the cell. Luna's PNG figure counts only the final attempt at each call; its earlier attempts that were cut off at a smaller token cap are in the spend table below.
+| Model | Effort | Decoded | Avg. cost per call | Total for the 35 calls |
+|---|---|---|---|---|
+| GPT-6 Sol | medium | 35 of 35 | $0.015 | $0.54 |
+| Claude Sonnet 5.5 | high | 33 of 35 | $0.026 | $0.91 |
+| GPT-6 Luna | high | 24 of 35 | $0.004 | $0.15 |
+| Gemini 3.8 Flash | low | 19 of 35 | $0.015 | $0.52 |
 
 ## Setup
 
-Each model gets one text prompt through the OpenRouter API and returns text. No tools are passed, so it cannot run a decoder. This closes the gap in the earlier chat-UI runs, where the chatbot could have used code.
+Each model gets one text prompt through the OpenRouter API and returns text. No tools are passed, so it cannot run a decoder. This closes the gap in the earlier chat-app runs, where the chatbot could have used code.
 
 - **Prompt:** the model writes out the pixel grid (1 = black), then names the image and its confidence.
-- **Images:** `digit_7`, `shape_x`, and two random-noise images. Noise has no shape to guess; chance is 50% per pixel.
+- **Images:** four shapes and three random-noise images, all 8×8. Noise has no shape to guess; chance is 50% per pixel.
 - **Reasoning effort** is set per call. Sonnet 5.5 and Gemini 3.8 Flash cannot switch reasoning off through the API.
-- **Scoring:** the grid in the reply is compared with the true pixels. A grid that is exact with black and white swapped counts as decoded.
+- **Token caps** for the final round, set by price: 32,000 for Luna, 10,000 for Gemini at low effort, 12,000 for Sol and Sonnet. Three of Luna's PNG cells are earlier calls made at a 24,000 cap.
+- **Scoring:** the grid in the reply is compared with the true pixels.
 
-Every request and reply is in [responses.jsonl](../../responses.jsonl); per-reply scores are in [results.csv](../../results.csv). The charts and table are rebuilt by `make_table.py`.
+Every request and reply is in [responses.jsonl](../../responses.jsonl); per-reply scores are in [results.csv](../../results.csv). The charts and table are rebuilt by `make_table.py`. The technical background and the full history of the project are in the [main README](../../README.md).
 
 ## Findings in detail
 
-### 1. Sonnet 5.5 and GPT-6 Sol: 10 of 10 each
+### 1. GPT-6 Sol
 
-- Both decoded the PNG of random noise exactly. Sol needed 8,804 reasoning tokens and 82 s for it; Sonnet 6,794 tokens and 50 s.
-- Sol is the cheaper of the two on every format, at about half Sonnet's cost on the uncompressed ones. On PNG they cost about the same.
-- Sol decoded the PNG of the 7 with black and white swapped, and still named it "a white 7 on a black background". PNG stores 0 as black and the prompt asks for 1 as black, so this is a prompt trap as much as a model error. On the noise PNG it got the colours right.
-- One run per cell, two images per format.
+- 35 of 35, at an average of 1.5 cents a call. Its most expensive call was 8,881 tokens for a noise PNG.
+- **Colour swaps on PNG.** Four of its seven PNG grids were exact with black and white swapped. PNG stores 0 as black and the prompt asks for 1 as black, so this is a prompt trap as much as a model error. It did not happen in the other formats.
+- With reasoning off (one call, the PNG of the 7) it declined to guess.
 
-### 2. Sonnet needs high effort; below that it does not reason
+### 2. Claude Sonnet 5.5
 
-At low and medium effort Sonnet did no reasoning at all on the PNG (zero reasoning tokens in four calls). Twice it refused to give a grid, saying it would be fabrication. Twice it gave a grid but labelled it a guess with low confidence. It never claimed a made-up answer with high confidence.
+- 33 of 35 at high effort, at 2.6 cents a call. The two misses were PNGs: the 1 (61 of 64 pixels) and the cross (62 of 64). All three noise PNGs were exact.
+- **It needs high effort.** At low and medium it did no reasoning on the PNG of the 7 (zero reasoning tokens in four calls). Twice it refused to give a grid, saying it would be fabrication; twice it gave a grid labelled as a guess with low confidence.
+- It never stated high confidence on a wrong answer.
 
-### 3. Gemini 3.8 Flash
+### 3. GPT-6 Luna
 
-- **At low effort** it reasoned on some calls and not others (0 to 5,761 reasoning tokens). It decoded PBM twice and the BMP of the 7. It got PGM and PNG wrong, and on two calls ran out of its 6,000-token cap.
-- **Wrong answers came with high confidence:** a "smiley face" for the PNG of the 7, and a grid at chance accuracy for the noise PNG.
-- **At medium effort** (one call, the PNG of the 7) it used its whole 12,000-token cap and gave an invented decode of an "X", again with high confidence. Medium was not run further because of cost.
-- In the earlier chat-UI run, Gemini with extended thinking took nearly six minutes and got this image right, so the caps here may be what holds it back.
+The cheapest model, so it was also swept across reasoning settings on four images (the 7, the cross, two noise images). Exact decodes out of 4:
 
-### 4. The cheap model in detail (GPT-6 Luna, four images per cell, 8×8 unless stated)
-
-Exact decodes out of 4:
-
-| Format | No reasoning | Low | High | Avg. reasoning tokens at high |
-|---|---|---|---|---|
-| Text grid (control) | 4 / 4 | 4 / 4 | 4 / 4 | 883 |
-| PBM (1 bit per pixel) | 0 / 4 | 2 / 4 | 4 / 4 | 1,727 |
-| PGM (1 byte per pixel) | 0 / 4 | 0 / 4 | 4 / 4 | 7,192 |
-| BMP | 0 / 4 | 4 / 4 | 2 / 4 | 8,519 |
-| PNG | 0 / 4 | 0 / 4 | 5 / 12 over three runs (finding 5) | 20,661 |
-| PBM at 16×16 | not run | not run | 2 / 4 | 5,917 |
-
-- The noise images decode as well as the shapes at high effort (PBM and PGM: 4 of 4 each), so this is decoding and not guessing.
-- PGM costs about four times the reasoning of PBM for the same picture, because the file is five times longer. Length of the base64, not just the format's complexity, drives the effort.
-- At low effort on PGM the model declined three times out of four, saying it could not decode reliably.
-- At 16×16 the PBM decodes held up: two exact, and the other two had 244 and 243 of 256 pixels right, one of them a noise image.
-- BMP did better at low effort than at high (4 of 4 against 2 of 4). The two high-effort misses were small: 56 and 62 of 64 pixels. With four images per cell this may be noise.
-
-### 5. PNG at high effort: Luna needs a very large reasoning allowance, and the compression inside the file decides the outcome
-
-With a 12,000-token cap, 15 of 16 PNG calls spent the whole cap on reasoning and returned no answer. Those were resent with a 24,000-token cap. Results at high effort, best cap per call:
-
-| Image | Size | Compression inside the PNG | Result |
+| Format | Reasoning off | Low | High |
 |---|---|---|---|
-| `digit_7` | 8×8 | Fixed Huffman | Run 1 cut off at 24,000; runs 2 and 3 exact (21,188 and 12,638 reasoning tokens) |
-| `shape_x` | 8×8 | Fixed Huffman | Runs 1 and 3 exact (13,984 and 14,955); run 2 cut off at 24,000 |
-| `noise_a` | 8×8 | Fixed Huffman | Runs 1 and 2 cut off at 24,000; run 3 exact (17,173) |
-| `noise_b` | 8×8 | Fixed Huffman | All three runs cut off at 24,000 |
-| `shape_x` | 16×16 | None (stored) | Exact, all 256 pixels (11,683) |
-| `noise_a` | 16×16 | None (stored) | Exact, all 256 pixels (9,094, at the 12,000 cap) |
-| `noise_b` | 16×16 | Fixed Huffman | Cut off at 24,000 |
-| `digit_7` | 16×16 | Dynamic Huffman | Answered after 22,790 tokens: said it could not decode and would not invent a grid |
+| Text grid | 4 | 4 | 4 |
+| PBM | 0 | 2 | 4 |
+| PGM | 0 | 0 | 4 |
+| BMP | 0 | 4 | 2 |
+| PNG | 0 | 0 | 5 of 12 (three runs) |
 
-- **Doubling the cap helped only partly.** Of the 15 retried calls, 6 came back exact, 1 declined, and 8 were cut off again at 24,000 tokens. At 8×8 that is 5 exact out of 12.
-- **Every grid Luna did give was exactly right.** At high effort on PNG it produced seven grids, all perfect, and never a wrong one. It either finishes correctly, declines, or runs out.
-- **The compression inside the PNG matters more than the image size.** Both PNGs whose pixel data is stored uncompressed were decoded, though they are 16×16. The compression type was read from the files; that it explains the pattern is an inference from eight images.
-- **The same call can succeed or fail between runs.** `digit_7` 8×8 was cut off once and exact twice; `shape_x` 8×8 was exact once and cut off once.
-- **One compressed noise PNG decoded exactly:** `noise_a` 8×8 on its third run, all 64 pixels. Random pixels cannot be guessed, so this is real decompression by the cheapest model. It is one success in six attempts on compressed noise PNGs.
-- One retried `digit_7` was pixel-exact but described as "a short horizontal bar with a zigzagging stem", not as a 7.
+- **Reasoning is the switch.** With it off, Luna got 0 of 16 encoded images at 38–67% pixel accuracy, and stated high confidence on 6 of them.
+- **On the seven-image set at high effort** it got 24 of 35. Its BMP misses were mostly a few pixels off.
+- **PNG is at the edge of its reach.** With a 12,000-token cap, 15 of 16 PNG calls used the whole cap and returned nothing. Resent at 24,000, 6 of those 15 came back exact, 1 declined and 8 were cut off again. The same call can succeed on one run and fail on the next.
+- **When it finishes a PNG it is usually right:** 8 of the 10 PNG grids it produced were pixel-perfect. The two wrong ones were the 1 (61 of 64) and the circle (48 of 64).
+- **The compression inside the PNG matters.** Both 16×16 PNGs that store their pixels uncompressed were decoded exactly; the fixed-Huffman 8×8 ones succeeded on some runs; the one dynamic-Huffman file was not decoded. The block types were read from the files; that they explain the pattern is an inference.
 
-### 6. Decoding the pixels is not the same as recognising the picture
+### 4. Gemini 3.8 Flash
 
-- GPT-6 Luna decoded the BMP of the X exactly and then called it "a white diamond on a black background".
+- **At low effort** it got 19 of 35: all the text grids, 6 of 7 PBM, 4 of 7 BMP, 2 of 7 PGM and no PNGs. How much it reasoned varied from call to call, from nothing to nearly its whole 10,000-token cap.
+- **Confident wrong answers.** 10 of its 16 misses came with high confidence, including a "smiley face" for the PNG of the 7.
+- **At medium effort** (one call, the PNG of the 7) it used its whole 12,000-token cap and gave an invented decode of an "X" with high confidence. Medium was not run further because of cost.
+- In the earlier chat-app run, Gemini with extended thinking took nearly six minutes and got that image right, so more reasoning than we gave it may be what it needs.
+
+### 5. Decoding the pixels is not the same as recognising the picture
+
+- GPT-6 Luna decoded the BMP of the cross exactly and called it "a white diamond on a black background".
 - Luna decoded the PNG of the 7 exactly and described it as "a short horizontal bar with a zigzagging stem".
-- GPT-6 Sol decoded the PNG of the 7 with the colours swapped (see finding 1).
+- GPT-6 Sol's colour-swapped PNGs are exact decodes read with the wrong convention.
 
 ## Cost and time
 
 | Model | Calls | Spend |
 |---|---|---|
-| GPT-6 Luna | 92 | $0.316 |
-| Claude Sonnet 5.5 | 14 | $0.286 |
-| GPT-6 Sol | 11 | $0.202 |
-| Gemini 3.8 Flash | 11 | $0.160 |
-| **Total** | **128** | **$0.965** |
+| Claude Sonnet 5.5 | 39 | $0.92 |
+| Gemini 3.8 Flash | 36 | $0.57 |
+| GPT-6 Sol | 36 | $0.54 |
+| GPT-6 Luna | 107 | $0.38 |
+| **Total** | **218** | **$2.41** |
 
 - Cost is almost entirely reasoning tokens. A no-reasoning call costs a fraction of a cent on any model.
-- 23 Luna calls were cut off at a token cap with no answer. They are billed all the same and cost $0.19.
-- One call timed out (Luna, `shape_x` 8×8 PNG, third run). The runner stopped and logged it, and the call was resent successfully.
+- 23 of Luna's early calls were cut off at a token cap with no answer. They are billed all the same and cost $0.19. None of the 90 calls in the final round was cut off.
+- One call timed out (Luna, cross PNG, third run). The runner stopped and logged it, and the call was resent successfully.
 
 ## Caveats
 
-- Sonnet, Sol and Gemini have one run per cell and two images per format. The pattern is clear, but the counts are small.
+- Seven images with one run per cell. Luna's repeat runs show a single call can go either way, so small differences between models should not be read into.
 - All images are 8×8 or 16×16 and black-and-white, about 20–130 characters of base64. A real photo is hundreds of thousands of characters; nothing here says these results carry over.
 - Pixel accuracy flatters sparse shapes: an all-white reply scores about 80% on a digit. The exact-decode counts and the noise images are the numbers to trust.
-- The token cap also limits how long a model can think, so a failure at the cap (Luna on PNG, Gemini) is "did not finish", not "cannot".
+- The token cap also limits how long a model can think, so a failure at the cap is "did not finish", not "cannot".
 - Models were not all run at the same effort level, because each has a different range. Rows compare each model at a setting where it reasons.
