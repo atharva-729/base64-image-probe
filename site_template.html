@@ -11,83 +11,100 @@
 <style>
 :root {
   color-scheme: light;
-  --bg: #f4f1e8; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #3b3a36; --hair: #c9c6ba; --cell: #ffffff;
-  --accent: #1c5cab; --bad: #c22f2f;
+  --paper: #f4f1e8; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #3b3a36; --hair: #c9c6ba;
+  --blue: #1c4f9c; --red: #c2361a; --green: #0a7d4f; --yellow: #ffd43b;
   --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a;
   --q0:#cde2fb; --q1:#b7d3f6; --q2:#9ec5f4; --q3:#86b6ef; --q4:#6da7ec; --q5:#5598e7; --q6:#3987e5; --q7:#2a78d6; --q8:#256abf; --q9:#1c5cab; --q10:#184f95;
   --f0:#0b0b0b; --f1:#0b0b0b; --f2:#0b0b0b; --f3:#0b0b0b; --f4:#0b0b0b; --f5:#0b0b0b; --f6:#0b0b0b; --f7:#ffffff; --f8:#ffffff; --f9:#ffffff; --f10:#ffffff;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --bg: #111110; --surface: #1a1a19; --ink: #f4f3ee; --ink2: #c9c8be; --hair: #45443f; --cell: #1a1a19;
-    --accent: #86b6ef; --bad: #ff8f8f;
-    --s1: #3987e5; --s2: #d95926; --s3: #199e70;
-    --q0:#0d366b; --q1:#104281; --q2:#184f95; --q3:#1c5cab; --q4:#256abf; --q5:#2a78d6; --q6:#3987e5; --q7:#5598e7; --q8:#6da7ec; --q9:#86b6ef; --q10:#b7d3f6;
-    --f0:#f4f3ee; --f1:#f4f3ee; --f2:#f4f3ee; --f3:#f4f3ee; --f4:#f4f3ee; --f5:#ffffff; --f6:#0b0b0b; --f7:#0b0b0b; --f8:#0b0b0b; --f9:#0b0b0b; --f10:#0b0b0b;
-  }
-}
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.6 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 .wrap { width: min(1000px, calc(100% - 48px)); margin-inline: auto; }
 .prose { max-width: 680px; }
 h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
-h1 { font-size: clamp(40px, 6.4vw, 76px); line-height: 1.02; }
-h2 { font-size: clamp(28px, 3.6vw, 40px); line-height: 1.12; margin-bottom: 14px; }
-h3 { font-size: 23px; line-height: 1.25; margin: 34px 0 8px; }
+h1 { font-size: clamp(42px, 6.6vw, 82px); line-height: 1.0; }
+h2 { font-size: clamp(30px, 4vw, 46px); line-height: 1.08; margin-bottom: 16px; }
+h3 { font-size: 24px; line-height: 1.25; margin: 34px 0 8px; }
 p { margin: 0 0 16px; }
-a { color: var(--ink); text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
-a:hover { color: var(--accent); }
+a { color: inherit; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; text-underline-offset: 3px; }
+mark { background: var(--yellow); color: var(--ink); padding: 1px 4px; border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .mono, code { font-family: "IBM Plex Mono", ui-monospace, monospace; }
-code { font-size: 0.88em; background: var(--surface); border: 1px solid var(--hair); padding: 1px 5px; border-radius: 3px; }
-.kicker { font: 600 12.5px/1 "IBM Plex Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink2); display: flex; gap: 12px; align-items: center; margin-bottom: 18px; }
-.kicker b { color: var(--bg); background: var(--ink); padding: 5px 7px; font-weight: 600; }
-section { padding: 72px 0; border-top: 2px solid var(--ink); }
 .lede { font-size: 21px; line-height: 1.5; }
-.note { font-size: 14.5px; color: var(--ink2); line-height: 1.5; }
+.note { font-size: 14.5px; line-height: 1.5; opacity: 0.86; }
 
-header.hero { padding: 56px 0 64px; }
-.topline { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 500 13px/1.4 "IBM Plex Mono", monospace; color: var(--ink2); padding-bottom: 40px; }
-.hero .lede { max-width: 640px; margin-top: 24px; }
-.figures { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid var(--ink); margin-top: 44px; background: var(--surface); }
-.figures div { padding: 18px 20px; border-right: 1px solid var(--ink); }
-.figures div:last-child { border-right: 0; }
-.figures strong { display: block; font: 500 38px/1 "Newsreader", serif; }
-.figures span { font-size: 14px; color: var(--ink2); }
+/* bands: each chapter is a full-width strip with its own colour */
+.band { padding: 84px 0; background: var(--paper); color: var(--ink); }
+.band.ink { background: var(--ink); color: var(--paper); }
+.band.blue { background: var(--blue); color: #ffffff; }
+.band.red { background: var(--red); color: #ffffff; }
+.band.green { background: var(--green); color: #ffffff; }
+.band.white { background: var(--surface); }
+.chapter { display: flex; align-items: baseline; gap: 14px; font: 600 13px/1 "IBM Plex Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; }
+.chapter b { font: 500 54px/0.8 "Newsreader", serif; letter-spacing: -0.02em; color: var(--red); }
+.band.ink .chapter b, .band.blue .chapter b, .band.red .chapter b, .band.green .chapter b { color: var(--yellow); }
 
-.panel { background: var(--surface); border: 2px solid var(--ink); }
+header.band { padding: 44px 0 76px; }
+.topline { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 500 13px/1.4 "IBM Plex Mono", monospace; opacity: 0.8; padding-bottom: 56px; }
+header .lede { max-width: 650px; margin-top: 26px; }
+.figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-top: 48px; }
+.figures div { padding: 18px 20px 20px; color: var(--ink); }
+.figures div:nth-child(1) { background: var(--yellow); }
+.figures div:nth-child(2) { background: #ffffff; }
+.figures div:nth-child(3) { background: #8fc0f5; }
+.figures div:nth-child(4) { background: #ff9a73; }
+.figures strong { display: block; font: 500 44px/1 "Newsreader", serif; }
+.figures span { font-size: 14.5px; font-weight: 500; }
+
+/* panels keep their own light surface on any band */
+.panel { background: var(--surface); color: var(--ink); border: 2px solid var(--ink); }
 .tabs { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--ink); }
 .tabs button, .chips button { font: 500 14px/1 "IBM Plex Mono", monospace; color: var(--ink); background: transparent; border: 0; cursor: pointer; padding: 13px 16px; }
 .tabs button { border-right: 1px solid var(--ink); }
-.tabs button[aria-pressed="true"], .chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
-.tabs button:focus-visible, .chips button:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.tabs button[aria-pressed="true"], .chips button[aria-pressed="true"] { background: var(--ink); color: var(--yellow); }
+.tabs button:focus-visible, .chips button:focus-visible { outline: 3px solid var(--red); outline-offset: -3px; }
 .chips { display: inline-flex; flex-wrap: wrap; border: 2px solid var(--ink); background: var(--surface); }
 .chips button { border-right: 1px solid var(--ink); padding: 10px 13px; }
 .chips button:last-child { border-right: 0; }
 .decoder { display: grid; grid-template-columns: minmax(0, 1fr) auto 220px; gap: 28px; align-items: center; padding: 28px; }
 .decoder .string { font: 500 15px/1.55 "IBM Plex Mono", monospace; word-break: break-all; white-space: pre-wrap; max-height: 220px; overflow: auto; }
-.decoder .arrow { font: 500 13px/1.3 "IBM Plex Mono", monospace; text-align: center; color: var(--ink2); }
-.decoder .arrow span { display: block; font-size: 30px; color: var(--ink); line-height: 1; }
-.about { border-top: 1px solid var(--ink); padding: 16px 28px; display: flex; gap: 28px; flex-wrap: wrap; align-items: baseline; }
-.about b { font: 600 13px/1 "IBM Plex Mono", monospace; white-space: nowrap; }
+.decoder .arrow { font: 600 13px/1.3 "IBM Plex Mono", monospace; text-align: center; }
+.decoder .arrow span { display: block; font-size: 34px; color: var(--red); line-height: 1; }
+.about { border-top: 2px solid var(--ink); padding: 16px 28px; display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; }
+.about b { font: 600 13px/1 "IBM Plex Mono", monospace; white-space: nowrap; padding: 6px 8px; color: #ffffff; }
+.level { font: 600 12px/1 "IBM Plex Mono", monospace; letter-spacing: 0.05em; margin-left: auto; white-space: nowrap; }
 
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--ink); background: var(--surface); margin: 28px 0; }
-.steps > div { padding: 22px; border-right: 1px solid var(--ink); }
-.steps > div:last-child { border-right: 0; }
-.steps i { font: 600 13px/1 "IBM Plex Mono", monospace; font-style: normal; color: var(--ink2); }
-.steps h4 { font: 600 17px/1.3 "IBM Plex Sans", sans-serif; margin: 10px 0 6px; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin: 30px 0; }
+.steps > div { padding: 22px; background: var(--surface); color: var(--ink); border-top: 8px solid var(--ink); }
+.steps > div:nth-child(1) { border-color: var(--yellow); }
+.steps > div:nth-child(2) { border-color: #ff9a73; }
+.steps > div:nth-child(3) { border-color: #6fd6ad; }
+.steps i { font: 600 13px/1 "IBM Plex Mono", monospace; font-style: normal; }
+.steps h4 { font: 600 18px/1.3 "IBM Plex Sans", sans-serif; margin: 10px 0 6px; }
 .steps p { font-size: 15px; margin: 0; }
 .imgs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 24px; max-width: 760px; }
-.imgs figure, .gallery figure { margin: 0; }
+figure { margin: 0; }
 .imgs figcaption { font: 500 13px/1.4 "IBM Plex Mono", monospace; margin-top: 8px; }
 svg.px { display: block; width: 100%; height: auto; border: 2px solid var(--ink); background: #ffffff; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin: 30px 0 8px; }
+.stat { padding: 22px 22px 24px; color: var(--ink); background: var(--surface); }
+.stat strong { display: block; font: 500 clamp(36px, 4.6vw, 58px)/1 "Newsreader", serif; letter-spacing: -0.02em; }
+.stat span { display: block; margin-top: 8px; font-size: 15px; line-height: 1.4; }
+.stat.r { background: var(--red); color: #ffffff; }
+.stat.g { background: var(--green); color: #ffffff; }
+.stat.y { background: var(--yellow); }
+.stat.b { background: var(--blue); color: #ffffff; }
+.stat.k { background: var(--ink); color: var(--paper); }
+
+.dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
+.dot.anthropic { background: var(--s1); } .dot.openai { background: var(--s2); } .dot.google { background: var(--s3); }
 
 .bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin: 26px 0 14px; }
 .heat { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; }
 .heat th { font: 600 13.5px/1.3 "IBM Plex Mono", monospace; padding: 8px 6px; text-align: center; }
-.heat th[scope="row"] { text-align: left; width: 190px; font: 600 15.5px/1.25 "IBM Plex Sans", sans-serif; padding: 6px 12px 6px 0; }
-.heat th small { display: block; font: 400 13px/1.3 "IBM Plex Sans", sans-serif; color: var(--ink2); }
+.heat th[scope="row"] { text-align: left; width: 200px; font: 600 15.5px/1.25 "IBM Plex Sans", sans-serif; padding: 6px 12px 6px 0; }
+.heat th small { display: block; font: 400 13px/1.3 "IBM Plex Sans", sans-serif; color: var(--ink2); margin-left: 18px; }
 .heat td { text-align: center; padding: 13px 4px; border-radius: 3px; height: 68px; cursor: default; }
 .heat td b { display: block; font: 600 19px/1.1 "IBM Plex Sans", sans-serif; }
 .heat td span { font-size: 12.5px; line-height: 1.25; display: block; margin-top: 3px; }
@@ -104,52 +121,59 @@ svg.px { display: block; width: 100%; height: auto; border: 2px solid var(--ink)
 #scatter .lab, #scatter .lab2 { paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
 #scatter .lab { font-size: 13.5px; font-weight: 600; }
 #scatter .lab2 { font-size: 12px; fill: var(--ink2); }
-#scatter .pt { cursor: default; }
 #scatter .pt:focus-visible { outline: 3px solid var(--ink); }
-.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14.5px; margin-top: 10px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14.5px; margin-top: 12px; }
 .legend span { display: inline-flex; align-items: center; gap: 7px; }
-#tip { position: fixed; z-index: 10; pointer-events: none; background: var(--ink); color: var(--bg); padding: 10px 12px; font-size: 13.5px; line-height: 1.45; max-width: 280px; border-radius: 3px; opacity: 0; transition: opacity .1s; }
-#tip b { display: block; font-size: 14.5px; }
+#tip { position: fixed; z-index: 10; pointer-events: none; background: var(--ink); color: var(--paper); padding: 10px 12px; font-size: 13.5px; line-height: 1.45; max-width: 280px; border-radius: 3px; opacity: 0; transition: opacity .1s; }
+#tip b { display: block; font-size: 14.5px; color: var(--yellow); }
 
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 30px 18px; margin-top: 28px; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 30px 18px; margin-top: 30px; }
 .gallery figcaption { margin-top: 10px; font-size: 14px; line-height: 1.4; }
 .gallery figcaption b { display: block; font-size: 15px; }
-.gallery figcaption small { color: var(--ink2); font-size: 13px; display: block; }
-.gallery q, .gallery .said { display: block; margin: 6px 0; quotes: none; }
-.tag { display: inline-block; font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: 0.04em; padding: 5px 7px; border: 1.5px solid var(--ink); margin-top: 2px; }
-.tag.solid { background: var(--ink); color: var(--bg); }
-.empty { aspect-ratio: 1; border: 2px dashed var(--ink); display: grid; place-items: center; text-align: center; font: 500 13px/1.4 "IBM Plex Mono", monospace; padding: 14px; color: var(--ink2); }
+.gallery figcaption small { opacity: 0.85; font-size: 13px; display: block; }
+.gallery .said { display: block; margin: 6px 0; }
+.tag { display: inline-block; font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: 0.04em; padding: 6px 8px; margin-top: 4px; border: 2px solid var(--ink); background: var(--surface); color: var(--ink); }
+.tag.good { background: var(--green); border-color: var(--green); color: #ffffff; }
+.tag.bad { background: var(--red); border-color: var(--red); color: #ffffff; }
+.tag.truth { background: var(--ink); color: var(--yellow); }
+.empty { aspect-ratio: 1; border: 2px dashed var(--ink); display: grid; place-items: center; text-align: center; font: 500 13px/1.4 "IBM Plex Mono", monospace; padding: 14px; background: var(--surface); }
 
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
-table.plain { width: 100%; border-collapse: collapse; font-size: 15px; margin: 14px 0 8px; }
+table.plain { width: 100%; border-collapse: collapse; font-size: 15px; }
 table.plain th, table.plain td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
 table.plain thead th { border-bottom: 2px solid var(--ink); font: 600 12.5px/1.3 "IBM Plex Mono", monospace; letter-spacing: 0.04em; text-transform: uppercase; }
 table.plain td.num, table.plain th.num { text-align: right; padding-right: 0; font-variant-numeric: tabular-nums; }
-blockquote { margin: 16px 0; padding: 14px 18px; border-left: 4px solid var(--ink); background: var(--surface); font-size: 16px; }
-blockquote cite { display: block; font: 500 13px/1.4 "IBM Plex Mono", monospace; font-style: normal; color: var(--ink2); margin-top: 8px; }
+table.plain tr:last-child td { border-bottom: 0; }
+table.plain small { color: var(--ink2); }
+.panel.pad { padding: 20px 24px; }
+.yes { font-weight: 600; color: var(--green); } .no { font-weight: 600; color: var(--red); } .meh { font-weight: 600; color: #8a5a00; }
+table.plain td.hit, table.plain td.miss, table.plain td.part { text-align: center; padding: 9px 6px; border-left: 3px solid var(--surface); font-weight: 600; }
+table.plain td.hit, table.plain td.miss, table.plain td.part { width: 21%; }
+td.hit { background: #d6f0e2; } td.miss { background: #fbe0d8; } td.part { background: #fff1b8; }
+blockquote { margin: 18px 0; padding: 20px 24px; background: var(--yellow); color: var(--ink); font: 500 22px/1.35 "Newsreader", serif; }
+blockquote cite { display: block; font: 500 13px/1.4 "IBM Plex Mono", monospace; font-style: normal; margin-top: 10px; }
+blockquote.small { font-size: 19px; padding: 16px 20px; }
+blockquote.plainq { background: var(--paper); border-left: 8px solid var(--green); }
+blockquote.redq { background: var(--paper); border-left: 8px solid var(--red); }
 ul.tight { padding-left: 20px; margin: 0 0 16px; }
-ul.tight li { margin-bottom: 8px; }
-.callout { border: 2px solid var(--ink); background: var(--surface); padding: 22px 24px; margin-top: 28px; }
-.callout h3 { margin-top: 0; }
-footer { border-top: 2px solid var(--ink); padding: 32px 0 64px; font-size: 14.5px; color: var(--ink2); }
-pre { background: var(--surface); border: 2px solid var(--ink); padding: 16px 18px; overflow-x: auto; font: 500 14px/1.6 "IBM Plex Mono", monospace; margin: 14px 0; }
+ul.tight li { margin-bottom: 9px; }
+pre { background: var(--surface); color: var(--ink); padding: 18px 20px; overflow-x: auto; font: 500 14px/1.6 "IBM Plex Mono", monospace; margin: 14px 0; }
+pre i { color: #6b6a63; font-style: normal; }
+footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color: var(--paper); border-top: 1px solid #45443f; }
 
 @media (max-width: 760px) {
   body { font-size: 16px; }
   .wrap { width: calc(100% - 32px); }
-  section { padding: 52px 0; }
-  .figures { grid-template-columns: 1fr 1fr; }
-  .figures div:nth-child(2) { border-right: 0; }
-  .figures div:nth-child(-n+2) { border-bottom: 1px solid var(--ink); }
+  .band { padding: 56px 0; }
+  .figures, .stats { grid-template-columns: 1fr 1fr; }
   .decoder { grid-template-columns: 1fr; padding: 20px; }
   .decoder .arrow span { transform: rotate(90deg); display: inline-block; }
   .decoder .grid { max-width: 200px; }
   .steps { grid-template-columns: 1fr; }
-  .steps > div { border-right: 0; border-bottom: 1px solid var(--ink); }
-  .steps > div:last-child { border-bottom: 0; }
   .imgs { grid-template-columns: 1fr 1fr; }
-  .two { grid-template-columns: 1fr; gap: 12px; }
+  .two { grid-template-columns: 1fr; gap: 20px; }
   .about { padding: 14px 20px; gap: 8px; }
+  .level { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } #tip { transition: none; } }
 </style>
@@ -157,217 +181,305 @@ pre { background: var(--surface); border: 2px solid var(--ink); padding: 16px 18
 <body>
 <div id="tip" role="status"></div>
 
-<header class="hero wrap">
-  <div class="topline"><span>base64-image-probe</span><span>An experiment, October 2026</span></div>
-  <h1>Can a model read a picture it can&rsquo;t see?</h1>
-  <p class="lede">We turned tiny images into strings of letters and digits, pasted them into four language models as plain text, and asked what the picture was. The models had no tools, no code and no vision. Two of them got every single pixel right.</p>
-  <div class="figures" id="figures"></div>
+<header class="band ink">
+  <div class="wrap">
+    <div class="topline"><span>base64-image-probe</span><span>An experiment, October 2026</span></div>
+    <h1>Can a model read a picture it <mark>can&rsquo;t see?</mark></h1>
+    <p class="lede">We turned tiny images into strings of letters and digits, pasted them into four language models as plain text, and asked what the picture was. No tools, no code, no vision. This is the story of what happened, including the parts where nothing did.</p>
+    <div class="figures" id="figures"></div>
+  </div>
 </header>
 
 <main>
-<section class="wrap" id="idea">
-  <div class="kicker"><b>01</b> The idea</div>
-  <div class="prose">
-    <h2>A picture is just a file, and a file can be written as text</h2>
-    <p>When you attach an image to a chat, the model looks at it with a separate vision system. We took that away. An image file is a sequence of bytes, and any bytes can be spelled out with ordinary characters using an encoding called base64. The result looks like gibberish.</p>
-    <p>The question is whether a model can work backwards from that gibberish to the picture, purely by reasoning. It is like being handed a page of Morse code and asked what the drawing is.</p>
-  </div>
-  <div class="panel" style="margin-top:28px">
-    <div class="tabs" id="fmtTabs" role="group" aria-label="File format"></div>
-    <div class="decoder">
-      <div><div class="note" id="fmtCount" style="margin-bottom:8px"></div><div class="string" id="fmtString"></div></div>
-      <div class="arrow"><span aria-hidden="true">&rarr;</span>model,<br>no tools</div>
-      <div class="grid" id="fmtGrid"></div>
+<section class="band">
+  <div class="wrap">
+    <div class="chapter"><b>1</b> The hunch</div>
+    <div class="prose">
+      <h2>A picture is a file, and a file can be written as text</h2>
+      <p>When you attach an image to a chat, the model looks at it with a separate vision system. But an image file is only a sequence of bytes, and any bytes can be spelled out in ordinary characters. That spelling is called base64, and it looks like gibberish.</p>
+      <p>Models read base64 text surprisingly well. So the hunch was: <mark>could a model read an image that way too</mark>, working backwards from the gibberish to the picture by reasoning alone? It is like being handed a page of Morse code and asked what the drawing is.</p>
     </div>
-    <div class="about"><b id="fmtName"></b><span id="fmtAbout"></span></div>
-  </div>
-  <p class="note" style="margin-top:12px">The same 8&times;8 picture of a 7, written five ways. Switch tabs to see what the model was actually given.</p>
-</section>
-
-<section class="wrap" id="setup">
-  <div class="kicker"><b>02</b> The setup</div>
-  <div class="prose">
-    <h2>Text in, text out, nothing else</h2>
-    <p>An earlier round used chat apps, and one objection sank it: a chatbot can quietly write code to decode the image and then look at the result. So every run here goes through the API with no tools attached. Whatever a model gets right, it worked out in its own reasoning.</p>
-  </div>
-  <div class="steps">
-    <div><i>STEP 1</i><h4>Draw a tiny image</h4><p>Black and white, 8 pixels by 8. Small enough that decoding it by hand is tedious and not hopeless.</p></div>
-    <div><i>STEP 2</i><h4>Save it five ways</h4><p>From a plain grid of 0s and 1s up to a compressed PNG. Same picture, very different amounts of work.</p></div>
-    <div><i>STEP 3</i><h4>Ask for every pixel</h4><p>The model must write out the full grid before naming the picture, so a lucky guess doesn&rsquo;t count.</p></div>
-  </div>
-  <div class="prose">
-    <h3>The test images</h3>
-    <p>Two shapes and two blocks of random noise. The noise matters most: nobody can guess random pixels, so a model that reproduces them exactly has really decoded the file.</p>
-  </div>
-  <div class="imgs" id="imgs"></div>
-</section>
-
-<section class="wrap" id="results">
-  <div class="kicker"><b>03</b> The result</div>
-  <div class="prose">
-    <h2>The stronger models decoded everything</h2>
-    <p>Each cell is two images: the 7 and one block of noise. A cell counts only when all 64 pixels are right.</p>
-  </div>
-  <div class="bar">
-    <div class="chips" id="heatView" role="group" aria-label="What the cells show">
-      <button data-v="acc" aria-pressed="true">Images decoded</button><button data-v="cost" aria-pressed="false">Cost per call</button>
+    <div class="panel" style="margin-top:30px">
+      <div class="tabs" id="fmtTabs" role="group" aria-label="File format"></div>
+      <div class="decoder">
+        <div><div class="note" id="fmtCount" style="margin-bottom:8px"></div><div class="string" id="fmtString"></div></div>
+        <div class="arrow"><span aria-hidden="true">&rarr;</span>model,<br>no tools</div>
+        <div class="grid" id="fmtGrid"></div>
+      </div>
+      <div class="about"><b id="fmtName"></b><span id="fmtAbout"></span><span class="level" id="fmtLevel"></span></div>
     </div>
-    <span class="note">Formats run easiest to hardest, left to right.</span>
-  </div>
-  <div class="scroll"><table class="heat" id="heat"></table></div>
-  <div class="scale" id="heatScale"></div>
-  <div class="two" style="margin-top:36px">
-    <ul class="tight">
-      <li><b>Claude Sonnet 5.5 and GPT-6 Sol went 10 for 10</b>, including a compressed PNG of random noise.</li>
-      <li><b>With reasoning switched off, nothing decodes.</b> GPT-6 Luna got the plain grid and nothing else.</li>
-    </ul>
-    <ul class="tight">
-      <li><b>PNG is where the cheap model runs out of room.</b> GPT-6 Luna got 3 of 6 and hit its token limit on the rest.</li>
-      <li><b>Gemini 3.8 Flash at low effort</b> managed the simplest format and little beyond it.</li>
-    </ul>
+    <p class="note" style="margin-top:12px">One 8&times;8 picture of a 7, stored five different ways. Switch tabs to see exactly what the model was handed each time.</p>
   </div>
 </section>
 
-<section class="wrap" id="tradeoff">
-  <div class="kicker"><b>04</b> Accuracy against cost</div>
-  <div class="prose">
-    <h2>What a correct answer costs</h2>
-    <p>Each point is one model at one reasoning setting. Up is better, left is cheaper. The cost axis is logarithmic: each gridline is ten times the one before.</p>
+<section class="band white">
+  <div class="wrap">
+    <div class="chapter"><b>2</b> The first try, and the objection</div>
+    <div class="two">
+      <div>
+        <h2>It seemed to work. That was the problem.</h2>
+        <p>The first round was done by hand, pasting the PNG of the 7 into chat apps. Two of five answers were pixel-perfect.</p>
+        <p>Then my manager pointed out the hole in it:</p>
+        <blockquote>A chatbot is an agent. It has access to code. It can save that string, convert it to an image, use its vision, and read it. You do not want that.</blockquote>
+        <p>He was right. A correct answer from a chat app proves nothing, because the app may have quietly run a decoder. <mark>Everything had to be redone where cheating is impossible.</mark></p>
+      </div>
+      <div>
+        <div class="panel pad">
+          <table class="plain">
+            <thead><tr><th>Chat app, by hand</th><th>Answer</th></tr></thead>
+            <tbody>
+              <tr><td><i class="dot anthropic"></i>Claude Opus 5.5<br><small>43 s</small></td><td><span class="yes">The digit 7.</span> Every pixel right.</td></tr>
+              <tr><td><i class="dot google"></i>Gemini 3.8 Flash, extended thinking<br><small>5 min 50 s</small></td><td><span class="yes">The digit 7.</span> Every pixel right.</td></tr>
+              <tr><td><i class="dot openai"></i>ChatGPT<br><small>about 50 s</small></td><td><span class="meh">Right pixels, colours swapped.</span> Could not name it.</td></tr>
+              <tr><td><i class="dot google"></i>Gemini 3.8 Flash, instant</td><td><span class="no">&ldquo;A hollow circle.&rdquo;</span> High confidence.</td></tr>
+              <tr><td><i class="dot google"></i>Gemini 3.6 Flash, instant</td><td><span class="no">&ldquo;The letter C.&rdquo;</span> High confidence.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note" style="margin-top:10px">Suggestive, and worthless as evidence. Nobody could say whether a tool had been used.</p>
+      </div>
+    </div>
   </div>
-  <div class="bar">
-    <div class="chips" id="scatterFmt" role="group" aria-label="Format shown"></div>
-    <span class="note">Choose a format to see how the picture changes.</span>
-  </div>
-  <div class="panel" style="padding:18px 18px 10px"><div class="scroll"><svg id="scatter" viewBox="0 0 960 470" role="img" aria-label="Scatter plot of share of images decoded against average cost per call"></svg></div></div>
-  <div class="legend" id="legend"></div>
-  <p class="note" style="margin-top:12px">Two images per format per point; GPT-6 Luna at high effort has six PNG attempts. With all formats selected, each point averages its five formats equally. The dashed line joins GPT-6 Luna&rsquo;s three settings, from reasoning off to high effort.</p>
 </section>
 
-<section class="wrap" id="gallery">
-  <div class="kicker"><b>05</b> What they answered</div>
-  <div class="prose">
-    <h2>One image, ten answers</h2>
-    <p>Every model was given the PNG of the 7. These are the grids they wrote back. A red dot marks a pixel that is wrong.</p>
+<section class="band blue">
+  <div class="wrap">
+    <div class="chapter"><b>3</b> Take the tools away</div>
+    <div class="prose">
+      <h2>Text in, text out, nothing else</h2>
+      <p>Every run from here on goes through the API with no tools attached. The model receives characters and returns characters. Whatever it gets right, it worked out in its own reasoning.</p>
+    </div>
+    <div class="steps">
+      <div><i>STEP 1</i><h4>Draw a tiny image</h4><p>Black and white, 8 pixels by 8. Small enough that decoding by hand is tedious and not hopeless.</p></div>
+      <div><i>STEP 2</i><h4>Store it five ways</h4><p>From a plain grid of 0s and 1s up to a compressed PNG. Same picture, very different amounts of work.</p></div>
+      <div><i>STEP 3</i><h4>Demand every pixel</h4><p>The model must write out the whole grid before naming the picture, so a lucky guess scores nothing.</p></div>
+    </div>
+    <div class="prose">
+      <h3>The test images</h3>
+      <p>Two shapes and two blocks of random noise. <mark>The noise is the real test</mark>: nobody can guess random pixels, so a model that reproduces them exactly has truly decoded the file.</p>
+    </div>
+    <div class="imgs" id="imgs"></div>
   </div>
-  <div class="gallery" id="galleryGrid"></div>
 </section>
 
-<section class="wrap" id="findings">
-  <div class="kicker"><b>06</b> What we learned</div>
-  <div class="two">
-    <div>
-      <h2>Reasoning is the switch</h2>
-      <p>The same model on the same files goes from coin-flip accuracy to exact decodes when it is allowed to think. GPT-6 Luna, four images per cell, exact decodes out of 4:</p>
+<section class="band">
+  <div class="wrap">
+    <div class="chapter"><b>4</b> The pilot</div>
+    <div class="prose">
+      <h2>One image, ten answers</h2>
+      <p>The first API calls sent every model the PNG of the 7. Here is what came back, drawn exactly as each model wrote it. A red dot marks a wrong pixel.</p>
+    </div>
+    <div class="gallery" id="galleryGrid"></div>
+    <div class="stats">
+      <div class="stat g"><strong>2 models</strong><span>decoded a compressed PNG with nothing but reasoning. The objection was answered.</span></div>
+      <div class="stat r"><strong>&ldquo;A smiley face&rdquo;</strong><span>Gemini&rsquo;s answer to a picture of a 7, with high confidence and zero reasoning.</span></div>
+      <div class="stat y"><strong>0 tokens</strong><span>of reasoning from Claude Sonnet 5.5 at low and medium effort. It only thought when set to high.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band white">
+  <div class="wrap">
+    <div class="chapter"><b>5</b> The switch</div>
+    <div class="two">
+      <div>
+        <h2>Reasoning is the whole difference</h2>
+        <p>GPT-6 Luna is the cheapest model here, so it got the full sweep: four images, five formats, three reasoning settings.</p>
+        <p>With reasoning off it scored <mark>0 of 16</mark> on the encoded images, with pixel accuracy of 38&ndash;67%. That is what flipping a coin gives. Turn reasoning up and the same model, on the same files, starts producing exact decodes.</p>
+        <p class="note">Each cell is exact decodes out of four images. The text grid needs no decoding, so it is right every time.</p>
+      </div>
+      <div class="panel pad">
+        <table class="plain">
+          <thead><tr><th>GPT-6 Luna</th><th class="num">Off</th><th class="num">Low</th><th class="num">High</th></tr></thead>
+          <tbody>
+            <tr><td>Text grid</td><td class="hit">4</td><td class="hit">4</td><td class="hit">4</td></tr>
+            <tr><td>PBM</td><td class="miss">0</td><td class="part">2</td><td class="hit">4</td></tr>
+            <tr><td>PGM</td><td class="miss">0</td><td class="miss">0</td><td class="hit">4</td></tr>
+            <tr><td>BMP</td><td class="miss">0</td><td class="hit">4</td><td class="part">2</td></tr>
+            <tr><td>PNG</td><td class="miss">0</td><td class="miss">0</td><td class="part">5 of 12</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="two" style="margin-top:36px">
+      <div>
+        <h3>Some models bluff when they don&rsquo;t think</h3>
+        <blockquote class="small redq">A classic pixel-art smiley face. Confidence: high.<cite>Gemini 3.8 Flash, no reasoning. The image was a 7.</cite></blockquote>
+      </div>
+      <div>
+        <h3>One of them refused to</h3>
+        <blockquote class="small plainq">A made-up grid would be fabricated, so I&rsquo;m not giving one.<cite>Claude Sonnet 5.5, no reasoning</cite></blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band red">
+  <div class="wrap">
+    <div class="chapter"><b>6</b> The wall</div>
+    <div class="two">
+      <div>
+        <h2>Then the cheap model ran out of room</h2>
+        <p>On PNG, GPT-6 Luna did something new. It did not answer wrongly. It did not answer at all. It reasoned until it hit its 12,000-token limit and returned an empty reply, 15 times out of 16.</p>
+        <p>So the limit was doubled to 24,000 and every failed call was sent again. That rescued some of them: 6 of the 15 came back pixel-perfect. Eight ran out of room a second time.</p>
+        <p><mark>Every grid Luna did manage on PNG was exactly right.</mark> It finishes correctly, declines, or runs out. It never returned a wrong one.</p>
+      </div>
+      <div>
+        <div class="stats" style="grid-template-columns:1fr 1fr;margin-top:0">
+          <div class="stat k"><strong>23</strong><span>calls that hit a limit and returned nothing</span></div>
+          <div class="stat y"><strong>$0.19</strong><span>paid for those empty replies, a fifth of everything spent</span></div>
+        </div>
+        <p class="note" style="margin-top:14px">An empty reply is billed like any other. This was the most expensive lesson of the project.</p>
+      </div>
+    </div>
+    <h3 style="margin-top:44px">Why some PNGs were easy</h3>
+    <div class="prose"><p>A PNG can pack its pixels in different ways. Luna breezed through both PNGs that store their pixels uncompressed, even at four times the size, and struggled with the ones that use real compression.</p></div>
+    <div class="panel pad" style="margin-top:14px">
       <table class="plain">
-        <thead><tr><th>Format</th><th class="num">Off</th><th class="num">Low</th><th class="num">High</th></tr></thead>
+        <thead><tr><th>PNG</th><th>Compression inside the file</th><th>GPT-6 Luna, high effort</th></tr></thead>
         <tbody>
-          <tr><td>Text grid</td><td class="num">4</td><td class="num">4</td><td class="num">4</td></tr>
-          <tr><td>PBM</td><td class="num">0</td><td class="num">2</td><td class="num">4</td></tr>
-          <tr><td>PGM</td><td class="num">0</td><td class="num">0</td><td class="num">4</td></tr>
-          <tr><td>BMP</td><td class="num">0</td><td class="num">4</td><td class="num">2</td></tr>
-          <tr><td>PNG</td><td class="num">0</td><td class="num">0</td><td class="num">5 of 12</td></tr>
+          <tr><td>X, 16&times;16</td><td>None</td><td><span class="yes">Exact, 256 of 256</span></td></tr>
+          <tr><td>Noise A, 16&times;16</td><td>None</td><td><span class="yes">Exact, 256 of 256</span></td></tr>
+          <tr><td>7, 8&times;8</td><td>Fixed Huffman</td><td><span class="meh">2 of 3 runs exact</span></td></tr>
+          <tr><td>X, 8&times;8</td><td>Fixed Huffman</td><td><span class="meh">2 of 3 runs exact</span></td></tr>
+          <tr><td>Noise A, 8&times;8</td><td>Fixed Huffman</td><td><span class="meh">1 of 3 runs exact</span></td></tr>
+          <tr><td>Noise B, 8&times;8</td><td>Fixed Huffman</td><td><span class="no">0 of 3, out of tokens</span></td></tr>
+          <tr><td>Noise B, 16&times;16</td><td>Fixed Huffman</td><td><span class="no">Out of tokens</span></td></tr>
+          <tr><td>7, 16&times;16</td><td>Dynamic Huffman</td><td><span class="no">Gave up after 22,790 tokens</span></td></tr>
         </tbody>
       </table>
-      <p class="note">With reasoning off, pixel accuracy was 38&ndash;67%, which is what guessing gives. The two BMP misses at high effort were close: 56 and 62 of 64 pixels.</p>
     </div>
-    <div>
-      <h2>Confidence without reasoning</h2>
-      <p>Models that did not reason still answered, and some answered boldly. Asked about the 7:</p>
-      <blockquote>A classic pixel-art smiley face. Confidence: high.<cite>Gemini 3.8 Flash, low effort, no reasoning tokens</cite></blockquote>
-      <p>Claude Sonnet 5.5 behaved differently. When it did not reason, it either refused or marked its answer as a guess:</p>
-      <blockquote>A made-up grid would be fabricated, so I&rsquo;m not giving one.<cite>Claude Sonnet 5.5, low effort</cite></blockquote>
-    </div>
-  </div>
-
-  <div class="two" style="margin-top:28px">
-    <div>
-      <h3>Not all PNGs are equally hard</h3>
-      <p>A PNG can compress its pixels in different ways. GPT-6 Luna decoded both PNGs that store their pixels uncompressed, even at 16&times;16, and struggled with the ones that use real compression.</p>
-      <table class="plain">
-        <thead><tr><th>PNG</th><th>Compression inside</th><th>GPT-6 Luna, high effort</th></tr></thead>
-        <tbody>
-          <tr><td>X, 16&times;16</td><td>None</td><td>Exact, 256 of 256</td></tr>
-          <tr><td>Noise A, 16&times;16</td><td>None</td><td>Exact, 256 of 256</td></tr>
-          <tr><td>7, 8&times;8</td><td>Fixed Huffman</td><td>2 of 3 runs exact</td></tr>
-          <tr><td>X, 8&times;8</td><td>Fixed Huffman</td><td>2 of 3 runs exact</td></tr>
-          <tr><td>Noise A, 8&times;8</td><td>Fixed Huffman</td><td>1 of 3 runs exact</td></tr>
-          <tr><td>Noise B, 8&times;8</td><td>Fixed Huffman</td><td>0 of 3, out of tokens</td></tr>
-          <tr><td>Noise B, 16&times;16</td><td>Fixed Huffman</td><td>Out of tokens</td></tr>
-          <tr><td>7, 16&times;16</td><td>Dynamic Huffman</td><td>Declined after 22,790 tokens</td></tr>
-        </tbody>
-      </table>
-      <p class="note">Every grid Luna did produce on PNG was pixel-perfect. It finishes correctly, declines, or runs out of tokens; it never returned a wrong grid. That compression explains the pattern is an inference from these eight files.</p>
-    </div>
-    <div>
-      <h3>Decoding is not recognising</h3>
-      <p>Getting the pixels right and knowing what they show turned out to be separate skills.</p>
-      <ul class="tight">
-        <li>GPT-6 Luna decoded the X exactly from a BMP, then called it &ldquo;a white diamond on a black background&rdquo;.</li>
-        <li>It decoded the 7 exactly from a PNG and described &ldquo;a short horizontal bar with a zigzagging stem&rdquo;.</li>
-        <li>GPT-6 Sol decoded the 7 with black and white swapped. PNG stores black as 0 and the prompt asked for black as 1, so the trap is partly ours.</li>
-      </ul>
-      <h3>The cost is the thinking</h3>
-      <p>The input is a hundred characters. Nearly all the cost is reasoning: a PNG took Sonnet and Sol about a minute and 6&ndash;7 cents, against a few seconds and under a cent for the same picture as PBM.</p>
-    </div>
-  </div>
-
-  <div class="callout">
-    <h3>What this is not</h3>
-    <p style="margin:0">This is not a better way to send images to a model. Attaching an image normally is far cheaper and more reliable than any of this. The experiment measures how far a model&rsquo;s reasoning can go on raw file bytes, and nothing more.</p>
+    <p class="note" style="margin-top:10px">The compression type was read from the files. That it explains the pattern is an inference from these eight.</p>
   </div>
 </section>
 
-<section class="wrap" id="cost">
-  <div class="kicker"><b>07</b> The bill and the fine print</div>
-  <div class="two">
-    <div>
-      <h2>What it cost</h2>
-      <table class="plain" id="spend"></table>
-      <p class="note">23 of GPT-6 Luna&rsquo;s calls hit a token limit and returned nothing. They are billed all the same, and came to $0.19.</p>
+<section class="band">
+  <div class="wrap">
+    <div class="chapter"><b>7</b> The clean sweep</div>
+    <div class="prose">
+      <h2>The stronger models decoded everything</h2>
+      <p>The last round put all four models through all five formats, on the 7 and on a block of noise. A cell counts only when all 64 pixels are right.</p>
     </div>
-    <div>
-      <h2>Read with care</h2>
+    <div class="stats">
+      <div class="stat g"><strong>10 of 10</strong><span>Claude Sonnet 5.5, including a compressed PNG of random noise</span></div>
+      <div class="stat g"><strong>10 of 10</strong><span>GPT-6 Sol, at about half the cost on the simpler formats</span></div>
+      <div class="stat b"><strong>~1 minute</strong><span>and 6&ndash;7 cents for one PNG. The same picture as PBM took seconds and under a cent.</span></div>
+    </div>
+    <div class="bar">
+      <div class="chips" id="heatView" role="group" aria-label="What the cells show">
+        <button data-v="acc" aria-pressed="true">Images decoded</button><button data-v="cost" aria-pressed="false">Cost per call</button>
+      </div>
+      <span class="note">Formats run easiest to hardest, left to right.</span>
+    </div>
+    <div class="scroll"><table class="heat" id="heat"></table></div>
+    <div class="scale" id="heatScale"></div>
+  </div>
+</section>
+
+<section class="band white">
+  <div class="wrap">
+    <div class="chapter"><b>8</b> The price of being right</div>
+    <div class="prose">
+      <h2>Accuracy against cost</h2>
+      <p>Each point is one model at one reasoning setting. Up is better, left is cheaper. The cost axis is logarithmic: every gridline is ten times the one before it.</p>
+    </div>
+    <div class="bar">
+      <div class="chips" id="scatterFmt" role="group" aria-label="Format shown"></div>
+      <span class="note">Pick a format and watch the points move.</span>
+    </div>
+    <div class="panel" style="padding:18px 18px 10px"><div class="scroll"><svg id="scatter" viewBox="0 0 960 470" role="img" aria-label="Scatter plot of share of images decoded against average cost per call"></svg></div></div>
+    <div class="legend" id="legend"></div>
+    <p class="note" style="margin-top:12px">Two images per format per point; GPT-6 Luna at high effort has six PNG attempts. With all formats selected, each point averages its five formats equally. The dashed line joins GPT-6 Luna&rsquo;s three settings, from reasoning off to high effort.</p>
+    <div class="two" style="margin-top:30px">
       <ul class="tight">
-        <li><b>Small counts.</b> Sonnet, Sol and Gemini have one run per cell on two images.</li>
-        <li><b>Tiny images.</b> These are 20&ndash;130 characters of base64. A real photo is hundreds of thousands. Nothing here says the result carries over.</li>
-        <li><b>Token limits cut both ways.</b> A model that hit its limit did not finish; that is different from being unable.</li>
-        <li><b>Unequal settings.</b> Each model has a different range of reasoning effort, so each is shown at a setting where it reasons.</li>
+        <li><mark>GPT-6 Sol is the best buy.</mark> The same perfect score as Sonnet, for less money on every format.</li>
+        <li><b>GPT-6 Luna costs a fraction of either</b> and gets most of the way, until PNG.</li>
+      </ul>
+      <ul class="tight">
+        <li><b>Gemini 3.8 Flash at low effort costs more than Luna and decodes less.</b> Its medium setting was dropped after one call used its whole budget and still got the answer wrong.</li>
+        <li><b>The cost is the thinking.</b> The input is about a hundred characters.</li>
       </ul>
     </div>
   </div>
-  <h3>Run it yourself</h3>
-  <div class="prose"><p>Everything is in the repository: the images, every prompt, every raw reply and the scoring. Replies are cached, so re-running costs nothing unless you add something new.</p></div>
-  <pre>python make_images.py      # test images
-python make_prompts.py     # encodings and prompts
-python run_openrouter.py --phase 1 --dry-run   # list calls and worst-case cost
-python score.py            # replies -> results.csv
-python make_site.py        # this page</pre>
-  <p><a href="https://github.com/atharva-729/base64-image-probe">Repository</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/results/api_runs/README.md">Full written report</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/responses.jsonl">Every raw reply</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/results.csv">Scores</a></p>
+</section>
+
+<section class="band green">
+  <div class="wrap">
+    <div class="chapter"><b>9</b> One more twist</div>
+    <div class="two">
+      <div>
+        <h2>Decoding is not recognising</h2>
+        <p>Getting every pixel right and knowing what the pixels show turned out to be two different skills.</p>
+      </div>
+      <ul class="tight">
+        <li>GPT-6 Luna decoded the X exactly, then called it <mark>&ldquo;a white diamond on a black background&rdquo;</mark>.</li>
+        <li>It decoded the 7 exactly and described &ldquo;a short horizontal bar with a zigzagging stem&rdquo;.</li>
+        <li>GPT-6 Sol decoded the 7 with black and white swapped. PNG stores black as 0 and our prompt asked for black as 1, so that trap was partly ours.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band ink">
+  <div class="wrap">
+    <div class="chapter"><b>10</b> What it means, and what it doesn&rsquo;t</div>
+    <div class="two">
+      <div>
+        <h2>Yes, they can. No, you shouldn&rsquo;t.</h2>
+        <p>A strong model with reasoning switched on can take the raw bytes of a small image, decompress them in its reasoning, and reproduce every pixel. That is a real capability, and it is not vision.</p>
+        <p><mark>This is not a better way to send images.</mark> Attaching an image normally is far cheaper and far more reliable. What this measures is how far reasoning alone can go on raw data.</p>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Read with care</h3>
+        <ul class="tight">
+          <li><b>Small counts.</b> Sonnet, Sol and Gemini have one run per cell on two images.</li>
+          <li><b>Tiny images.</b> These are 20&ndash;130 characters of base64. A real photo is hundreds of thousands. Nothing here says the result carries over.</li>
+          <li><b>Limits cut both ways.</b> A model that hit its token limit did not finish; that is not the same as being unable.</li>
+          <li><b>Unequal settings.</b> Each model has a different range of reasoning effort, so each is shown where it reasons.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="two" style="margin-top:44px">
+      <div>
+        <h3 style="margin-top:0">The bill</h3>
+        <div class="panel pad"><table class="plain" id="spend"></table></div>
+      </div>
+      <div>
+        <h3 style="margin-top:0">Run it yourself</h3>
+        <p>Every image, prompt, raw reply and score is in the repository. Replies are cached, so re-running costs nothing unless you add something new.</p>
+        <pre>python make_images.py     <i># test images</i>
+python make_prompts.py    <i># encodings and prompts</i>
+python run_openrouter.py --phase 1 --dry-run
+python score.py           <i># replies to results.csv</i>
+python make_site.py       <i># this page</i></pre>
+      </div>
+    </div>
+    <p style="margin-top:28px"><a href="https://github.com/atharva-729/base64-image-probe">Repository</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/README.md">The full story, with the technical detail</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/results/api_runs/README.md">Results report</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/responses.jsonl">Every raw reply</a></p>
+  </div>
 </section>
 </main>
 
-<footer class="wrap">Atharva Sharma &middot; Models were called through OpenRouter between 5 and 11 October 2026.</footer>
+<footer><div class="wrap">Atharva Sharma &middot; Models were called through OpenRouter between 5 and 11 October 2026.</div></footer>
 
 <script>
 const D = __DATA__;
 const $ = (id) => document.getElementById(id);
 const FMT = {
-  grid: ["Text grid", "The picture typed out directly, one character per pixel. Nothing to decode. This is the sanity check."],
-  pbm: ["PBM", "A short label, then one bit per pixel. The shortest file of the five."],
-  pgm: ["PGM", "A short label, then one whole byte per pixel. Simple, but five times longer than PBM."],
-  bmp: ["BMP", "A long header, then the pixels stored bottom row first, with padding."],
-  png: ["PNG", "The pixels are compressed, like a zip file. To read it the model has to decompress it step by step in its reasoning."],
+  grid: ["Text grid", "The picture typed out directly, one character per pixel. Nothing to decode. This is the sanity check.", "NO DECODING", "#0a7d4f"],
+  pbm: ["PBM", "A short label, then one bit per pixel. The shortest file of the five.", "EASY", "#1c4f9c"],
+  pgm: ["PGM", "A short label, then one whole byte per pixel. Simple, but five times longer than PBM.", "EASY BUT LONG", "#1c4f9c"],
+  bmp: ["BMP", "A long header, then the pixels stored bottom row first, with padding.", "FIDDLY", "#8a5a00"],
+  png: ["PNG", "The pixels are compressed, like a zip file. To read it the model has to decompress it step by step in its reasoning.", "HARD", "#c2361a"],
 };
 const money = (x) => (x >= 0.0005 ? "$" + x.toFixed(3) : "under $0.001");
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
-// ---------- pixel grids
+// ---------- pixel grids: the test images are black on white whatever surrounds them
 function px(rows, truth) {
   const n = rows.length, c = 10;
   let s = `<svg class="px" viewBox="0 0 ${n * c} ${n * c}" role="img" aria-label="${n} by ${n} pixel grid">`;
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
     const on = rows[y][x] === "1";
-    // the test images are black on white whatever the page theme
     s += `<rect x="${x * c}" y="${y * c}" width="${c}" height="${c}" fill="${on ? "#0b0b0b" : "#ffffff"}" stroke="#b9b6aa" stroke-width="0.4"/>`;
     if (truth && truth[y][x] !== rows[y][x]) s += `<circle cx="${x * c + 5}" cy="${y * c + 5}" r="2.4" fill="${on ? "#ff6b6b" : "#c22f2f"}"/>`;
   }
@@ -377,7 +489,7 @@ const SEVEN = D.truth.digit_7;
 
 // ---------- headline figures
 $("figures").innerHTML = [
-  [D.totalCalls, "model calls, all logged"], [4, "models"], [5, "ways to store one picture"], ["$" + D.totalCost.toFixed(2), "total spend"],
+  [D.totalCalls, "model calls, every one logged"], [4, "models"], [5, "ways to store one picture"], ["$" + D.totalCost.toFixed(2), "total spend"],
 ].map(([a, b]) => `<div><strong>${a}</strong><span>${b}</span></div>`).join("");
 
 // ---------- format switcher
@@ -386,7 +498,10 @@ function showFormat(f) {
   $("fmtString").textContent = s;
   $("fmtCount").textContent = `${s.length} characters, exactly as given to the model`;
   $("fmtName").textContent = FMT[f][0];
+  $("fmtName").style.background = FMT[f][3];
   $("fmtAbout").textContent = FMT[f][1];
+  $("fmtLevel").textContent = FMT[f][2];
+  $("fmtLevel").style.color = FMT[f][3];
   document.querySelectorAll("#fmtTabs button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.f === f));
 }
 $("fmtTabs").innerHTML = D.formats.map((f) => `<button data-f="${f}">${FMT[f][0]}</button>`).join("");
@@ -429,7 +544,7 @@ function notes(s) {
 function drawHeat(view) {
   let h = `<thead><tr><th></th>${D.formats.map((f) => `<th scope="col">${FMT[f][0]}</th>`).join("")}</tr></thead><tbody>`;
   for (const c of HEAT_ROWS) {
-    h += `<tr><th scope="row">${c.name}<small>${c.effort}</small></th>`;
+    h += `<tr><th scope="row"><i class="dot ${c.vendor}"></i>${c.name}<small>${c.effort}</small></th>`;
     for (const f of D.formats) {
       const s = c.formats[f];
       const v = view === "acc" ? s.decoded / s.n : s.cost / maxCost;
@@ -512,23 +627,24 @@ const lg = (shape, vendor, hollow, label) => `<span><svg width="24" height="24" 
 $("legend").innerHTML = lg("circle", "anthropic", false, "Claude Sonnet 5.5") + lg("square", "openai", false, "GPT-6 Sol") + lg("diamond", "openai", false, "GPT-6 Luna") + lg("triangle", "google", false, "Gemini 3.8 Flash") + lg("diamond", "openai", true, "Hollow: reasoning off");
 
 // ---------- gallery
-const TAG = { decoded: ["DECODED", 1], flipped: ["DECODED, FLIPPED", 1], wrong: ["WRONG", 0], guess: ["LABELLED A GUESS", 0], declined: ["DECLINED TO GUESS", 0] };
+const TAG = { decoded: ["DECODED", "good"], flipped: ["DECODED, FLIPPED", "good"], wrong: ["WRONG", "bad"], guess: ["LABELLED A GUESS", ""], declined: ["DECLINED TO GUESS", ""] };
+const VENDOR = { "Claude Sonnet 5.5": "anthropic", "GPT-6 Sol": "openai", "GPT-6 Luna": "openai", "Gemini 3.8 Flash": "google" };
 const right = (g) => g.reduce((a, row, y) => a + [...row].filter((ch, x) => ch === SEVEN[y][x]).length, 0);
 $("galleryGrid").innerHTML =
-  `<figure>${px(SEVEN)}<figcaption><b>The real image</b><small>what was encoded</small><span class="tag solid">TRUTH</span></figcaption></figure>` +
+  `<figure>${px(SEVEN)}<figcaption><b>The real image</b><small>what was encoded</small><span class="tag truth">TRUTH</span></figcaption></figure>` +
   D.gallery.map((g) => {
     const flip = g.verdict === "flipped";
     const pic = g.grid ? px(g.grid, flip ? null : SEVEN) : `<div class="empty">no grid given</div>`;
     const score = g.grid ? (flip ? "every pixel right, black and white swapped" : `${right(g.grid)} of 64 pixels right`) : "";
-    const [label, solid] = TAG[g.verdict];
+    const [label, cls] = TAG[g.verdict];
     const work = g.tokens ? `${g.tokens.toLocaleString()} reasoning tokens, ${Math.round(g.seconds)}&nbsp;s` : `no reasoning, ${Math.round(g.seconds)}&nbsp;s`;
-    return `<figure>${pic}<figcaption><b>${g.name}</b><small>${g.setting}</small><span class="said">${g.said}</span><small>${score}${score ? "<br>" : ""}${work}</small><span class="tag${solid ? " solid" : ""}">${label}</span></figcaption></figure>`;
+    return `<figure>${pic}<figcaption><b><i class="dot ${VENDOR[g.name]}"></i>${g.name}</b><small>${g.setting}</small><span class="said">${g.said}</span><small>${score}${score ? "<br>" : ""}${work}</small><span class="tag ${cls}">${label}</span></figcaption></figure>`;
   }).join("");
 
 // ---------- spend
-const NAMES = { "openai/gpt-6-luna": "GPT-6 Luna", "anthropic/claude-sonnet-5.5": "Claude Sonnet 5.5", "openai/gpt-6-sol": "GPT-6 Sol", "google/gemini-3.8-flash": "Gemini 3.8 Flash" };
+const NAMES = { "openai/gpt-6-luna": ["GPT-6 Luna", "openai"], "anthropic/claude-sonnet-5.5": ["Claude Sonnet 5.5", "anthropic"], "openai/gpt-6-sol": ["GPT-6 Sol", "openai"], "google/gemini-3.8-flash": ["Gemini 3.8 Flash", "google"] };
 $("spend").innerHTML = `<thead><tr><th>Model</th><th class="num">Calls</th><th class="num">Spend</th></tr></thead><tbody>` +
-  D.spend.map((r) => `<tr><td>${NAMES[r.model]}</td><td class="num">${r.calls}</td><td class="num">$${r.cost.toFixed(2)}</td></tr>`).join("") +
+  D.spend.map((r) => `<tr><td><i class="dot ${NAMES[r.model][1]}"></i>${NAMES[r.model][0]}</td><td class="num">${r.calls}</td><td class="num">$${r.cost.toFixed(2)}</td></tr>`).join("") +
   `<tr><td><b>Total</b></td><td class="num"><b>${D.totalCalls}</b></td><td class="num"><b>$${D.totalCost.toFixed(2)}</b></td></tr></tbody>`;
 </script>
 </body>
