@@ -19,41 +19,64 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.6 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-.wrap { width: min(1000px, calc(100% - 48px)); margin-inline: auto; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
 .prose { max-width: 680px; }
 h1, h2, h3 { font-family: "Newsreader", Georgia, serif; font-weight: 500; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
-h1 { font-size: clamp(42px, 6.6vw, 82px); line-height: 1.0; }
-h2 { font-size: clamp(30px, 4vw, 46px); line-height: 1.08; margin-bottom: 16px; }
-h3 { font-size: 24px; line-height: 1.25; margin: 34px 0 8px; }
+h1 { font-size: clamp(30px, 3.5vw, 46px); line-height: 1.06; }
+h2 { font-size: clamp(25px, 2.8vw, 34px); line-height: 1.1; margin-bottom: 12px; }
+h3 { font-size: 21px; line-height: 1.25; margin: 30px 0 8px; }
 p { margin: 0 0 16px; }
 a { color: inherit; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; text-underline-offset: 3px; }
 mark { background: var(--yellow); color: var(--ink); padding: 1px 4px; border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .mono, code { font-family: "IBM Plex Mono", ui-monospace, monospace; }
-.lede { font-size: 21px; line-height: 1.5; }
+.lede { font-size: 17px; line-height: 1.5; max-width: 78ch; }
+.more { font: 600 12.5px/1 "IBM Plex Mono", monospace; white-space: nowrap; }
 .note { font-size: 14.5px; line-height: 1.5; opacity: 0.86; }
 
 /* bands: each chapter is a full-width strip with its own colour */
-.band { padding: 84px 0; background: var(--paper); color: var(--ink); }
+.band { padding: 60px 0; background: var(--paper); color: var(--ink); }
 .band.ink { background: var(--ink); color: var(--paper); }
 .band.blue { background: var(--blue); color: #ffffff; }
 .band.red { background: var(--red); color: #ffffff; }
 .band.green { background: var(--green); color: #ffffff; }
 .band.white { background: var(--surface); }
 .chapter { display: flex; align-items: baseline; gap: 14px; font: 600 13px/1 "IBM Plex Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; }
-.chapter b { font: 500 54px/0.8 "Newsreader", serif; letter-spacing: -0.02em; color: var(--red); }
+.chapter b { font: 500 40px/0.8 "Newsreader", serif; letter-spacing: -0.02em; color: var(--red); }
 .band.ink .chapter b, .band.blue .chapter b, .band.red .chapter b, .band.green .chapter b { color: var(--yellow); }
 
-header.band { padding: 44px 0 76px; }
-.topline { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 500 13px/1.4 "IBM Plex Mono", monospace; opacity: 0.8; padding-bottom: 56px; }
-header .lede { max-width: 650px; margin-top: 26px; }
-.figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-top: 48px; }
+/* the brief: question, approach and answer on one screen */
+header.band { padding: 22px 0 40px; }
+.topline { display: flex; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; font: 500 12.5px/1.4 "IBM Plex Mono", monospace; letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 34px; }
+.topline > span, .topline nav i { opacity: 0.7; }
+.topline nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.topline nav a { text-decoration: none; opacity: 0.8; }
+.topline nav a:hover { opacity: 1; text-decoration: underline; text-decoration-color: var(--yellow); }
+.topline nav i { font-style: normal; }
+.kicker { display: flex; align-items: center; gap: 12px; font: 600 12.5px/1 "IBM Plex Mono", monospace; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+.kicker::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: 0.3; }
+.kicker b { color: var(--red); }
+.band.ink .kicker b { color: var(--yellow); }
+.aimgrid { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 44px; align-items: start; }
+.ps { margin: 16px 0 0; font-size: 16px; line-height: 1.5; }
+.answer { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 20px; }
+.answer div { padding: 12px 14px; font-weight: 600; font-size: 15px; line-height: 1.35; color: #ffffff; }
+.answer small { display: block; font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; opacity: 0.9; }
+.answer .y { background: var(--green); } .answer .n { background: var(--red); }
+.aims { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.aims li { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 11px 16px; border-left: 4px solid #55544e; background: #1c1c1a; font-size: 15px; line-height: 1.45; color: #d9d6cb; }
+.aims li > b { font: 600 11.5px/1.9 "IBM Plex Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; color: #a3a096; }
+.aims li strong { color: #ffffff; font-weight: 600; }
+.aims li.main { border-left-color: var(--yellow); background: #2d2a12; color: #ffffff; font-size: 16.5px; padding: 14px 16px; }
+.aims li.main > b { color: var(--yellow); }
+.aims .more { color: var(--yellow); }
+.figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-top: 26px; }
 .figures div { padding: 18px 20px 20px; color: var(--ink); }
 .figures div:nth-child(1) { background: var(--yellow); }
 .figures div:nth-child(2) { background: #ffffff; }
 .figures div:nth-child(3) { background: #8fc0f5; }
 .figures div:nth-child(4) { background: #ff9a73; }
-.figures strong { display: block; font: 500 44px/1 "Newsreader", serif; }
+.figures strong { display: block; font: 500 34px/1 "Newsreader", serif; }
 .figures span { font-size: 14.5px; font-weight: 500; }
 
 /* panels keep their own light surface on any band */
@@ -66,13 +89,16 @@ header .lede { max-width: 650px; margin-top: 26px; }
 .chips { display: inline-flex; flex-wrap: wrap; border: 2px solid var(--ink); background: var(--surface); }
 .chips button { border-right: 1px solid var(--ink); padding: 10px 13px; }
 .chips button:last-child { border-right: 0; }
-.decoder { display: grid; grid-template-columns: minmax(0, 1fr) auto 220px; gap: 28px; align-items: center; padding: 28px; }
-.decoder .string { font: 500 15px/1.55 "IBM Plex Mono", monospace; word-break: break-all; white-space: pre-wrap; max-height: 220px; overflow: auto; }
-.decoder .arrow { font: 600 13px/1.3 "IBM Plex Mono", monospace; text-align: center; }
-.decoder .arrow span { display: block; font-size: 34px; color: var(--red); line-height: 1; }
-.about { border-top: 2px solid var(--ink); padding: 16px 28px; display: flex; gap: 20px; flex-wrap: wrap; align-items: baseline; }
-.about b { font: 600 13px/1 "IBM Plex Mono", monospace; white-space: nowrap; padding: 6px 8px; color: #ffffff; }
-.level { font: 600 12px/1 "IBM Plex Mono", monospace; letter-spacing: 0.05em; margin-left: auto; white-space: nowrap; }
+.formats { display: grid; grid-template-columns: 190px minmax(0, 1fr); }
+.formats .pic { padding: 22px; border-right: 2px solid var(--ink); display: flex; flex-direction: column; justify-content: center; gap: 10px; font: 500 12.5px/1.4 "IBM Plex Mono", monospace; }
+.formats .pic span b { color: var(--red); font-size: 16px; }
+.fmt { display: grid; grid-template-columns: 124px minmax(0, 1fr) minmax(0, 0.72fr); gap: 20px; align-items: center; padding: 12px 20px; border-top: 1px solid var(--hair); }
+.fmt:first-child { border-top: 0; }
+.fmt .name b { display: inline-block; font: 600 13px/1 "IBM Plex Mono", monospace; padding: 6px 8px; color: #ffffff; }
+.fmt .name small { display: block; margin-top: 7px; font: 600 11px/1.2 "IBM Plex Mono", monospace; letter-spacing: 0.05em; }
+.fmt .string { font: 500 12.5px/1.45 "IBM Plex Mono", monospace; word-break: break-all; white-space: pre-wrap; }
+.fmt .string small { display: block; margin-top: 4px; font: 400 12px/1.3 "IBM Plex Sans", sans-serif; color: var(--ink2); }
+.fmt p { margin: 0; font-size: 14.5px; line-height: 1.45; }
 
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin: 30px 0; }
 .steps > div { padding: 22px; background: var(--surface); color: var(--ink); border-top: 8px solid var(--ink); }
@@ -82,7 +108,9 @@ header .lede { max-width: 650px; margin-top: 26px; }
 .steps i { font: 600 13px/1 "IBM Plex Mono", monospace; font-style: normal; }
 .steps h4 { font: 600 18px/1.3 "IBM Plex Sans", sans-serif; margin: 10px 0 6px; }
 .steps p { font-size: 15px; margin: 0; }
-.imgs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 14px; margin-top: 24px; }
+.imgs { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+.data { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 40px; align-items: center; margin-top: 22px; }
+.data ul.tight { margin: 0; }
 figure { margin: 0; }
 .imgs figcaption { font: 500 13px/1.4 "IBM Plex Mono", monospace; margin-top: 8px; }
 svg.px { display: block; width: 100%; height: auto; border: 2px solid var(--ink); background: #ffffff; }
@@ -105,12 +133,53 @@ svg.px { display: block; width: 100%; height: auto; border: 2px solid var(--ink)
 .heat th { font: 600 13.5px/1.3 "IBM Plex Mono", monospace; padding: 8px 6px; text-align: center; }
 .heat th[scope="row"] { text-align: left; width: 200px; font: 600 15.5px/1.25 "IBM Plex Sans", sans-serif; padding: 6px 12px 6px 0; }
 .heat th small { display: block; font: 400 13px/1.3 "IBM Plex Sans", sans-serif; color: var(--ink2); margin-left: 18px; }
-.heat td { text-align: center; padding: 13px 4px; border-radius: 3px; height: 68px; cursor: default; }
+.heat td { text-align: center; padding: 11px 4px; border-radius: 3px; height: 64px; cursor: pointer; }
+.heat td:hover { outline: 3px solid var(--ink); outline-offset: 1px; }
 .heat td b { display: block; font: 600 19px/1.1 "IBM Plex Sans", sans-serif; }
 .heat td span { font-size: 12.5px; line-height: 1.25; display: block; margin-top: 3px; }
 .heat td:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-.scale { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink2); margin-top: 12px; }
-.scale i { display: inline-block; width: 22px; height: 12px; }
+.scale { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink2); }
+.scale i { display: inline-block; width: 11px; height: 12px; }
+.results { display: grid; grid-template-columns: minmax(0, 1fr) 262px; gap: 26px; align-items: start; }
+.key { background: var(--paper); border: 2px solid var(--ink); padding: 16px 18px 6px; font-size: 13.5px; line-height: 1.45; }
+.key h4 { font: 600 12px/1 "IBM Plex Mono", monospace; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 12px; }
+.key .demo { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: center; margin-bottom: 12px; }
+.key .demo div { background: var(--q7); color: #ffffff; text-align: center; padding: 9px 4px; border-radius: 3px; }
+.key .demo div b { display: block; font-size: 17px; line-height: 1.1; } .key .demo div span { font-size: 11.5px; }
+.key dl { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid var(--hair); }
+.key dt { font-weight: 600; margin-top: 7px; } .key dd { margin: 0; color: var(--ink2); }
+.key p { margin: 10px 0; }
+.points { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 22px; }
+.points > div { padding: 14px 18px; background: var(--paper); border-left: 6px solid var(--ink); }
+.points b { display: block; font-size: 16.5px; }
+.bottom { margin-top: 26px; padding: 16px 20px; background: var(--ink); color: var(--paper); font-size: 17px; line-height: 1.45; }
+.bottom b, .bottom .more { color: var(--yellow); }
+#story-start { padding: 22px 0; background: var(--yellow); color: var(--ink); scroll-margin-top: 0; }
+#story-start .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 24px; }
+#story-start b { font: 500 24px/1.2 "Newsreader", serif; }
+#story-start span { font: 500 12.5px/1.4 "IBM Plex Mono", monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+.story .band { padding: 72px 0; }
+
+/* the box behind a tile: every image that cell was scored on */
+dialog { width: min(1060px, calc(100% - 28px)); max-height: calc(100vh - 40px); padding: 0; border: 2px solid var(--ink); background: var(--surface); color: var(--ink); }
+dialog::backdrop { background: rgba(11, 11, 11, 0.62); }
+.dhead { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; padding: 16px 20px; background: var(--surface); border-bottom: 2px solid var(--ink); }
+.dhead h3 { margin: 0; font-size: 23px; }
+.dhead p { margin: 4px 0 0; font-size: 14px; color: var(--ink2); }
+.dhead button { font: 600 13px/1 "IBM Plex Mono", monospace; background: var(--ink); color: var(--yellow); border: 0; padding: 11px 13px; cursor: pointer; white-space: nowrap; }
+.dhead button:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+.dkey { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 10px 20px; font-size: 13px; color: var(--ink2); background: var(--paper); }
+.dkey i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #c22f2f; margin-right: 6px; }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 3px; background: var(--paper); }
+.card { background: var(--surface); padding: 14px 14px 16px; border-top: 6px solid var(--hair); }
+.card.exact, .card.flipped { border-color: var(--green); } .card.wrong { border-color: var(--red); }
+.card .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.card .top b { font-size: 15.5px; white-space: nowrap; } .card .tag { margin: 0; white-space: nowrap; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pair figcaption { font: 500 11.5px/1.3 "IBM Plex Mono", monospace; color: var(--ink2); margin-top: 5px; }
+.pair .empty { font-size: 11.5px; padding: 8px; }
+.card p { margin: 10px 0 0; font-size: 13.5px; line-height: 1.4; }
+.card p.meta { color: var(--ink2); font-size: 12.5px; margin-top: 6px; }
 .scroll { overflow-x: auto; }
 .scroll > * { min-width: 720px; }
 
@@ -136,6 +205,7 @@ svg.px { display: block; width: 100%; height: auto; border: 2px solid var(--ink)
 .tag.good { background: var(--green); border-color: var(--green); color: #ffffff; }
 .tag.bad { background: var(--red); border-color: var(--red); color: #ffffff; }
 .tag.truth { background: var(--ink); color: var(--yellow); }
+.tag.none { background: var(--paper); }
 .empty { aspect-ratio: 1; border: 2px dashed var(--ink); display: grid; place-items: center; text-align: center; font: 500 13px/1.4 "IBM Plex Mono", monospace; padding: 14px; background: var(--surface); }
 
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
@@ -164,16 +234,19 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
 @media (max-width: 760px) {
   body { font-size: 16px; }
   .wrap { width: calc(100% - 32px); }
-  .band { padding: 56px 0; }
+  .band, .story .band { padding: 44px 0; }
   .figures, .stats { grid-template-columns: 1fr 1fr; }
-  .decoder { grid-template-columns: 1fr; padding: 20px; }
-  .decoder .arrow span { transform: rotate(90deg); display: inline-block; }
-  .decoder .grid { max-width: 200px; }
+  .aimgrid, .data, .results, .points { grid-template-columns: 1fr; gap: 22px; }
+  .points { gap: 3px; }
+  .aims li { grid-template-columns: 1fr; gap: 0; }
+  .imgs { grid-template-columns: repeat(4, 1fr); }
+  .cards { grid-template-columns: 1fr 1fr; }
+  .formats, .fmt { grid-template-columns: 1fr; }
+  .fmt { gap: 8px; padding: 16px 20px; }
+  .formats .pic { border-right: 0; border-bottom: 2px solid var(--ink); }
+  .formats .pic svg { max-width: 150px; }
   .steps { grid-template-columns: 1fr; }
-  .imgs { grid-template-columns: repeat(3, 1fr); }
   .two { grid-template-columns: 1fr; gap: 20px; }
-  .about { padding: 14px 20px; gap: 8px; }
-  .level { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } #tip { transition: none; } }
 </style>
@@ -181,38 +254,143 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
 <body>
 <div id="tip" role="status"></div>
 
-<header class="band ink">
+<header class="band ink" id="brief">
   <div class="wrap">
-    <div class="topline"><span>base64-image-probe</span><span>An experiment, October 2026</span></div>
-    <h1>Can a model read a picture it <mark>can&rsquo;t see?</mark></h1>
-    <p class="lede">We turned tiny images into strings of letters and digits, pasted them into four language models as plain text, and asked what the picture was. No tools, no code, no vision. This is the story of what happened, including the parts where nothing did.</p>
-    <div class="figures" id="figures"></div>
+    <div class="topline"><span>base64-image-probe &middot; October 2026</span><nav><a href="#data">Data</a><a href="#results">Results</a><a href="#cost">Cost</a><i>|</i><a href="#story">Full story</a><a href="#caveats">Caveats</a></nav></div>
+    <div class="aimgrid">
+      <div>
+        <div class="kicker"><b>The question</b></div>
+        <h1>Can a language model read a picture it <mark>can&rsquo;t see?</mark></h1>
+        <p class="ps">An image file is only bytes, and bytes can be typed out as text. We pasted that text into four models and asked: <strong>what is the picture?</strong></p>
+        <div class="answer">
+          <div class="y"><small>Short answer: yes</small>The strongest model rebuilt every pixel of every image.</div>
+          <div class="n"><small>But</small>Only with heavy reasoning. It is slow and costly next to attaching the image.</div>
+        </div>
+      </div>
+      <div>
+        <div class="kicker"><b>What we did</b></div>
+        <ul class="aims">
+          <li><b>Images</b><span><strong>7 tiny black-and-white pictures</strong>, 8 pixels by 8: four shapes and three blocks of random noise.</span></li>
+          <li><b>Formats</b><span>Each one stored <strong>5 ways</strong>, from a plain grid of 0s and 1s up to a compressed PNG, then written out as base64 text.</span></li>
+          <li class="main"><b>Models</b><span>4 models, called with <strong>no tools, no code and no vision</strong>. Text in, text out, so a right answer can only come from the model&rsquo;s own reasoning. <a class="more" href="#objection">Why this matters &darr;</a></span></li>
+          <li><b>Scoring</b><span>The model must write out <strong>all 64 pixels</strong>. An image counts only when every one is right, so a lucky guess scores nothing.</span></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </header>
 
 <main>
-<section class="band">
+<section class="band" id="data">
+  <div class="wrap">
+    <div class="kicker"><b>The data</b></div>
+    <h2>Seven tiny pictures, each handed over as a string of text</h2>
+    <div class="data">
+      <div class="imgs" id="imgs"></div>
+      <ul class="tight">
+        <li><b>Four shapes</b> a model could recognise: a 1, a 7, a cross and a circle.</li>
+        <li><b>Three blocks of random noise.</b> <mark>Nobody can guess random pixels</mark>, so an exact answer proves the file was truly decoded.</li>
+        <li><b>Kept tiny on purpose.</b> At 8&times;8 the text is 20&ndash;130 characters, so decoding by hand is tedious and not hopeless. <a class="more" href="#caveats">Caveats &darr;</a></li>
+      </ul>
+    </div>
+    <p style="margin:30px 0 10px"><b>What the model actually received.</b> One picture of a 7, stored five ways, easiest to hardest. Each string is exactly what was pasted in.</p>
+    <div class="panel">
+      <div class="formats">
+        <div class="pic"><div id="fmtGrid"></div><span>The picture: a 7, 8&times;8 pixels <b aria-hidden="true">&rarr;</b></span></div>
+        <div id="fmtRows"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band white" id="results">
+  <div class="wrap">
+    <div class="kicker"><b>Results</b></div>
+    <h2>One model decoded everything. Another came close.</h2>
+    <p class="lede">Each tile is the number of images a model rebuilt with every pixel right. <mark>Click any tile to see every image behind it.</mark></p>
+    <div class="bar">
+      <div class="chips" id="heatView" role="group" aria-label="What the cells show">
+        <button data-v="acc" aria-pressed="true">Images decoded</button><button data-v="cost" aria-pressed="false">Cost per call</button>
+      </div>
+      <span class="note">Rows are models. Columns are file formats, easiest to hardest.</span>
+    </div>
+    <div class="results">
+      <div class="scroll"><table class="heat" id="heat"></table></div>
+      <aside class="key">
+        <h4>How to read a tile</h4>
+        <div class="demo"><div><b>5 of 7</b><span>2 wrong</span></div><span><b>Top:</b> images with all 64 pixels right.<br><b>Below:</b> what happened to the rest.</span></div>
+        <div class="scale" id="heatScale"></div>
+        <dl>
+          <dt>wrong</dt><dd>Gave a grid, with pixels wrong.</dd>
+          <dt>gave no grid</dt><dd>Said it could not decode the file.</dd>
+          <dt>out of tokens</dt><dd>Hit its limit while still reasoning. <a href="#wall">More &darr;</a></dd>
+          <dt>colours swapped</dt><dd>Every pixel right, black and white reversed. Counted as decoded. <a href="#twist">More &darr;</a></dd>
+        </dl>
+        <p style="display:flex;flex-wrap:wrap;gap:2px 12px"><span><i class="dot anthropic"></i>Anthropic</span><span><i class="dot openai"></i>OpenAI</span><span><i class="dot google"></i>Google</span></p>
+        <p class="note">GPT-6 Luna with reasoning off ran on 4 images, not 7.</p>
+      </aside>
+    </div>
+    <div class="points">
+      <div style="border-color:var(--green)"><b>Reasoning is the whole difference.</b>The same model on the same files goes from <mark>0 decoded with reasoning off</mark> to exact answers with it on. <a class="more" href="#switch">The switch &darr;</a></div>
+      <div style="border-color:var(--red)"><b>The weak answers were not cautious ones.</b>Gemini 3.8 Flash missed 16 images and gave <mark>10 of those with high confidence</mark>. <a class="more" href="#pilot">Examples &darr;</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="cost">
+  <div class="wrap">
+    <div class="kicker"><b>Cost</b></div>
+    <h2>What being right costs</h2>
+    <p class="lede">Each point is one model at one reasoning setting. <b>Up is more accurate, left is cheaper.</b> Every gridline is ten times the cost of the one before it.</p>
+    <div class="bar">
+      <div class="chips" id="scatterFmt" role="group" aria-label="Format shown"></div>
+      <span class="note">Pick a format and watch the points move.</span>
+    </div>
+    <div class="panel" style="padding:18px 18px 10px"><div class="scroll"><svg id="scatter" viewBox="0 0 960 470" role="img" aria-label="Scatter plot of share of images decoded against average cost per call"></svg></div></div>
+    <div class="legend" id="legend"></div>
+    <p class="note" style="margin-top:12px">Seven images per format per point, except GPT-6 Luna with reasoning off and at low effort, which ran on four. With all formats selected, each point averages its five formats equally. The dashed line joins GPT-6 Luna&rsquo;s three settings, from reasoning off to high effort.</p>
+    <div class="kicker" style="margin-top:34px"><b>Not obvious from the numbers</b></div>
+    <div class="two">
+      <ul class="tight">
+        <li><mark>GPT-6 Sol is the best buy.</mark> The only perfect score, at about 60% of Sonnet&rsquo;s cost.</li>
+        <li><b>GPT-6 Luna costs a quarter of what Sol does</b> and decodes two thirds of the images. It is solid on the simple formats and fades on BMP and PNG.</li>
+        <li><b>The cheap model fails by running out of room, not by being wrong.</b> When Luna finished a PNG it was usually right. <a class="more" href="#wall">More &darr;</a></li>
+      </ul>
+      <ul class="tight">
+        <li><b>Gemini 3.8 Flash at low effort costs as much as Sol and decodes about half.</b> Ten of its sixteen misses came with high confidence.</li>
+        <li><b>PNG is the expensive format.</b> About 45 seconds and 4&ndash;7 cents for Sol and Sonnet, against seconds and under a cent for the same picture as PBM.</li>
+        <li><b>Decoding is not recognising.</b> GPT-6 Luna rebuilt the cross exactly, then called it <mark>&ldquo;a white diamond&rdquo;</mark>. <a class="more" href="#twist">More &darr;</a></li>
+      </ul>
+    </div>
+    <div class="bottom"><b>Bottom line.</b> A strong model with reasoning on can rebuild a small image from its raw bytes. That is a real capability, and it is not a better way to send images: attaching one normally is far cheaper and far more reliable. <a class="more" href="#caveats">Read with care &darr;</a></div>
+  </div>
+</section>
+
+<section id="story-start"><div class="wrap" id="story"><b>That is the result. Everything below is the how.</b><span>Optional reading &middot; the full story, the method, the caveats, the bill</span></div></section>
+
+<div class="story">
+<section class="band ink">
+  <div class="wrap">
+    <div class="kicker"><b>The full story</b></div>
+    <h2>Ten steps from a hunch to a result</h2>
+    <p class="lede">We turned tiny images into strings of letters and digits, pasted them into four language models as plain text, and asked what the picture was. No tools, no code, no vision. This is the story of what happened, including the parts where nothing did.</p>
+    <div class="figures" id="figures"></div>
+  </div>
+</section>
+
+<section id="hunch" class="band">
   <div class="wrap">
     <div class="chapter"><b>1</b> The hunch</div>
     <div class="prose">
       <h2>A picture is a file, and a file can be written as text</h2>
       <p>When you attach an image to a chat, the model looks at it with a separate vision system. But an image file is only a sequence of bytes, and any bytes can be spelled out in ordinary characters. That spelling is called base64, and it looks like gibberish.</p>
       <p>Models read base64 text surprisingly well. So the hunch was: <mark>could a model read an image that way too</mark>, working backwards from the gibberish to the picture by reasoning alone? It is like being handed a page of Morse code and asked what the drawing is.</p>
+      <p><a href="#data">See one picture stored five ways, exactly as the models received it &uarr;</a></p>
     </div>
-    <div class="panel" style="margin-top:30px">
-      <div class="tabs" id="fmtTabs" role="group" aria-label="File format"></div>
-      <div class="decoder">
-        <div><div class="note" id="fmtCount" style="margin-bottom:8px"></div><div class="string" id="fmtString"></div></div>
-        <div class="arrow"><span aria-hidden="true">&rarr;</span>model,<br>no tools</div>
-        <div class="grid" id="fmtGrid"></div>
-      </div>
-      <div class="about"><b id="fmtName"></b><span id="fmtAbout"></span><span class="level" id="fmtLevel"></span></div>
-    </div>
-    <p class="note" style="margin-top:12px">One 8&times;8 picture of a 7, stored five different ways. Switch tabs to see exactly what the model was handed each time.</p>
   </div>
 </section>
 
-<section class="band white">
+<section id="objection" class="band white">
   <div class="wrap">
     <div class="chapter"><b>2</b> The first try, and the objection</div>
     <div class="two">
@@ -242,7 +420,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
   </div>
 </section>
 
-<section class="band blue">
+<section id="tools" class="band blue">
   <div class="wrap">
     <div class="chapter"><b>3</b> Take the tools away</div>
     <div class="prose">
@@ -256,13 +434,12 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
     </div>
     <div class="prose">
       <h3>The test images</h3>
-      <p>Four shapes and three blocks of random noise. <mark>The noise is the real test</mark>: nobody can guess random pixels, so a model that reproduces them exactly has truly decoded the file.</p>
+      <p>Four shapes and three blocks of random noise. <mark>The noise is the real test</mark>: nobody can guess random pixels, so a model that reproduces them exactly has truly decoded the file. <a href="#data">The seven images are at the top &uarr;</a></p>
     </div>
-    <div class="imgs" id="imgs"></div>
   </div>
 </section>
 
-<section class="band">
+<section id="pilot" class="band">
   <div class="wrap">
     <div class="chapter"><b>4</b> The pilot</div>
     <div class="prose">
@@ -278,7 +455,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
   </div>
 </section>
 
-<section class="band white">
+<section id="switch" class="band white">
   <div class="wrap">
     <div class="chapter"><b>5</b> The switch</div>
     <div class="two">
@@ -314,7 +491,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
   </div>
 </section>
 
-<section class="band red">
+<section id="wall" class="band red">
   <div class="wrap">
     <div class="chapter"><b>6</b> The wall</div>
     <div class="two">
@@ -353,7 +530,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
   </div>
 </section>
 
-<section class="band">
+<section id="full" class="band">
   <div class="wrap">
     <div class="chapter"><b>7</b> The full test</div>
     <div class="prose">
@@ -365,45 +542,22 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
       <div class="stat b"><strong>33 of 35</strong><span>Claude Sonnet 5.5. It got all the noise PNGs and missed two shape PNGs by two and three pixels.</span></div>
       <div class="stat r"><strong>0 of 7</strong><span>PNGs for Gemini 3.8 Flash at low effort, five of them answered with high confidence.</span></div>
     </div>
-    <div class="bar">
-      <div class="chips" id="heatView" role="group" aria-label="What the cells show">
-        <button data-v="acc" aria-pressed="true">Images decoded</button><button data-v="cost" aria-pressed="false">Cost per call</button>
-      </div>
-      <span class="note">Formats run easiest to hardest, left to right.</span>
-    </div>
-    <div class="scroll"><table class="heat" id="heat"></table></div>
-    <div class="scale" id="heatScale"></div>
+    <p style="margin-top:18px"><a href="#results">The full table, with every image behind every cell, is at the top &uarr;</a></p>
   </div>
 </section>
 
-<section class="band white">
+<section id="price" class="band white">
   <div class="wrap">
     <div class="chapter"><b>8</b> The price of being right</div>
     <div class="prose">
       <h2>Accuracy against cost</h2>
       <p>Each point is one model at one reasoning setting. Up is better, left is cheaper. The cost axis is logarithmic: every gridline is ten times the one before it.</p>
-    </div>
-    <div class="bar">
-      <div class="chips" id="scatterFmt" role="group" aria-label="Format shown"></div>
-      <span class="note">Pick a format and watch the points move.</span>
-    </div>
-    <div class="panel" style="padding:18px 18px 10px"><div class="scroll"><svg id="scatter" viewBox="0 0 960 470" role="img" aria-label="Scatter plot of share of images decoded against average cost per call"></svg></div></div>
-    <div class="legend" id="legend"></div>
-    <p class="note" style="margin-top:12px">Seven images per format per point, except GPT-6 Luna with reasoning off and at low effort, which ran on four. With all formats selected, each point averages its five formats equally. The dashed line joins GPT-6 Luna&rsquo;s three settings, from reasoning off to high effort.</p>
-    <div class="two" style="margin-top:30px">
-      <ul class="tight">
-        <li><mark>GPT-6 Sol is the best buy.</mark> The only perfect score, at about 60% of Sonnet&rsquo;s cost.</li>
-        <li><b>GPT-6 Luna costs a quarter of what Sol does</b> and decodes two thirds of the images. It is solid on the simple formats and fades on BMP and PNG.</li>
-      </ul>
-      <ul class="tight">
-        <li><b>Gemini 3.8 Flash at low effort costs as much as Sol and decodes about half.</b> Ten of its sixteen misses came with high confidence.</li>
-        <li><b>PNG is the expensive format.</b> About 45 seconds and 4&ndash;7 cents for Sol and Sonnet, against seconds and under a cent for the same picture as PBM.</li>
-      </ul>
+      <p>PNG is where the money goes: about 45 seconds and 4&ndash;7 cents a call for Sol and Sonnet, against seconds and under a cent for the same picture as PBM. <a href="#cost">The chart and what it shows are at the top &uarr;</a></p>
     </div>
   </div>
 </section>
 
-<section class="band green">
+<section id="twist" class="band green">
   <div class="wrap">
     <div class="chapter"><b>9</b> One more twist</div>
     <div class="two">
@@ -420,7 +574,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
   </div>
 </section>
 
-<section class="band ink">
+<section id="meaning" class="band ink">
   <div class="wrap">
     <div class="chapter"><b>10</b> What it means, and what it doesn&rsquo;t</div>
     <div class="two">
@@ -430,7 +584,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
         <p><mark>This is not a better way to send images.</mark> Attaching an image normally is far cheaper and far more reliable. What this measures is how far reasoning alone can go on raw data.</p>
       </div>
       <div>
-        <h3 style="margin-top:0">Read with care</h3>
+        <h3 style="margin-top:0" id="caveats">Read with care</h3>
         <ul class="tight">
           <li><b>Small counts.</b> Seven images, one run per cell. Enough to see the pattern, not enough for fine comparisons.</li>
           <li><b>Tiny images.</b> These are 20&ndash;130 characters of base64. A real photo is hundreds of thousands. Nothing here says the result carries over.</li>
@@ -441,7 +595,7 @@ footer { padding: 30px 0 60px; font-size: 14.5px; background: var(--ink); color:
     </div>
     <div class="two" style="margin-top:44px">
       <div>
-        <h3 style="margin-top:0">The bill</h3>
+        <h3 style="margin-top:0" id="bill">The bill</h3>
         <div class="panel pad"><table class="plain" id="spend"></table></div>
       </div>
       <div>
@@ -457,12 +611,15 @@ python make_site.py       <i># this page</i></pre>
     <p style="margin-top:28px"><a href="https://github.com/atharva-729/base64-image-probe">Repository</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/README.md">The full story, with the technical detail</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/results/api_runs/README.md">Results report</a> &nbsp;&middot;&nbsp; <a href="https://github.com/atharva-729/base64-image-probe/blob/first-results/responses.jsonl">Every raw reply</a></p>
   </div>
 </section>
+</div>
 </main>
+
+<dialog id="cell" aria-labelledby="cellTitle"></dialog>
 
 <footer><div class="wrap">Atharva Sharma &middot; Models were called through OpenRouter between 5 and 11 October 2026.</div></footer>
 
 <script>
-const D = {"configs": [{"name": "Claude Sonnet 5.5", "effort": "high effort", "vendor": "anthropic", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.002242857142857143, "tokens": 0.0, "seconds": 3.357142857142857}, "pbm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.007852857142857142, "tokens": 577.2857142857143, "seconds": 6.871428571428572}, "pgm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.032221428571428574, "tokens": 2983.5714285714284, "seconds": 20.87142857142857}, "bmp": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.017684285714285715, "tokens": 1459.5714285714287, "seconds": 13.12857142857143}, "png": {"n": 7, "decoded": 5, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.06942428571428572, "tokens": 6640.142857142857, "seconds": 49.84285714285714}}}, {"name": "GPT-6 Sol", "effort": "medium effort", "vendor": "openai", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.001917142857142857, "tokens": 109.57142857142857, "seconds": 3.314285714285714}, "pbm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.004747142857142858, "tokens": 391.85714285714283, "seconds": 7.242857142857142}, "pgm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.016992857142857143, "tokens": 1613.4285714285713, "seconds": 15.542857142857143}, "bmp": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.009724285714285715, "tokens": 885.8571428571429, "seconds": 10.071428571428571}, "png": {"n": 7, "decoded": 7, "flipped": 4, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.04377142857142857, "tokens": 4287.0, "seconds": 44.728571428571435}}}, {"name": "GPT-6 Luna", "effort": "high effort", "vendor": "openai", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0004171428571428572, "tokens": 748.5714285714286, "seconds": 9.757142857142856}, "pbm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0008742857142857144, "tokens": 1663.142857142857, "seconds": 17.728571428571428}, "pgm": {"n": 7, "decoded": 5, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.004015714285714286, "tokens": 7933.571428571428, "seconds": 66.9}, "bmp": {"n": 7, "decoded": 3, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 4, "cost": 0.005435714285714286, "tokens": 10766.857142857143, "seconds": 94.07142857142857}, "png": {"n": 7, "decoded": 2, "flipped": 0, "cutOff": 3, "declined": 0, "wrong": 2, "cost": 0.009928571428571429, "tokens": 19791.85714285714, "seconds": 165.32857142857142}}}, {"name": "GPT-6 Luna", "effort": "low effort", "vendor": "openai", "formats": {"grid": {"n": 4, "decoded": 4, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00019, "tokens": 290.25, "seconds": 5.3}, "pbm": {"n": 4, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.0004175, "tokens": 751.0, "seconds": 10.175}, "pgm": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 3, "wrong": 1, "cost": 0.001105, "tokens": 2122.5, "seconds": 21.6}, "bmp": {"n": 4, "decoded": 4, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0007199999999999999, "tokens": 1354.5, "seconds": 15.4}, "png": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 4, "wrong": 0, "cost": 0.00087, "tokens": 1663.0, "seconds": 19.875}}}, {"name": "Gemini 3.8 Flash", "effort": "low effort", "vendor": "google", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00149, "tokens": 216.85714285714286, "seconds": 3.442857142857143}, "pbm": {"n": 7, "decoded": 6, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 1, "cost": 0.008515714285714286, "tokens": 2077.4285714285716, "seconds": 12.87142857142857}, "pgm": {"n": 7, "decoded": 2, "flipped": 0, "cutOff": 1, "declined": 0, "wrong": 4, "cost": 0.02645, "tokens": 6807.428571428572, "seconds": 42.128571428571426}, "bmp": {"n": 7, "decoded": 4, "flipped": 0, "cutOff": 1, "declined": 0, "wrong": 2, "cost": 0.023692857142857144, "tokens": 6094.0, "seconds": 37.971428571428575}, "png": {"n": 7, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 7, "cost": 0.014310000000000002, "tokens": 3486.0, "seconds": 23.485714285714288}}}, {"name": "GPT-6 Luna", "effort": "reasoning off", "vendor": "openai", "formats": {"grid": {"n": 4, "decoded": 4, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 4e-05, "tokens": 0.0, "seconds": 1.85}, "pbm": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 4, "cost": 4.75e-05, "tokens": 0.0, "seconds": 2.375}, "pgm": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 4, "cost": 6.25e-05, "tokens": 0.0, "seconds": 1.925}, "bmp": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 2, "wrong": 2, "cost": 4.25e-05, "tokens": 0.0, "seconds": 2.0}, "png": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 1, "wrong": 3, "cost": 4e-05, "tokens": 0.0, "seconds": 2.1}}}], "formats": ["grid", "pbm", "pgm", "bmp", "png"], "gallery": [{"name": "Claude Sonnet 5.5", "setting": "high effort", "said": "“The digit 7.” Confidence: medium–high.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 6327, "seconds": 49.4, "cost": 0.065772}, {"name": "GPT-6 Sol", "setting": "medium effort", "said": "“A white 7 on a black background.” Confidence: high.", "verdict": "flipped", "grid": ["10000001", "11111001", "11111011", "11111011", "11110111", "11110111", "11100111", "11101111"], "tokens": 3537, "seconds": 34.6, "cost": 0.036218}, {"name": "GPT-6 Luna", "setting": "high effort, 2nd run", "said": "“The digit 7.” Confidence: high.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 21188, "seconds": 238.5, "cost": 0.0106374}, {"name": "GPT-6 Luna", "setting": "high effort, 3rd run", "said": "“A short horizontal bar with a narrow, slightly zigzagging stem.” Confidence: medium.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 12638, "seconds": 145.1, "cost": 0.0063659}, {"name": "Gemini 3.8 Flash", "setting": "medium effort", "said": "“An X, formed by two intersecting diagonal lines.” Confidence: high.", "verdict": "wrong", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "tokens": 11520, "seconds": 69.3, "cost": 0.04494225}, {"name": "Gemini 3.8 Flash", "setting": "low effort", "said": "“A classic pixel-art smiley face.” Confidence: high.", "verdict": "wrong", "grid": ["00111100", "01000010", "10011001", "10000001", "10100101", "10011001", "01000010", "00111100"], "tokens": 0, "seconds": 5.3, "cost": 0.00238725}, {"name": "GPT-6 Luna", "setting": "reasoning off", "said": "“A small pixel-art key.” Confidence: medium.", "verdict": "wrong", "grid": ["01011100", "01011000", "01110000", "11101100", "01111100", "01111000", "01010000", "00000000"], "tokens": 0, "seconds": 2.5, "cost": 4.19e-05}, {"name": "GPT-6 Luna", "setting": "medium effort", "said": "“An abstract pixel pattern; I can’t confidently identify it.” Confidence: low.", "verdict": "wrong", "grid": ["01111111", "00000110", "00000110", "11111111", "00000011", "00000000", "00000000", "00000000"], "tokens": 8054, "seconds": 73.5, "cost": 0.0040839}, {"name": "Claude Sonnet 5.5", "setting": "medium effort, did not reason", "said": "“This guess looks like the letter A … not a verified decode.” Confidence: low.", "verdict": "guess", "grid": ["00011000", "00111100", "01100110", "11000011", "11111111", "11000011", "11000011", "11000011"], "tokens": 0, "seconds": 6.1, "cost": 0.004682}, {"name": "Claude Sonnet 5.5", "setting": "low effort, did not reason", "said": "“A made-up grid would be fabricated, so I’m not giving one.”", "verdict": "declined", "grid": null, "tokens": 0, "seconds": 5.0, "cost": 0.004312}], "truth": {"digit_1": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "digit_7": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "shape_x": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "shape_circle": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "noise_a": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "noise_b": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "noise_c": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"]}, "encodings": {"grid": "01111110\n00000110\n00000100\n00000100\n00001000\n00001000\n00011000\n00010000", "pbm": "UDQKOCA4Cn4GBAQICBgQ", "pgm": "UDUKOCA4CjI1NQr/AAAAAAAA////////AAD///////8A/////////wD///////8A/////////wD///////8AAP///////wD/////", "bmp": "Qk1eAAAAAAAAAD4AAAAoAAAACAAAAAgAAAABAAEAAAAAACAAAADEDgAAxA4AAAIAAAACAAAAAAAAAP///wDvAAAA5wAAAPcAAAD3AAAA+wAAAPsAAAD5AAAAgQAAAA==", "png": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQAAAADsdIMmAAAAGElEQVR4nGNoZPjJxMTEwPSHiYHpAxMHAB5qA32rRw2yAAAAAElFTkSuQmCC"}, "spend": [{"model": "anthropic/claude-sonnet-5.5", "calls": 39, "cost": 0.9238120000000001}, {"model": "google/gemini-3.8-flash", "calls": 36, "cost": 0.566139}, {"model": "openai/gpt-6-sol", "calls": 36, "cost": 0.5408520000000001}, {"model": "openai/gpt-6-luna", "calls": 107, "cost": 0.3806257999999998}], "totalCalls": 218, "totalCost": 2.4114288};
+const D = {"configs": [{"name": "Claude Sonnet 5.5", "effort": "high effort", "vendor": "anthropic", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.002242857142857143, "tokens": 0.0, "seconds": 3.357142857142857, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The digit \"1\".", "confidence": "high", "tokens": 0, "seconds": 4.0, "cost": 0.0017}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The top row is a horizontal bar spanning columns 1–6.", "confidence": "medium", "tokens": 0, "seconds": 2.7, "cost": 0.00233}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "Two diagonal lines that cross, forming a large \"X\".", "confidence": "high", "tokens": 0, "seconds": 2.7, "cost": 0.00191}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "A hollow circle, drawn as an outline with a ring of black pixels and an empty white center.", "confidence": "high", "tokens": 0, "seconds": 2.2, "cost": 0.00182}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "It looks like random noise, or a static-like pattern, with no discernible object, letter, or digit.", "confidence": "medium", "tokens": 0, "seconds": 5.4, "cost": 0.00322}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "I can't see a clear picture in it.", "confidence": "medium", "tokens": 0, "seconds": 3.8, "cost": 0.00248}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "I can't make out any recognizable object, letter, or symbol.", "confidence": "low", "tokens": 0, "seconds": 2.7, "cost": 0.00224}]}, "pbm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.007852857142857142, "tokens": 577.2857142857143, "seconds": 6.871428571428572, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The digit \"1\".", "confidence": "high", "tokens": 548, "seconds": 6.7, "cost": 0.00737}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image looks like the digit \"7\".", "confidence": "high", "tokens": 636, "seconds": 7.0, "cost": 0.0077}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "A large \"X\", made of two diagonal lines that cross in the center and run corner to corner.", "confidence": "high", "tokens": 503, "seconds": 5.8, "cost": 0.00716}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "An empty circle (a ring outline) with rounded corners, centered in the 8x8 frame.", "confidence": "high", "tokens": 564, "seconds": 6.4, "cost": 0.00688}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "I can't see any recognizable object, letter, or symbol in it.", "confidence": "high", "tokens": 560, "seconds": 6.6, "cost": 0.00822}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "I can't see a recognizable shape in it.", "confidence": "high", "tokens": 550, "seconds": 7.2, "cost": 0.00826}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "I can't see a recognizable object, letter, or symbol in it.", "confidence": "high", "tokens": 680, "seconds": 8.4, "cost": 0.00938}]}, "pgm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.032221428571428574, "tokens": 2983.5714285714284, "seconds": 20.87142857142857, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The digit \"1\" in a simple serif style.", "confidence": "high", "tokens": 2727, "seconds": 19.6, "cost": 0.02889}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The grid looks like a handwritten digit 7.", "confidence": "medium", "tokens": 3956, "seconds": 28.4, "cost": 0.04205}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "A large \"X\", made of two diagonal lines that cross in the center.", "confidence": "high", "tokens": 2773, "seconds": 20.9, "cost": 0.02932}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "A hollow circle, drawn as a black outline on a white background.", "confidence": "high", "tokens": 2651, "seconds": 18.0, "cost": 0.02872}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "I can't see a recognizable shape, letter, or object in it.", "confidence": "medium", "tokens": 2445, "seconds": 16.7, "cost": 0.02742}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "I can't see a clear object, letter or symbol in it.", "confidence": "low", "tokens": 3497, "seconds": 24.3, "cost": 0.03785}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "I can't see a clear shape in it.", "confidence": "medium", "tokens": 2836, "seconds": 18.2, "cost": 0.0313}]}, "bmp": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.017684285714285715, "tokens": 1459.5714285714287, "seconds": 13.12857142857143, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The digit \"1\", drawn as a vertical stroke with a small diagonal flag at the top left and a horizontal base line at the bottom.", "confidence": "high", "tokens": 1085, "seconds": 11.0, "cost": 0.01403}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The digit \"7\".", "confidence": "high", "tokens": 868, "seconds": 9.3, "cost": 0.01071}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "A large \"X\", made of two diagonal lines crossing in the center of the image.", "confidence": "high", "tokens": 759, "seconds": 8.4, "cost": 0.0106}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "A hollow circle (ring outline) in black on a white background.", "confidence": "high", "tokens": 785, "seconds": 9.6, "cost": 0.01036}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "I can't make out any recognisable shape, letter or symbol.", "confidence": "medium", "tokens": 2540, "seconds": 20.1, "cost": 0.02955}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "I can't see a clear recognizable shape in this grid.", "confidence": "high", "tokens": 1856, "seconds": 14.7, "cost": 0.0223}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "I can't see a recognizable picture, letter, or symbol in it.", "confidence": "high", "tokens": 2324, "seconds": 18.8, "cost": 0.02624}]}, "png": {"n": 7, "decoded": 5, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.06942428571428572, "tokens": 6640.142857142857, "seconds": 49.84285714285714, "images": [{"image": "digit_1", "verdict": "wrong", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "01110100"], "said": "A small, rough digit \"1\": a vertical stroke with a short diagonal flag at the top and a base at the bottom.", "confidence": "low", "tokens": 5776, "seconds": 43.4, "cost": 0.06075}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The digit 7.", "confidence": "medium", "tokens": 6327, "seconds": 49.4, "cost": 0.06577}, {"image": "shape_x", "verdict": "wrong", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000010"], "said": "A black \"X\", with two diagonals crossing in the middle, on a white background.", "confidence": "medium", "tokens": 4797, "seconds": 35.2, "cost": 0.05097}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "A hollow circle, or ring, drawn as a black outline on a white background.", "confidence": "medium", "tokens": 8863, "seconds": 68.9, "cost": 0.09101}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "I can't see any recognizable object, letter, or symbol.", "confidence": "", "tokens": 6794, "seconds": 49.6, "cost": 0.07183}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "I can't see a recognizable shape, letter, or symbol.", "confidence": "high", "tokens": 7425, "seconds": 54.9, "cost": 0.0771}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "I can't see a recognizable object, letter or symbol in it.", "confidence": "", "tokens": 6499, "seconds": 47.5, "cost": 0.06854}]}}}, {"name": "GPT-6 Sol", "effort": "medium effort", "vendor": "openai", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.001917142857142857, "tokens": 109.57142857142857, "seconds": 3.314285714285714, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the number 1.", "confidence": "high", "tokens": 89, "seconds": 3.7, "cost": 0.00167}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the number 7.", "confidence": "high", "tokens": 69, "seconds": 3.4, "cost": 0.00147}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows a black X on a white background.", "confidence": "high", "tokens": 26, "seconds": 2.2, "cost": 0.00104}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows the outline of a circle.", "confidence": "high", "tokens": 0, "seconds": 1.5, "cost": 0.00074}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "It shows an abstract black-and-white pixel pattern; I can’t identify a clear object.", "confidence": "medium", "tokens": 217, "seconds": 3.9, "cost": 0.00309}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image looks like an abstract pattern of black and white pixels; I can’t identify a recognizable object.", "confidence": "medium", "tokens": 77, "seconds": 3.3, "cost": 0.00165}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "The image does not show an object I can reliably identify; it looks like an abstract pixel pattern.", "confidence": "low", "tokens": 289, "seconds": 5.2, "cost": 0.00376}]}, "pbm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.004747142857142858, "tokens": 391.85714285714283, "seconds": 7.242857142857142, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the digit 1.", "confidence": "high", "tokens": 293, "seconds": 4.2, "cost": 0.00372}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the digit 7.", "confidence": "high", "tokens": 307, "seconds": 4.8, "cost": 0.00381}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows a black X on a white background.", "confidence": "high", "tokens": 253, "seconds": 15.2, "cost": 0.00332}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows an outlined circle, like the letter O.", "confidence": "high", "tokens": 270, "seconds": 3.9, "cost": 0.00352}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "It looks like an abstract pixel pattern; I can’t identify a specific object.", "confidence": "high", "tokens": 623, "seconds": 7.4, "cost": 0.00715}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image looks like an irregular black-and-white pixel pattern, with no recognizable object.", "confidence": "medium", "tokens": 412, "seconds": 6.6, "cost": 0.00497}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "It shows an irregular black-and-white pattern, with no clearly recognizable object.", "confidence": "high", "tokens": 585, "seconds": 8.6, "cost": 0.00674}]}, "pgm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.016992857142857143, "tokens": 1613.4285714285713, "seconds": 15.542857142857143, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the number 1.", "confidence": "high", "tokens": 1182, "seconds": 11.7, "cost": 0.01262}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the digit 7.", "confidence": "high", "tokens": 1455, "seconds": 13.7, "cost": 0.01535}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X.", "confidence": "high", "tokens": 1482, "seconds": 12.5, "cost": 0.01568}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows the outline of a circle.", "confidence": "high", "tokens": 1542, "seconds": 18.8, "cost": 0.0162}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to be an abstract pixel pattern; I can’t identify a recognizable object.", "confidence": "low", "tokens": 1800, "seconds": 17.2, "cost": 0.01891}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be an abstract arrangement of black and white pixels; I can’t identify a specific object.", "confidence": "medium", "tokens": 1552, "seconds": 15.5, "cost": 0.01645}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "It looks like an irregular black-and-white pixel pattern, not a clearly identifiable object.", "confidence": "low", "tokens": 2281, "seconds": 19.4, "cost": 0.02374}]}, "bmp": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.009724285714285715, "tokens": 885.8571428571429, "seconds": 10.071428571428571, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the digit 1.", "confidence": "high", "tokens": 764, "seconds": 8.5, "cost": 0.00846}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the number 7.", "confidence": "high", "tokens": 943, "seconds": 9.1, "cost": 0.01029}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X.", "confidence": "high", "tokens": 379, "seconds": 5.3, "cost": 0.00458}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows a black circle outline.", "confidence": "high", "tokens": 411, "seconds": 6.2, "cost": 0.00489}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to be an abstract pixel pattern rather than a clearly recognizable object.", "confidence": "low", "tokens": 1514, "seconds": 16.1, "cost": 0.01602}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "It looks like an abstract pixel pattern; I can’t identify a recognizable object.", "confidence": "low", "tokens": 825, "seconds": 9.8, "cost": 0.00917}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "It looks like an abstract arrangement of black and white pixels, not a recognizable object.", "confidence": "high", "tokens": 1365, "seconds": 15.5, "cost": 0.01466}]}, "png": {"n": 7, "decoded": 7, "flipped": 4, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.04377142857142857, "tokens": 4287.0, "seconds": 44.728571428571435, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the digit 1.", "confidence": "high", "tokens": 3428, "seconds": 34.0, "cost": 0.03508}, {"image": "digit_7", "verdict": "flipped", "grid": ["10000001", "11111001", "11111011", "11111011", "11110111", "11110111", "11100111", "11101111"], "said": "The image shows a white 7 on a black background.", "confidence": "high", "tokens": 3537, "seconds": 34.6, "cost": 0.03622}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X.", "confidence": "high", "tokens": 2556, "seconds": 41.8, "cost": 0.02638}, {"image": "shape_circle", "verdict": "flipped", "grid": ["11000011", "10111101", "01111110", "01111110", "01111110", "01111110", "10111101", "11000011"], "said": "The image looks like a black circle with small white gaps near its edges.", "confidence": "medium", "tokens": 3106, "seconds": 33.6, "cost": 0.03192}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "It looks like an abstract, irregular pixel pattern rather than a recognizable object.", "confidence": "medium", "tokens": 8804, "seconds": 81.9, "cost": 0.08911}, {"image": "noise_b", "verdict": "flipped", "grid": ["10000001", "01101001", "11111011", "00101100", "01011111", "11011100", "01001111", "00110110"], "said": "The image appears to be an abstract black-and-white pixel pattern, with no clearly identifiable object.", "confidence": "medium", "tokens": 4954, "seconds": 50.1, "cost": 0.05045}, {"image": "noise_c", "verdict": "flipped", "grid": ["11011101", "00011100", "01100101", "00010101", "01011111", "11101010", "00000010", "11011110"], "said": "The image looks like an abstract, irregular black-and-white pixel pattern rather than a recognizable object.", "confidence": "high", "tokens": 3624, "seconds": 37.1, "cost": 0.03724}]}}}, {"name": "GPT-6 Luna", "effort": "high effort", "vendor": "openai", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0004171428571428572, "tokens": 748.5714285714286, "seconds": 9.757142857142856, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the numeral 1.", "confidence": "high", "tokens": 327, "seconds": 6.2, "cost": 0.0002}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the digit 7.", "confidence": "high", "tokens": 307, "seconds": 5.7, "cost": 0.00019}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X.", "confidence": "high", "tokens": 80, "seconds": 3.0, "cost": 8e-05}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows a circular outline, like a ring or the digit 0.", "confidence": "high", "tokens": 64, "seconds": 3.0, "cost": 7e-05}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The grid looks like an abstract, irregular pixel pattern; I can’t confidently identify a specific object.", "confidence": "low", "tokens": 1764, "seconds": 19.9, "cost": 0.00093}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be an abstract, irregular pixel pattern; I can’t confidently identify a specific object.", "confidence": "low", "tokens": 1383, "seconds": 17.4, "cost": 0.00074}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "It looks like an abstract, jagged pixel-art shape, perhaps a small creature or insect; it isn’t clearly identifiable.", "confidence": "low", "tokens": 1315, "seconds": 13.1, "cost": 0.00071}]}, "pbm": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0008742857142857144, "tokens": 1663.142857142857, "seconds": 17.728571428571428, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "It appears to show a stylized number 1.", "confidence": "medium", "tokens": 1282, "seconds": 13.3, "cost": 0.00068}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "It looks like a pixelated numeral 7.", "confidence": "medium", "tokens": 1583, "seconds": 17.5, "cost": 0.00083}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X formed by two diagonal lines.", "confidence": "high", "tokens": 1989, "seconds": 21.8, "cost": 0.00103}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows a hollow circle.", "confidence": "high", "tokens": 956, "seconds": 12.4, "cost": 0.00051}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to be an abstract, irregular pixel pattern; I don’t see a clearly recognizable object.", "confidence": "medium", "tokens": 1552, "seconds": 15.5, "cost": 0.00083}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "It appears to be an irregular black-and-white pixel pattern, with no clearly recognizable subject.", "confidence": "high", "tokens": 1787, "seconds": 19.2, "cost": 0.00094}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "It shows an irregular, abstract pixel pattern.", "confidence": "low", "tokens": 2493, "seconds": 24.4, "cost": 0.0013}]}, "pgm": {"n": 7, "decoded": 5, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.004015714285714286, "tokens": 7933.571428571428, "seconds": 66.9, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "It looks like a small, stylized number 1 with a broad base.", "confidence": "medium", "tokens": 10036, "seconds": 82.4, "cost": 0.00507}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "It resembles a stylized 7, with a horizontal top and a bent stroke descending to the left.", "confidence": "medium", "tokens": 8748, "seconds": 74.0, "cost": 0.00442}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows a black X formed by diagonal lines, with a thicker center.", "confidence": "high", "tokens": 3927, "seconds": 32.7, "cost": 0.00201}, {"image": "shape_circle", "verdict": "wrong", "grid": ["00111100", "11000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "It looks like a roughly oval outline, similar to a capital “O,” with a slight irregularity on the left near the top.", "confidence": "medium", "tokens": 8444, "seconds": 75.8, "cost": 0.00427}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to be an irregular black-and-white pixel pattern; I can’t identify a clear object.", "confidence": "high", "tokens": 8121, "seconds": 62.6, "cost": 0.00411}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be an irregular abstract pixel pattern; I can’t confidently identify a specific object.", "confidence": "medium", "tokens": 7973, "seconds": 64.0, "cost": 0.00404}, {"image": "noise_c", "verdict": "wrong", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111110", "10010001"], "said": "The image appears to be an irregular abstract pixel pattern; no clear object is identifiable.", "confidence": "medium", "tokens": 8286, "seconds": 76.8, "cost": 0.00419}]}, "bmp": {"n": 7, "decoded": 3, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 4, "cost": 0.005435714285714286, "tokens": 10766.857142857143, "seconds": 94.07142857142857, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "It looks like a small upright object with a narrow stem and a broad base, perhaps a stylized candlestick.", "confidence": "medium", "tokens": 9947, "seconds": 92.2, "cost": 0.00503}, {"image": "digit_7", "verdict": "wrong", "grid": ["01111111", "00001000", "00001000", "00000100", "00000100", "00001000", "00011000", "00010000"], "said": "It shows a small, bent pixel shape with a long horizontal bar across the top; I can’t confidently identify it as a specific object.", "confidence": "low", "tokens": 10876, "seconds": 112.7, "cost": 0.00549}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows a white diamond centered on a black background.", "confidence": "high", "tokens": 4760, "seconds": 43.3, "cost": 0.00242}, {"image": "shape_circle", "verdict": "wrong", "grid": ["00111100", "01000010", "10000001", "10000001", "01111111", "10000001", "01000010", "00111100"], "said": "It looks like a roughly circular outline with a thick horizontal band across it; the tiny image doesn’t make a more specific subject clear.", "confidence": "medium", "tokens": 17208, "seconds": 153.1, "cost": 0.00866}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "It appears to be an irregular abstract black-and-white pattern; I can’t identify a specific object.", "confidence": "medium", "tokens": 9003, "seconds": 85.8, "cost": 0.00456}, {"image": "noise_b", "verdict": "wrong", "grid": ["01111110", "10010110", "00000100", "11010111", "10100000", "00100111", "10110000", "11001001"], "said": "The image appears to be an abstract, scattered pixel pattern; I can’t identify a specific object.", "confidence": "medium", "tokens": 9439, "seconds": 72.3, "cost": 0.00477}, {"image": "noise_c", "verdict": "wrong", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11110111", "00100001"], "said": "It appears to be an irregular, abstract pixel pattern; I can’t confidently identify a specific object.", "confidence": "medium", "tokens": 14135, "seconds": 99.1, "cost": 0.00712}]}, "png": {"n": 7, "decoded": 2, "flipped": 0, "cutOff": 3, "declined": 0, "wrong": 2, "cost": 0.009928571428571429, "tokens": 19791.85714285714, "seconds": 165.32857142857142, "images": [{"image": "digit_1", "verdict": "wrong", "grid": ["00001001", "00011001", "00101001", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "It looks like a vertical stem with a short branching shape near the top and a wider base.", "confidence": "medium", "tokens": 17092, "seconds": 132.2, "cost": 0.0086}, {"image": "digit_7", "verdict": "cutOff", "grid": null, "said": "", "confidence": "", "tokens": 24000, "seconds": 246.7, "cost": 0.01201}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows a black X on a white background.", "confidence": "high", "tokens": 13984, "seconds": 130.4, "cost": 0.00703}, {"image": "shape_circle", "verdict": "wrong", "grid": ["00111100", "01000010", "11100001", "11100001", "11100001", "11100001", "10100010", "10011011"], "said": "It looks like an abstract, asymmetrical pixel-art figure; I can’t confidently identify a specific object.", "confidence": "medium", "tokens": 17965, "seconds": 109.4, "cost": 0.00904}, {"image": "noise_a", "verdict": "cutOff", "grid": null, "said": "", "confidence": "", "tokens": 24000, "seconds": 198.5, "cost": 0.01201}, {"image": "noise_b", "verdict": "cutOff", "grid": null, "said": "", "confidence": "", "tokens": 24000, "seconds": 212.3, "cost": 0.01201}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "It looks like a small pixel-art creature or face, though the exact subject is unclear.", "confidence": "high", "tokens": 17502, "seconds": 127.8, "cost": 0.0088}]}}}, {"name": "GPT-6 Luna", "effort": "low effort", "vendor": "openai", "formats": {"grid": {"n": 4, "decoded": 4, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00019, "tokens": 290.25, "seconds": 5.3, "images": [{"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows a stylized number 7.", "confidence": "high", "tokens": 134, "seconds": 5.3, "cost": 0.00011}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X shape made of black pixels.", "confidence": "high", "tokens": 118, "seconds": 3.3, "cost": 0.0001}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to be an irregular black-and-white pixel pattern; I can’t identify a clear subject.", "confidence": "low", "tokens": 436, "seconds": 6.5, "cost": 0.00027}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be an irregular, abstract pattern of black and white pixels; I can’t confidently identify a specific object.", "confidence": "low", "tokens": 473, "seconds": 6.1, "cost": 0.00028}]}, "pbm": {"n": 4, "decoded": 2, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 2, "cost": 0.0004175, "tokens": 751.0, "seconds": 10.175, "images": [{"image": "digit_7", "verdict": "wrong", "grid": ["01111111", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "It looks like a pixelated numeral 7.", "confidence": "medium", "tokens": 909, "seconds": 12.0, "cost": 0.00049}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X.", "confidence": "high", "tokens": 606, "seconds": 8.9, "cost": 0.00034}, {"image": "noise_a", "verdict": "wrong", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101010", "01010011", "00010111"], "said": "The image appears to be an abstract, irregular black-and-white pattern; I can’t identify a clear object.", "confidence": "high", "tokens": 858, "seconds": 11.8, "cost": 0.00048}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be an abstract, irregular pixel pattern; I don’t see a clear recognizable object.", "confidence": "medium", "tokens": 631, "seconds": 8.0, "cost": 0.00036}]}, "pgm": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 3, "wrong": 1, "cost": 0.001105, "tokens": 2122.5, "seconds": 21.6, "images": [{"image": "digit_7", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the full pixel grid from the provided string without decoding it, so I can’t confidently identify the image.", "confidence": "low", "tokens": 1808, "seconds": 19.1, "cost": 0.00094}, {"image": "shape_x", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the pixel grid from the supplied data: the encoded bytes appear inconsistent with an 8×8 PGM image, so I can’t…", "confidence": "high", "tokens": 1764, "seconds": 17.8, "cost": 0.00093}, {"image": "noise_a", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the full grid from the encoded string by hand, so I can’t confidently identify the image.", "confidence": "low", "tokens": 2465, "seconds": 24.4, "cost": 0.00127}, {"image": "noise_b", "verdict": "wrong", "grid": ["01111110", "10010110", "00000001", "01010111", "01000000", "01000000", "10001100", "11001001"], "said": "It shows a small, abstract pixel-art pattern; I can’t confidently identify a specific object.", "confidence": "high", "tokens": 2453, "seconds": 25.1, "cost": 0.00128}]}, "bmp": {"n": 4, "decoded": 4, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.0007199999999999999, "tokens": 1354.5, "seconds": 15.4, "images": [{"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "It shows a small pixelated, zigzagging mark.", "confidence": "medium", "tokens": 1734, "seconds": 18.8, "cost": 0.00091}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows a white diamond on a black background.", "confidence": "high", "tokens": 1377, "seconds": 15.5, "cost": 0.00073}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to be an abstract, irregular pixel pattern; I can’t confidently identify a specific object.", "confidence": "medium", "tokens": 1019, "seconds": 13.6, "cost": 0.00055}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be an abstract, irregular pixel pattern; I can’t identify a clear object.", "confidence": "medium", "tokens": 1288, "seconds": 13.7, "cost": 0.00069}]}, "png": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 4, "wrong": 0, "cost": 0.00087, "tokens": 1663.0, "seconds": 19.875, "images": [{"image": "digit_7", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the pixels from the encoded data without decoding it, so I can’t give a trustworthy grid or identify the image.", "confidence": "low", "tokens": 1853, "seconds": 24.1, "cost": 0.00096}, {"image": "shape_x", "verdict": "declined", "grid": null, "said": "Undetermined", "confidence": "low", "tokens": 1415, "seconds": 15.3, "cost": 0.00076}, {"image": "noise_a", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the pixel grid from the encoded data without decoding it, so I can’t confidently say what the image shows.", "confidence": "low", "tokens": 1552, "seconds": 20.2, "cost": 0.00081}, {"image": "noise_b", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the pixel grid from this encoded data by hand, so I can’t identify the image without guessing.", "confidence": "low", "tokens": 1832, "seconds": 19.9, "cost": 0.00095}]}}}, {"name": "Gemini 3.8 Flash", "effort": "low effort", "vendor": "google", "formats": {"grid": {"n": 7, "decoded": 7, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 0.00149, "tokens": 216.85714285714286, "seconds": 3.442857142857143, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the number \"1\" (digit one).", "confidence": "high", "tokens": 0, "seconds": 1.8, "cost": 0.00049}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the number 7 (seven).", "confidence": "high", "tokens": 285, "seconds": 3.4, "cost": 0.00156}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows the letter \"X\" (or a diagonal cross), formed by two intersecting diagonal lines running from corner to corner.", "confidence": "high", "tokens": 161, "seconds": 2.9, "cost": 0.00119}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows a circle (or a ring, the letter \"O\", or the digit \"0\").", "confidence": "high", "tokens": 184, "seconds": 3.1, "cost": 0.00125}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "Looking at the 0s and 1s, the white pixels (0s) or black pixels (1s) don't form a universally clear, standard icon, but looking at the cluster of…", "confidence": "low", "tokens": 0, "seconds": 3.3, "cost": 0.00117}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image does not clearly depict a standard recognizable icon, digit, or everyday object.", "confidence": "low", "tokens": 0, "seconds": 2.2, "cost": 0.00071}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "The image does not form a clearly identifiable standard icon or recognizable figure; it appears to be either random/pseudo-random pixel noise, a…", "confidence": "low", "tokens": 888, "seconds": 7.4, "cost": 0.00406}]}, "pbm": {"n": 7, "decoded": 6, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 1, "cost": 0.008515714285714286, "tokens": 2077.4285714285716, "seconds": 12.87142857142857, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the digit \"1\" (number one).", "confidence": "high", "tokens": 2619, "seconds": 16.8, "cost": 0.01025}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the digit 7.", "confidence": "high", "tokens": 1715, "seconds": 11.1, "cost": 0.00684}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows the letter X (or an \"X\" mark / diagonal cross).", "confidence": "high", "tokens": 751, "seconds": 5.1, "cost": 0.00326}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows a circle (or the letter \"O\" / number \"0\").", "confidence": "high", "tokens": 1599, "seconds": 10.2, "cost": 0.00644}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image represents an abstract low-resolution 8x8 icon/sprite.", "confidence": "", "tokens": 2540, "seconds": 17.5, "cost": 0.01162}, {"image": "noise_b", "verdict": "wrong", "grid": ["01111110", "10100110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image appears to be pseudorandom binary noise / a random 8x8 bitmap pattern (it does not depict a recognizable icon, letter, or object).", "confidence": "high", "tokens": 2324, "seconds": 11.4, "cost": 0.00929}, {"image": "noise_c", "verdict": "exact", "grid": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"], "said": "The image represents a stylized running person / stick figure (or a small 8x8 sprite of a character in motion).", "confidence": "low", "tokens": 2994, "seconds": 18.0, "cost": 0.01191}]}, "pgm": {"n": 7, "decoded": 2, "flipped": 0, "cutOff": 1, "declined": 0, "wrong": 4, "cost": 0.02645, "tokens": 6807.428571428572, "seconds": 42.128571428571426, "images": [{"image": "digit_1", "verdict": "wrong", "grid": ["00001000", "00011000", "00111000", "01111000", "00001000", "00001000", "00001000", "11111110"], "said": "The image shows a sailboat (a triangular sail on a mast with a boat hull at the bottom).", "confidence": "high", "tokens": 9600, "seconds": 70.0, "cost": 0.03669}, {"image": "digit_7", "verdict": "wrong", "grid": ["01111110", "00000000", "10000001", "00000000", "00000000", "10000001", "00000000", "01111110"], "said": "A circle / letter \"O\" (an outline of an ellipse/circle or rounded square)", "confidence": "high", "tokens": 1853, "seconds": 11.4, "cost": 0.00779}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows the letter \"X\" (or a cross / multiplication sign).", "confidence": "high", "tokens": 4877, "seconds": 29.3, "cost": 0.01897}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "A circle (or the letter 'O' / digit '0').", "confidence": "high", "tokens": 9601, "seconds": 59.4, "cost": 0.03712}, {"image": "noise_a", "verdict": "cutOff", "grid": null, "said": "", "confidence": "", "tokens": 5757, "seconds": 29.3, "cost": 0.02259}, {"image": "noise_b", "verdict": "wrong", "grid": ["01111110", "10010110", "00000100", "11010011", "01000000", "00100011", "10110000", "11001001"], "said": "At this low 8×8 resolution, the pattern appears to show an abstract pixel art icon or face (possibly an animal head, skull, or small 8-bit sprite…", "confidence": "low", "tokens": 6367, "seconds": 35.2, "cost": 0.02467}, {"image": "noise_c", "verdict": "wrong", "grid": ["00100010", "11011101", "11001100", "11101110", "10101010", "00000000", "10111111", "01001000"], "said": "Wait, looking at the pattern inverted (or standard convention where 1 is the foreground):", "confidence": "high", "tokens": 9597, "seconds": 60.3, "cost": 0.03732}]}, "bmp": {"n": 7, "decoded": 4, "flipped": 0, "cutOff": 1, "declined": 0, "wrong": 2, "cost": 0.023692857142857144, "tokens": 6094.0, "seconds": 37.971428571428575, "images": [{"image": "digit_1", "verdict": "exact", "grid": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "said": "The image shows the digit 1 (number one).", "confidence": "high", "tokens": 5497, "seconds": 33.4, "cost": 0.02127}, {"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows the digit 7.", "confidence": "high", "tokens": 4115, "seconds": 23.0, "cost": 0.01586}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an \"X\" (a cross mark / letter X).", "confidence": "high", "tokens": 4590, "seconds": 25.9, "cost": 0.01789}, {"image": "shape_circle", "verdict": "exact", "grid": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "said": "The image shows a circle (or the letter 'O' / ring / zero).", "confidence": "high", "tokens": 3505, "seconds": 21.0, "cost": 0.01361}, {"image": "noise_a", "verdict": "cutOff", "grid": null, "said": "", "confidence": "", "tokens": 5756, "seconds": 32.1, "cost": 0.02259}, {"image": "noise_b", "verdict": "wrong", "grid": ["01111110", "10010110", "11000100", "10100000", "11010011", "00100011", "10110000", "11001001"], "said": "The image depicts a small 8×8 pixel art icon / glyph (a Space Invader / alien sprite).", "confidence": "medium", "tokens": 9597, "seconds": 70.3, "cost": 0.03708}, {"image": "noise_c", "verdict": "wrong", "grid": ["00111100", "01100110", "01100000", "00111100", "00000110", "01100110", "00111100", "00000000"], "said": "The image shows the digit '8' (or the letter 'S').", "confidence": "high", "tokens": 9598, "seconds": 60.1, "cost": 0.03755}]}, "png": {"n": 7, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 7, "cost": 0.014310000000000002, "tokens": 3486.0, "seconds": 23.485714285714288, "images": [{"image": "digit_1", "verdict": "wrong", "grid": ["00111100", "01000010", "10011001", "10000001", "10100101", "10011001", "01000010", "00111100"], "said": "The image shows a classic pixel-art smiley face (or smiling face icon inside a circle), with eyes (row 3), a smiling mouth curving up at the edges…", "confidence": "high", "tokens": 0, "seconds": 5.5, "cost": 0.00186}, {"image": "digit_7", "verdict": "wrong", "grid": ["00111100", "01000010", "10011001", "10000001", "10100101", "10011001", "01000010", "00111100"], "said": "The image displays a classic pixel-art smiley face (a circular outline with two eyes at rows 2/3 and a smiling curved mouth at rows 4/5).", "confidence": "high", "tokens": 0, "seconds": 5.3, "cost": 0.00239}, {"image": "shape_x", "verdict": "wrong", "grid": ["01100110", "11111111", "11111111", "11111111", "01111110", "00111100", "00011000", "00000000"], "said": "The image shows a heart.", "confidence": "medium", "tokens": 6314, "seconds": 38.0, "cost": 0.02433}, {"image": "shape_circle", "verdict": "wrong", "grid": ["00111100", "01000010", "10100101", "10000001", "10100101", "10011001", "01000010", "00111100"], "said": "The image shows a classic 8x8 smiley face (an outlined circular face with two eyes and a smiling mouth).", "confidence": "high", "tokens": 2728, "seconds": 17.5, "cost": 0.01095}, {"image": "noise_a", "verdict": "wrong", "grid": ["00111100", "01111110", "11011011", "11111111", "11111111", "11000011", "01100110", "00111100"], "said": "The image depicts a classic 8×8 pixel art smiley face (or smiling face icon), featuring a round head, two distinct eyes, and an open smiling mouth.", "confidence": "high", "tokens": 5761, "seconds": 35.0, "cost": 0.0225}, {"image": "noise_b", "verdict": "wrong", "grid": ["00011000", "00111100", "01111110", "11100111", "00100100", "00100100", "00100100", "00000000"], "said": "The image depicts an arrow pointing up (or an upward-pointing directional arrow / mushroom / house silhouette, most standardly an up arrow).", "confidence": "high", "tokens": 0, "seconds": 4.5, "cost": 0.00167}, {"image": "noise_c", "verdict": "wrong", "grid": ["01101110", "00011100", "00111000", "01110000", "11100000", "01110000", "00111000", "00011100"], "said": "This image shows a left-pointing arrow (or chevron/play-back symbol).", "confidence": "medium", "tokens": 9599, "seconds": 58.6, "cost": 0.03647}]}}}, {"name": "GPT-6 Luna", "effort": "reasoning off", "vendor": "openai", "formats": {"grid": {"n": 4, "decoded": 4, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 0, "cost": 4e-05, "tokens": 0.0, "seconds": 1.85, "images": [{"image": "digit_7", "verdict": "exact", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "said": "The image shows a curved, tapering shape resembling a hook or a bent stem.", "confidence": "medium", "tokens": 0, "seconds": 3.1, "cost": 4e-05}, {"image": "shape_x", "verdict": "exact", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "said": "The image shows an X-shaped pattern, with black pixels forming diagonal lines from corner to corner.", "confidence": "high", "tokens": 0, "seconds": 1.4, "cost": 4e-05}, {"image": "noise_a", "verdict": "exact", "grid": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "said": "The image appears to show a small, abstract pixel pattern; I can’t confidently identify a specific object.", "confidence": "low", "tokens": 0, "seconds": 1.5, "cost": 4e-05}, {"image": "noise_b", "verdict": "exact", "grid": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "said": "The image is an abstract, irregular pattern; I can’t confidently identify a specific object.", "confidence": "low", "tokens": 0, "seconds": 1.4, "cost": 4e-05}]}, "pbm": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 4, "cost": 4.75e-05, "tokens": 0.0, "seconds": 2.375, "images": [{"image": "digit_7", "verdict": "wrong", "grid": ["01111110", "11111111", "11111111", "01111110", "00011000", "00111100", "01111110", "00011000"], "said": "The image appears to show a simple person-like figure, with a round head, shoulders, and a narrow body.", "confidence": "high", "tokens": 0, "seconds": 2.0, "cost": 5e-05}, {"image": "shape_x", "verdict": "wrong", "grid": ["11000010", "10000110", "01011000", "11011000", "01000100", "11001000", "00100000", "00100000"], "said": "The image appears to show a small, pixelated capital A.", "confidence": "low", "tokens": 0, "seconds": 3.4, "cost": 4e-05}, {"image": "noise_a", "verdict": "wrong", "grid": ["10101111", "11110100", "11001010", "10011000", "11000011", "11100110", "10011101", "00111011"], "said": "The image appears to be an abstract, irregular pattern; it doesn’t clearly depict a recognizable object.", "confidence": "low", "tokens": 0, "seconds": 1.7, "cost": 4e-05}, {"image": "noise_b", "verdict": "wrong", "grid": ["01111110", "10000001", "10111101", "10100101", "10100101", "10111101", "10000001", "01111110"], "said": "The image shows a simple circular ring.", "confidence": "high", "tokens": 0, "seconds": 2.4, "cost": 6e-05}]}, "pgm": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 0, "wrong": 4, "cost": 6.25e-05, "tokens": 0.0, "seconds": 1.925, "images": [{"image": "digit_7", "verdict": "wrong", "grid": ["11111111", "10000000", "00000000", "11111111", "10000000", "11111111", "10000000", "00000000"], "said": "It appears to show an abstract, blocky pattern rather than a clearly identifiable object.", "confidence": "low", "tokens": 0, "seconds": 1.4, "cost": 5e-05}, {"image": "shape_x", "verdict": "wrong", "grid": ["00101001", "00000010", "10100000", "00111000", "11100000", "10101110", "00100001", "10001110"], "said": "The image is abstract; I can’t identify a recognizable object or symbol.", "confidence": "low", "tokens": 0, "seconds": 1.9, "cost": 4e-05}, {"image": "noise_a", "verdict": "wrong", "grid": ["00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000"], "said": "The image appears entirely white.", "confidence": "low", "tokens": 0, "seconds": 1.3, "cost": 4e-05}, {"image": "noise_b", "verdict": "wrong", "grid": ["00000000", "00011111", "10000000", "11111110", "11110011", "10111110", "11000000", "11110011"], "said": "It doesn’t clearly depict a recognizable object at this resolution.", "confidence": "high", "tokens": 0, "seconds": 3.1, "cost": 0.00012}]}, "bmp": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 2, "wrong": 2, "cost": 4.25e-05, "tokens": 0.0, "seconds": 2.0, "images": [{"image": "digit_7", "verdict": "wrong", "grid": ["11111110", "10000010", "10111010", "10101010", "10111010", "10000010", "11111010", "00000000"], "said": "The image appears to show a small pixel-art letter “P”.", "confidence": "high", "tokens": 0, "seconds": 2.1, "cost": 4e-05}, {"image": "shape_x", "verdict": "wrong", "grid": ["11111111", "10000001", "10111101", "10100101", "10100101", "10111101", "10000001", "11111111"], "said": "The image shows a square frame with a smaller square outline inside it.", "confidence": "high", "tokens": 0, "seconds": 1.8, "cost": 4e-05}, {"image": "noise_a", "verdict": "declined", "grid": null, "said": "The image data does not appear to be a valid 8×8, 1-bit BMP: its header specifies an 8×8 image, but it lacks the pixel data needed to reconstruct…", "confidence": "high", "tokens": 0, "seconds": 2.4, "cost": 5e-05}, {"image": "noise_b", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the pixel grid from the base64 string without decoding it, and you asked me not to use tools or run code.", "confidence": "", "tokens": 0, "seconds": 1.7, "cost": 4e-05}]}, "png": {"n": 4, "decoded": 0, "flipped": 0, "cutOff": 0, "declined": 1, "wrong": 3, "cost": 4e-05, "tokens": 0.0, "seconds": 2.1, "images": [{"image": "digit_7", "verdict": "wrong", "grid": ["01011100", "01011000", "01110000", "11101100", "01111100", "01111000", "01010000", "00000000"], "said": "It appears to show a small pixel-art key.", "confidence": "medium", "tokens": 0, "seconds": 2.5, "cost": 4e-05}, {"image": "shape_x", "verdict": "wrong", "grid": ["00000000", "01011010", "00111000", "01010100", "01010100", "00111000", "00010000", "00000000"], "said": "The image appears to show a small pixel-art person or figure.", "confidence": "medium", "tokens": 0, "seconds": 1.9, "cost": 4e-05}, {"image": "noise_a", "verdict": "declined", "grid": null, "said": "I can’t reliably reconstruct the pixel grid from the encoded text alone without decoding the PNG, and you asked me not to use tools or run code.", "confidence": "low", "tokens": 0, "seconds": 2.0, "cost": 4e-05}, {"image": "noise_b", "verdict": "wrong", "grid": ["10110101", "01001010", "10110101", "01001010", "10110101", "01001010", "10110101", "01001010"], "said": "It shows a repeating checkerboard pattern.", "confidence": "high", "tokens": 0, "seconds": 2.0, "cost": 4e-05}]}}}], "formats": ["grid", "pbm", "pgm", "bmp", "png"], "gallery": [{"name": "Claude Sonnet 5.5", "setting": "high effort", "said": "“The digit 7.” Confidence: medium–high.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 6327, "seconds": 49.4, "cost": 0.065772}, {"name": "GPT-6 Sol", "setting": "medium effort", "said": "“A white 7 on a black background.” Confidence: high.", "verdict": "flipped", "grid": ["10000001", "11111001", "11111011", "11111011", "11110111", "11110111", "11100111", "11101111"], "tokens": 3537, "seconds": 34.6, "cost": 0.036218}, {"name": "GPT-6 Luna", "setting": "high effort, 2nd run", "said": "“The digit 7.” Confidence: high.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 21188, "seconds": 238.5, "cost": 0.0106374}, {"name": "GPT-6 Luna", "setting": "high effort, 3rd run", "said": "“A short horizontal bar with a narrow, slightly zigzagging stem.” Confidence: medium.", "verdict": "decoded", "grid": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "tokens": 12638, "seconds": 145.1, "cost": 0.0063659}, {"name": "Gemini 3.8 Flash", "setting": "medium effort", "said": "“An X, formed by two intersecting diagonal lines.” Confidence: high.", "verdict": "wrong", "grid": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "tokens": 11520, "seconds": 69.3, "cost": 0.04494225}, {"name": "Gemini 3.8 Flash", "setting": "low effort", "said": "“A classic pixel-art smiley face.” Confidence: high.", "verdict": "wrong", "grid": ["00111100", "01000010", "10011001", "10000001", "10100101", "10011001", "01000010", "00111100"], "tokens": 0, "seconds": 5.3, "cost": 0.00238725}, {"name": "GPT-6 Luna", "setting": "reasoning off", "said": "“A small pixel-art key.” Confidence: medium.", "verdict": "wrong", "grid": ["01011100", "01011000", "01110000", "11101100", "01111100", "01111000", "01010000", "00000000"], "tokens": 0, "seconds": 2.5, "cost": 4.19e-05}, {"name": "GPT-6 Luna", "setting": "medium effort", "said": "“An abstract pixel pattern; I can’t confidently identify it.” Confidence: low.", "verdict": "wrong", "grid": ["01111111", "00000110", "00000110", "11111111", "00000011", "00000000", "00000000", "00000000"], "tokens": 8054, "seconds": 73.5, "cost": 0.0040839}, {"name": "Claude Sonnet 5.5", "setting": "medium effort, did not reason", "said": "“This guess looks like the letter A … not a verified decode.” Confidence: low.", "verdict": "guess", "grid": ["00011000", "00111100", "01100110", "11000011", "11111111", "11000011", "11000011", "11000011"], "tokens": 0, "seconds": 6.1, "cost": 0.004682}, {"name": "Claude Sonnet 5.5", "setting": "low effort, did not reason", "said": "“A made-up grid would be fabricated, so I’m not giving one.”", "verdict": "declined", "grid": null, "tokens": 0, "seconds": 5.0, "cost": 0.004312}], "truth": {"digit_1": ["00001000", "00011000", "00101000", "00001000", "00001000", "00001000", "00001000", "00111110"], "digit_7": ["01111110", "00000110", "00000100", "00000100", "00001000", "00001000", "00011000", "00010000"], "shape_x": ["10000001", "01000010", "00100100", "00011000", "00011000", "00100100", "01000010", "10000001"], "shape_circle": ["00111100", "01000010", "10000001", "10000001", "10000001", "10000001", "01000010", "00111100"], "noise_a": ["11101111", "11111101", "00010011", "00010100", "11000011", "10101001", "10010011", "00010111"], "noise_b": ["01111110", "10010110", "00000100", "11010011", "10100000", "00100011", "10110000", "11001001"], "noise_c": ["00100010", "11100011", "10011010", "11101010", "10100000", "00010101", "11111101", "00100001"]}, "encodings": {"grid": "01111110\n00000110\n00000100\n00000100\n00001000\n00001000\n00011000\n00010000", "pbm": "UDQKOCA4Cn4GBAQICBgQ", "pgm": "UDUKOCA4CjI1NQr/AAAAAAAA////////AAD///////8A/////////wD///////8A/////////wD///////8AAP///////wD/////", "bmp": "Qk1eAAAAAAAAAD4AAAAoAAAACAAAAAgAAAABAAEAAAAAACAAAADEDgAAxA4AAAIAAAACAAAAAAAAAP///wDvAAAA5wAAAPcAAAD3AAAA+wAAAPsAAAD5AAAAgQAAAA==", "png": "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQAAAADsdIMmAAAAGElEQVR4nGNoZPjJxMTEwPSHiYHpAxMHAB5qA32rRw2yAAAAAElFTkSuQmCC"}, "spend": [{"model": "anthropic/claude-sonnet-5.5", "calls": 39, "cost": 0.9238120000000001}, {"model": "google/gemini-3.8-flash", "calls": 36, "cost": 0.566139}, {"model": "openai/gpt-6-sol", "calls": 36, "cost": 0.5408520000000001}, {"model": "openai/gpt-6-luna", "calls": 107, "cost": 0.3806257999999998}], "totalCalls": 218, "totalCost": 2.4114288};
 const $ = (id) => document.getElementById(id);
 const FMT = {
   grid: ["Text grid", "The picture typed out directly, one character per pixel. Nothing to decode. This is the sanity check.", "NO DECODING", "#0a7d4f"],
@@ -492,26 +649,17 @@ $("figures").innerHTML = [
   [D.totalCalls, "model calls, every one logged"], [4, "models"], [5, "ways to store one picture"], ["$" + D.totalCost.toFixed(2), "total spend"],
 ].map(([a, b]) => `<div><strong>${a}</strong><span>${b}</span></div>`).join("");
 
-// ---------- format switcher
-function showFormat(f) {
-  const s = D.encodings[f];
-  $("fmtString").textContent = s;
-  $("fmtCount").textContent = `${s.length} characters, exactly as given to the model`;
-  $("fmtName").textContent = FMT[f][0];
-  $("fmtName").style.background = FMT[f][3];
-  $("fmtAbout").textContent = FMT[f][1];
-  $("fmtLevel").textContent = FMT[f][2];
-  $("fmtLevel").style.color = FMT[f][3];
-  document.querySelectorAll("#fmtTabs button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.f === f));
-}
-$("fmtTabs").innerHTML = D.formats.map((f) => `<button data-f="${f}">${FMT[f][0]}</button>`).join("");
-$("fmtTabs").addEventListener("click", (e) => e.target.dataset.f && showFormat(e.target.dataset.f));
+// ---------- the five formats, side by side
 $("fmtGrid").innerHTML = px(SEVEN);
-showFormat("png");
+$("fmtRows").innerHTML = D.formats.map((f) => {
+  const [name, about, level, color] = FMT[f], text = D.encodings[f];
+  return `<div class="fmt"><div class="name"><b style="background:${color}">${name}</b><small style="color:${color}">${level}</small></div>
+    <div class="string">${esc(text)}<small>${text.length} characters</small></div><p>${about}</p></div>`;
+}).join("");
 
 // ---------- test images
-$("imgs").innerHTML = [["digit_1", "A 1"], ["digit_7", "A 7"], ["shape_x", "A cross"], ["shape_circle", "A circle"], ["noise_a", "Noise A"], ["noise_b", "Noise B"], ["noise_c", "Noise C"]]
-  .map(([k, label]) => `<figure>${px(D.truth[k])}<figcaption>${label}</figcaption></figure>`).join("");
+const IMG = { digit_1: "A 1", digit_7: "A 7", shape_x: "A cross", shape_circle: "A circle", noise_a: "Noise A", noise_b: "Noise B", noise_c: "Noise C" };
+$("imgs").innerHTML = Object.entries(IMG).map(([k, label]) => `<figure>${px(D.truth[k])}<figcaption>${label}</figcaption></figure>`).join("");
 
 // ---------- tooltip
 const tip = $("tip");
@@ -528,7 +676,7 @@ function bindTips(root) {
     el.addEventListener("mouseleave", () => (tip.style.opacity = 0)); el.addEventListener("blur", () => (tip.style.opacity = 0));
   });
 }
-const cellTip = (c, f, s) => `<b>${c.name}, ${c.effort}</b>${FMT[f][0]}: ${s.decoded} of ${s.n} decoded<br>${money(s.cost)} per call<br>${Math.round(s.tokens).toLocaleString()} reasoning tokens, ${Math.round(s.seconds)} s`;
+const cellTip = (c, f, s) => `<b>${c.name}, ${c.effort}</b>${FMT[f][0]}: ${s.decoded} of ${s.n} decoded<br>${money(s.cost)} per call<br>${Math.round(s.tokens).toLocaleString()} reasoning tokens, ${Math.round(s.seconds)} s<br><i>Click to see each image</i>`;
 
 // ---------- heatmap
 const HEAT_ROWS = D.configs.filter((c) => c.effort !== "low effort" || c.name !== "GPT-6 Luna");
@@ -551,7 +699,7 @@ function drawHeat(view) {
       const k = Math.round(Math.max(0, Math.min(1, v)) * 10);
       const main = view === "acc" ? `${s.decoded} of ${s.n}` : money(s.cost);
       const sub = view === "acc" ? notes(s) : (s.tokens ? (s.tokens / 1000).toFixed(1) + "k tokens" : "no reasoning") + `, ${Math.round(s.seconds)} s`;
-      h += `<td tabindex="0" style="background:var(--q${k});color:var(--f${k})" data-tip="${esc(cellTip(c, f, s))}"><b>${main}</b><span>${sub}</span></td>`;
+      h += `<td tabindex="0" role="button" aria-label="${c.name}, ${c.effort}, ${FMT[f][0]}: ${main}. Show each image." data-row="${HEAT_ROWS.indexOf(c)}" data-f="${f}" style="background:var(--q${k});color:var(--f${k})" data-tip="${esc(cellTip(c, f, s))}"><b>${main}</b><span>${sub}</span></td>`;
     }
     h += "</tr>";
   }
@@ -563,6 +711,36 @@ function drawHeat(view) {
 }
 $("heatView").addEventListener("click", (e) => e.target.dataset.v && drawHeat(e.target.dataset.v));
 drawHeat("acc");
+
+// ---------- the box behind a tile: one card per image, real picture beside the model's answer
+const VERDICT = { exact: ["EXACT", "good"], flipped: ["EXACT, SWAPPED", "good"], wrong: ["WRONG", "bad"], declined: ["NO GRID GIVEN", "none"], cutOff: ["OUT OF TOKENS", "none"] };
+const flip = (rows) => rows.map((r) => [...r].map((ch) => (ch === "1" ? "0" : "1")).join(""));
+function openCell(c, f) {
+  const s = c.formats[f];
+  const cards = s.images.map((im) => {
+    const truth = D.truth[im.image], [label, cls] = VERDICT[im.verdict];
+    const answer = im.grid ? px(im.grid, im.verdict === "flipped" ? flip(truth) : truth) : `<div class="empty">${im.verdict === "cutOff" ? "ran out of tokens before answering" : "no grid given"}</div>`;
+    const right = im.grid ? im.grid.reduce((a, row, y) => a + [...row].filter((ch, x) => ch === truth[y][x]).length, 0) : null;
+    const meta = [];
+    if (im.verdict === "wrong") meta.push(`${right} of 64 pixels right`);
+    if (im.confidence) meta.push(`its confidence: ${im.confidence}`);
+    meta.push(im.tokens ? `${(im.tokens / 1000).toFixed(1)}k reasoning tokens` : "no reasoning", `${Math.round(im.seconds)} s`, money(im.cost));
+    return `<div class="card ${im.verdict}"><div class="top"><b>${IMG[im.image]}</b><span class="tag ${cls}">${label}</span></div>
+      <div class="pair"><figure>${px(truth)}<figcaption>Real image</figcaption></figure><figure>${answer}<figcaption>Model&rsquo;s answer</figcaption></figure></div>
+      ${im.said ? `<p>&ldquo;${esc(im.said)}&rdquo;</p>` : ""}<p class="meta">${meta.join(" &middot; ")}</p></div>`;
+  }).join("");
+  $("cell").innerHTML = `<div class="dhead"><div><h3 id="cellTitle"><i class="dot ${c.vendor}"></i>${c.name}, ${c.effort} &middot; ${FMT[f][0]}</h3>
+    <p><b>${s.decoded} of ${s.n} images decoded.</b> ${FMT[f][1]}</p></div><button type="button" autofocus>Close &times;</button></div>
+    <div class="dkey"><span>Left: the real image. Right: the grid the model wrote.</span><span><i></i>a pixel the model got wrong</span><span>In quotes: what the model said the picture was</span>${s.flipped ? "<span>Swapped: every pixel right, black and white reversed</span>" : ""}</div>
+    <div class="cards">${cards}</div>`;
+  tip.style.opacity = 0;
+  $("cell").showModal();
+  $("cell").scrollTop = 0;
+}
+const cellOf = (e) => { const td = e.target.closest("td[data-row]"); if (td) openCell(HEAT_ROWS[td.dataset.row], td.dataset.f); return td; };
+$("heat").addEventListener("click", cellOf);
+$("heat").addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && cellOf(e) && e.preventDefault());
+$("cell").addEventListener("click", (e) => (e.target === $("cell") || e.target.closest(".dhead button")) && $("cell").close());
 
 // ---------- scatter
 const COLOR = { anthropic: "var(--s1)", openai: "var(--s2)", google: "var(--s3)" };

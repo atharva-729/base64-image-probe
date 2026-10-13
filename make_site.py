@@ -38,12 +38,30 @@ GALLERY = (
 
 
 def find_grid(text, n):
-    rows = [re.sub(r"[\s`|]", "", line) for line in text.splitlines()]
+    """The reply's last n-by-n block of 0/1, and the text after it."""
+    lines = text.splitlines()
+    rows = [re.sub(r"[\s`|]", "", line) for line in lines]
     ok = [bool(re.fullmatch(f"[01]{{{n}}}", r)) for r in rows]
     for end in range(len(rows), n - 1, -1):
         if all(ok[end - n : end]):
-            return rows[end - n : end]
-    return None
+            return rows[end - n : end], "\n".join(lines[end:])
+    return None, text
+
+
+def said(text):
+    """The one sentence where the reply says what the picture is, for the per-image cards."""
+    text = re.sub(r"```.*?```", " ", text, flags=re.S)
+    text = re.sub(r"[*#`>]|^\s*[-•]\s*", "", text, flags=re.M)
+    label = re.search(r"(?:what (?:it|the image) shows|description)\s*:\s*(.+)", text, re.I | re.S)
+    for part in ([label.group(1)] if label else []) + [text]:
+        for s in re.split(r"(?<=[.!?])\s+|\n+", part):
+            s = s.strip()
+            if len(s) < 12 or re.match(r"confidence", s, re.I):
+                continue
+            if part is not text or re.search(r"\b(shows?|appears?|looks?|depicts?|displays?|represents?|resembles?|can.t|cannot|unable|identify|pattern)\b", s, re.I):
+                s = s[0].upper() + s[1:]
+                return s if len(s) <= 150 else s[:147].rsplit(" ", 1)[0] + "…"
+    return ""
 
 
 truth = {(im["name"], im["size"]): im["grid"] for im in json.loads((ROOT / "images" / "images.json").read_text())}
@@ -53,6 +71,37 @@ cells = defaultdict(list)
 for r in csv.DictReader(open(ROOT / "results.csv")):
     if r["size"] == "8" and r["image"] in IMAGES and r["run"] == "1":
         cells[r["model"], r["effort"], r["format"]].append(r)
+
+# the reply behind each scored row; a resent call replaces its cut-off first attempt, as in score.py
+replies = {}
+for line in (ROOT / "responses.jsonl").read_text(encoding="utf-8").splitlines():
+    r = json.loads(line)
+    if "error" not in r and r["size"] == 8 and r["run"] == 1:
+        replies[r["model"], r["effort"], r["image"], r["format"]] = r
+
+
+def image_result(row):
+    """One image in one cell: what the model drew and how it scored."""
+    reply = replies[row["model"], row["effort"], row["image"], row["format"]]["response"]
+    grid, tail = find_grid(reply, 8)
+    if row["exact"] == "1":
+        verdict = "exact"
+    elif row["pixel_acc_inverted"] == "1.0":
+        verdict = "flipped"
+    elif grid:
+        verdict = "wrong"
+    else:
+        verdict = "cutOff" if row["finish_reason"] == "length" else "declined"
+    return {
+        "image": row["image"],
+        "verdict": verdict,
+        "grid": grid,
+        "said": "" if verdict == "cutOff" else said(tail),
+        "confidence": row["confidence"],
+        "tokens": int(row["reasoning_tokens"] or 0),
+        "seconds": float(row["seconds"]),
+        "cost": float(row["cost"]),
+    }
 
 configs = []
 for model, effort, name, label, vendor in CONFIGS:
@@ -74,6 +123,7 @@ for model, effort, name, label, vendor in CONFIGS:
             "cost": sum(float(r["cost"]) for r in rows) / n,
             "tokens": sum(int(r["reasoning_tokens"] or 0) for r in rows) / n,
             "seconds": sum(float(r["seconds"]) for r in rows) / n,
+            "images": sorted((image_result(r) for r in rows), key=lambda x: IMAGES.index(x["image"])),
         }
     configs.append({"name": name, "effort": label, "vendor": vendor, "formats": per_format})
 
@@ -92,7 +142,7 @@ for model, effort, run, name, setting, said, verdict in GALLERY:
             "setting": setting,
             "said": said,
             "verdict": verdict,
-            "grid": find_grid(r["response"], 8),
+            "grid": find_grid(r["response"], 8)[0],
             "tokens": r["reasoning_tokens"] or 0,
             "seconds": r["seconds"],
             "cost": r["cost"],
